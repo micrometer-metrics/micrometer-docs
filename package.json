@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "asciidoc-loader": "file:/Users/jschneider/Projects/github/jkschneider/asciidoc-loader",
+    "asciidoctor.js": "^1.5.6-preview.2",
     "bootstrap": "4.0.0-alpha.6",
     "codemirror": "^5.27.4",
     "font-awesome": "^4.7.0",
@@ -17,6 +19,8 @@
     "string-template": "^1.0.0"
   },
   "devDependencies": {
+    "console-loader": "^1.0.0",
+    "loader-utils": "^1.1.0",
     "raw-loader": "^0.5.1",
     "react-scripts": "1.0.10"
   },

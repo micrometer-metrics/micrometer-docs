@@ -1,9 +1,9 @@
 import React from 'react';
 import {Route} from 'react-router-dom';
-import Navbar from '../Navbar/Navbar';
-import Footer from '../Footer/Footer';
-import Home from '../Home/Home';
-import Docs from '../Docs/Docs';
+import Navbar from '../Navbar';
+import Footer from '../Footer';
+import Home from '../Home';
+import Docs from '../Docs';
 
 export default function App() {
   return (

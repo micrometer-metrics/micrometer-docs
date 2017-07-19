@@ -1,0 +1,19 @@
+Pre-release artifacts are being published frequently, but are NOT intended for production use yet.
+
+In Gradle:
+
+[source,groovy,subs=+attributes]
+----
+compile 'io.micrometer:micrometer-{system}-starter:latest.release'
+----
+
+Or in Maven:
+
+[source,xml,subs=+attributes]
+----
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-{system}-starter</artifactId>
+  <version>${micrometer.version}</version>
+</dependency>
+----

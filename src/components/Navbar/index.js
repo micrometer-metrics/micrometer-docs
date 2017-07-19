@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import logo from '../../img/logo.svg';
 import 'font-awesome/css/font-awesome.min.css';
-import './Navbar.css';
+import './style.css';
 
 export default function Navbar() {
   return (

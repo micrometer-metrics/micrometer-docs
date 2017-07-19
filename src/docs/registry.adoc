@@ -1,0 +1,50 @@
+A `Meter` is the interface for collecting a set of measurements (which we individually call metrics) about your
+application. Meters in Micrometer are created from and held in a `MeterRegistry`, for which there is an implementation
+for each supported monitoring system.
+
+Micrometer packs with a supported set of `Meter` primitives including:
+`Timer`, `Counter`, `Gauge`, `DistributionSummary`, and `LongTaskTimer`. Note that different meter types
+result in a different number of metrics. For example, while there is a single metric that represents a
+`Gauge`, a `Timer` measures both number of timed events and the total time of all events timed.
+
+Exporters use the meter registry to iterate over the set of meters instrumenting your application, and then further
+iterate over each meter's metrics, generally resulting in a time series in the metrics backend for each
+combination of metrics and their dimension values.
+
+To create the registry:
+
+ifeval::[{system} == atlas]
+[source,java]
+----
+AtlasRegistry spectatorAtlas = new AtlasRegistry(Clock.SYSTEM, new AtlasConfig() {
+    @Override
+    public Duration step() {
+        return Duration.ofSeconds(10);
+    }
+
+    @Override
+    public String get(String k) {
+        return null; // accept the rest of the defaults
+    }
+});
+spectatorAtlas.start();
+MeterRegistry registry = new SpectatorMeterRegistry(spectatorAtlas);
+----
+
+`AtlasConfig` is an interface with a set of default methods. If in the implementation of `get(String k)`,
+rather than returning `null` you instead bind it to a property source, you can override default configuration
+through properties prefixed with atlas. For example, if properties were loaded from a yml configuration:
+
+[source,yml]
+----
+# The location of your Atlas server
+atlas.uri: http://localhost:7101/api/v1/publish
+
+# You will probably want to conditionally disable Atlas publishing in local development.
+atlas.enabled: true
+
+# The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
+# The default is 1 minute.
+atlas.step: PT1M
+----
+endif::[]
