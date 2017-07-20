@@ -30,5 +30,8 @@
     "eject": "react-scripts eject",
     "analyze": "source-map-explorer build/static/js/main.*",
     "prod-start": "chmod +x bin/server && ./bin/server"
+  },
+  "engines": {
+    "node": "4.x"
   }
 }
