@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import logoNoTitle from '../../img/logo-no-title.svg';
 import background from '../../img/playback-latency.png';
 
@@ -24,7 +25,6 @@ export default function Home() {
             <h2>Dimensional Metrics</h2>
             <p>Micrometer provides vendor-neutral interfaces for <strong>timers</strong>, <strong>gauges</strong>, <strong>counters</strong>, <strong>distribution summaries</strong>, and <strong>long task timers</strong> with a dimensional data model that, when paired with a dimensional monitoring system, allows for efficient
               access to a particular named metric with the ability to drill down across its dimensions.</p>
-            <p><a className="btn btn-secondary" href="#" role="button">More »</a></p>
           </div>
           <div className="col-lg-4 text-center">
             <i className="fa fa-4x fa-area-chart" aria-hidden="true" />
@@ -39,7 +39,6 @@ export default function Home() {
             <p>Starting with Spring Boot 2.0, Micrometer is the instrumentation library powering
               the delivery of application metrics from Spring. Support is ported back to Boot 1.x
               through an additional library dependency.</p>
-            <p><a className="btn btn-secondary" href="#" role="button">Spring docs »</a></p>
           </div>
         </div>
         <div className="row justify-content-center" style={{ padding: 30 }}>

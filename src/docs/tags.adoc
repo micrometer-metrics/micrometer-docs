@@ -7,7 +7,7 @@ using other dimensions and be able to reason about the value being shown.
 
 Suppose we are trying to measure the number of threads in a thread pool and the number of rows in a database table.
 
-== Recommended approach
+*Recommended approach*
 
 ```java
 registry.counter("threadpool_size", "id", "server_requests")
@@ -19,7 +19,7 @@ is at least potentially meaningful. For example if we select `threadpool_size` w
 threads in all pools. Then we can group by or select an `id` to drill down further or perform comparative
 analysis on the contribution of each functional area to the number of threads consumed by the instrumented app.
 
-== Bad approach
+*Bad approach*
 
 ```java
 registry.counter("size",

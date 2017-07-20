@@ -1,0 +1,109 @@
+The long task timer is a special type of timer that allows you to measure time while an
+event being measured is *still running*. A timer does not record the duration
+and until the task is complete.
+
+Now consider a background process to refresh metadata from a data store.
+For example, Edda caches AWS resources such as instances, volumes, auto-scaling
+groups etc. Normally all data can be refreshed in a few minutes. If the AWS
+services are having problems it can take much longer. A long duration timer can
+be used to track the overall time for refreshing the metadata.
+
+For example, in a Spring application, it is common for such long running processes to be implemented with `@Scheduled`.
+Micrometer provides a special `@Timed` annotation for instrumenting these processes with a long
+task timer.
+
+[source, java]
+----
+@Timed(value = "aws_scrape", longTask = true)
+@Scheduled(fixedDelay = 360000)
+void scrapeResources() {
+    // find instances, volumes, auto-scaling groups, etc...
+}
+----
+
+It is up to the application framework to make something happen with `@Timed`. If your framework of
+choice does not have support for it, you can still use the long task timer:
+
+[source, java]
+----
+LongTaskTimer scrapeTimer = registry.longTaskTimer("scrape");
+void scrapeResources() {
+    scrapeTimer.record(() => {
+        // find instances, volumes, auto-scaling groups, etc...
+    });
+}
+----
+
+If we wanted to alert when this process exceeds `threshold`,
+with a long task timer we will receive that alert at the first
+reporting interval after we have exceeded the threshold. With a regular
+timer, we wouldn't receive the alert until the first reporting interval after
+the process completed, over an hour later!
+
+ifeval::["{system}" == "atlas"]
+.Simulated back-to-back long tasks.
+image::img/atlas-long-task-timer.png[Atlas-rendered long task timer,float="right"]
+
+[source, http]
+----
+GET /api/v1/graph?
+       q=
+       name,longTaskTimer,:eq,statistic,duration,:eq,:and, <1>
+       :dup,
+       70,:gt,:vspan,f00,:color,40,:alpha,alerted,:legend, <2>
+       70,f00,:color,alert+threshold,:legend <3>
+       &tz=US/Central
+       &s=e-15m
+       &w=400
+       &l=0
+       &title=Peaks+of+Long+Tasks
+       &ylabel=time
+Host: localhost:7101
+----
+<1> A representation of long tasks that are happening back-to-back.
+<2> A vertical span that appears whenever the long task exceeds our threshold of 70 seconds.
+So that it doesn't overwhelm the graph, we'll also decrease the opacity of the vspan.
+<3> Plot the threshold of 70 seconds as a separate line.
+endif::[]
+
+ifeval::["{system}" == "datadog"]
+
+.Simulated back-to-back long tasks.
+image::img/datadog-long-task-timer.png[Datadog-rendered long task timer,float="right"]
+
+[source, json]
+----
+{
+  "requests": [
+    {
+      "q": "avg:longTaskTimer{statistic:duration} / avg:longTaskTimer{statistic:activetasks}",
+      "type": "line",
+      "conditional_formats": [],
+      "aggregator": "avg"
+    }
+  ],
+  "viz": "timeseries",
+  "autoscale": true,
+  "markers": [
+    {
+      "val": 20,
+      "value": "y = 20",
+      "type": "error dashed",
+      "label": "max time allowed",
+      "dim": "y"
+    }
+  ]
+}
+----
+
+endif::[]
+
+ifeval::["{system}" == "prometheus"]
+
+The Prometheus query to plot the long task timer is `longTaskTimer{statistic="duration"}`. In
+Grafana, we can set an alert threshold at some fixed point.
+
+.Simulated back-to-back long tasks with a fixed alert threshold.
+image::img/prometheus-long-task-timer.png[Grafana-rendered Prometheus long task timer]
+
+endif::[]

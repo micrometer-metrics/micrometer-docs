@@ -13,7 +13,7 @@ combination of metrics and their dimension values.
 
 To create the registry:
 
-ifeval::[{system} == atlas]
+ifeval::["{system}" == "atlas"]
 [source,java]
 ----
 AtlasRegistry spectatorAtlas = new AtlasRegistry(Clock.SYSTEM, new AtlasConfig() {
@@ -46,5 +46,48 @@ atlas.enabled: true
 # The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
 # The default is 1 minute.
 atlas.step: PT1M
+----
+endif::[]
+
+ifeval::["{system}" == "datadog"]
+== Spectator-backed registry that pushes directly to datadoghq
+
+Metrics are rate-normalized and pushed to datadoghq on a periodic interval. Rate normalization performed by the
+Spectator-backed registry yields datasets that are quite similar to those produced by dogstatsd.
+
+.Two metrics with the same input data, one aggregated by dogstatsd and the other by the Spectator-backed registry.
+image::img/datadog-agent-vs-api.png[Datadog Agent vs. API]
+
+[source, java]
+----
+DatadogRegistry spectatorDatadog = new DatadogRegistry(Clock.SYSTEM, new DatadogConfig() {
+    @Override
+    public Duration step() {
+        return Duration.ofSeconds(10);
+    }
+
+    @Override
+    public String get(String k) {
+        return null; // accept the rest of the defaults
+    }
+});
+spectatorDatadog.start();
+MeterRegistry registry = new SpectatorMeterRegistry(spectatorDatadog);
+----
+
+`DatadogConfig` is an interface with a set of default methods. If in the implementation of `get(String k)`,
+rather than returning `null` you instead bind it to a property source, you can override default configuration
+through properties prefixed with datadog. For example, if properties were loaded from a yml configuration:
+
+[source, yaml]
+----
+datadog.apiKey: YOURKEY
+
+# You will probably want disable Atlas publishing in a local development profile.
+datadog.enabled: true
+
+# The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
+# The default is 10 seconds, which matches the Datadog Agent publishes at.
+datadog.step: PT10S
 ----
 endif::[]

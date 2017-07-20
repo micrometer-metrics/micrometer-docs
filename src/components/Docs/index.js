@@ -1,22 +1,71 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-import './Asciidoc/style.css';
-import Asciidoc from 'console-loader!./Asciidoc';
+import './style.css';
+import Manual from './Manual';
 
-/* eslint import/no-webpack-loader-syntax: off */
+export default function Docs(props) {
+  let system = props.location.pathname.split('/').slice(-1)[0];
 
-let index = require('!asciidoc-loader!../../docs/index.adoc');
-
-export default function Docs() {
   return (
-    <div className="container-fluid mt-3">
-      <div className="row mt-3">
-        <div className="col-12">
-          <Asciidoc
-            source={index}
-            attrs={{system: 'atlas'}}/>
+    <div className="container-fluid mt-4 ml-3 mr-3">
+      <h1>User Manual</h1>
+
+      <p>
+        Micrometer provides a simple facade over the instrumentation clients for the most popular monitoring systems,
+        allowing you to instrument your JVM-based application code without vendor lock-in. Think SLF4J, but for
+        application
+        metrics!
+      </p>
+
+      <p>
+        Micrometer is <i>not</i> a <a href="http://zipkin.io/">distributed tracing system</a> or a general
+        purpose <a href="https://www.splunk.com/">event logger</a>. Application
+        metrics recorded by Micrometer are intended to be used to observe, alert, and react to the current/recent
+        operational
+        state of your environment.
+      </p>
+
+      <p>
+        <strong>Select your monitoring system</strong> to tailor the manual to your specific use.
+      </p>
+
+      <div className="card-deck">
+        <div className="card">
+          <NavLink to="/docs/atlas" className={'system-card'} activeClassName={'active'}>
+            <div className="card-block">
+              <h4 className="card-title">Netflix Atlas</h4>
+              <p className="card-text">Atlas is an in-memory dimensional time series
+                database with built-in graphing, a custom stack-based query language,
+                and advanced math operations.</p>
+            </div>
+          </NavLink>
+        </div>
+        <div className="card">
+          <NavLink to="/docs/prometheus" className={'system-card'} activeClassName={'active'}>
+            <div className="card-block">
+              <h4 className="card-title">Prometheus</h4>
+              <p className="card-text">Prometheus is an in-memory dimensional time series database
+                with a simple built-in UI, a custom query language, and math operations.
+                Prometheus is designed to operate on a pull model, scraping metrics from application
+                instances periodically based on service discovery.
+              </p>
+            </div>
+          </NavLink>
+        </div>
+        <div className="card">
+          <NavLink to="/docs/datadog" className={'system-card'} activeClassName={'active'}>
+            <div className="card-block">
+              <h4 className="card-title">Datadog</h4>
+              <p className="card-text">Datadog is a dimensional time-series SAAS with built-in
+                dashboarding and alerting. Micrometer supports shipping metrics to Datadog directly
+                via its API.</p>
+            </div>
+          </NavLink>
         </div>
       </div>
+
+      <Manual system={system} />
     </div>
   );
 }

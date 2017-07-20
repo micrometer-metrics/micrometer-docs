@@ -22,10 +22,7 @@ export default function Navbar() {
             <Link to="/docs" className="nav-link">Documentation</Link>
           </li>
           <li className="nav-item active">
-            <a className="nav-link" href="#"><i className="fa fa-lg fa-github-alt" aria-hidden="true" /></a>
-          </li>
-          <li className="nav-item active">
-            <a className="nav-link" href="#"><i className="fa fa-lg fa-twitter" aria-hidden="true" /></a>
+            <a className="nav-link" href="https://github.com/micrometer-metrics/micrometer"><i className="fa fa-lg fa-github-alt" aria-hidden="true" /></a>
           </li>
         </ul>
       </div>
