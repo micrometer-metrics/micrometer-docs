@@ -19,10 +19,13 @@ export default function Navbar() {
       <div className="collapse navbar-collapse" id="navbarCollapse">
         <ul className="navbar-nav ml-auto">
           <li className="nav-item active">
-            <Link to="/docs" className="nav-link">Documentation</Link>
+            <Link to="/docs" className="nav-link"><i className="fa fa-lg fa-book"/> Documentation</Link>
           </li>
           <li className="nav-item active">
-            <a className="nav-link" href="https://github.com/micrometer-metrics/micrometer"><i className="fa fa-lg fa-github-alt" aria-hidden="true" /></a>
+            <a className="nav-link" href="https://github.com/micrometer-metrics/micrometer"><i className="fa fa-lg fa-github-alt" /> Github</a>
+          </li>
+          <li className="nav-item active">
+            <a className="nav-link" href="https://slack.micrometer.io"><i className="fa fa-lg fa-slack" /> Slack</a>
           </li>
         </ul>
       </div>

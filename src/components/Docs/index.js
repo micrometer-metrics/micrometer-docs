@@ -27,6 +27,11 @@ export default function Docs(props) {
       </p>
 
       <p>
+        Join the discussion with any comments and feature requests on Micrometer's
+        public <a href="http://slack.micrometer.io">Slack team</a>.
+      </p>
+
+      <p>
         <strong>Select your monitoring system</strong> to tailor the manual to your specific use.
       </p>
 

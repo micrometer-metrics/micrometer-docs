@@ -7,6 +7,7 @@
     "asciidoctor.js": "^1.5.6-preview.2",
     "bootstrap": "4.0.0-alpha.6",
     "codemirror": "^5.27.4",
+    "express": "^4.15.3",
     "font-awesome": "^4.7.0",
     "octicons": "^5.0.1",
     "react": "^15.6.1",
@@ -32,6 +33,6 @@
     "prod-start": "chmod +x bin/server && ./bin/server"
   },
   "engines": {
-    "node": "4.x"
+    "node": "8.1.4"
   }
 }
