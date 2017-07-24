@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import logoNoTitle from '../../img/logo-no-title.svg';
 import background from '../../img/playback-latency.png';
 
@@ -8,7 +7,7 @@ export default function Home() {
     <div>
       <div className="jumbotron text-center" style={{ background: `url(${background}) no-repeat center center` }}>
         <div className="container">
-          <img src={logoNoTitle} className="img-fluid" />
+          <img src={logoNoTitle} className="img-fluid" alt="" />
           <h1 className="jumbotron-heading mt-3" style={{ color: 'white', background: 'rgba(52, 48, 45, 0.8)' }}>
             Vendor-neutral application metrics facade
           </h1>

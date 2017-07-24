@@ -248,11 +248,11 @@ asciidoc-loader@^0.2.0:
     file-loader "^0.11.2"
     loader-utils "^1.1.0"
 
-asciidoctor.js@^1.5.6-preview.2:
-  version "1.5.6-preview.2"
-  resolved "https://registry.yarnpkg.com/asciidoctor.js/-/asciidoctor.js-1.5.6-preview.2.tgz#4cc7aefc2b3a9dc47abbf46785b15f8dfc60a152"
+asciidoctor.js@^1.5.6-preview.3:
+  version "1.5.6-preview.3"
+  resolved "https://registry.yarnpkg.com/asciidoctor.js/-/asciidoctor.js-1.5.6-preview.3.tgz#aedcb69361a2a032f57f36f0893491e0c2826149"
   dependencies:
-    opal-runtime "0.11.0-integration7"
+    opal-runtime "0.11.0-integration8"
     xmlhttprequest "~1.7.0"
 
 asn1.js@^4.0.0:
@@ -4330,9 +4330,9 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-opal-runtime@0.11.0-integration7:
-  version "0.11.0-integration7"
-  resolved "https://registry.yarnpkg.com/opal-runtime/-/opal-runtime-0.11.0-integration7.tgz#e165be3a79f0f48b18417c8ab333da853a9e696a"
+opal-runtime@0.11.0-integration8:
+  version "0.11.0-integration8"
+  resolved "https://registry.yarnpkg.com/opal-runtime/-/opal-runtime-0.11.0-integration8.tgz#8442ddc8c66279c6cd004bf7a730a78646202db2"
   dependencies:
     glob "6.0.4"
 

@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "asciidoc-loader": "^0.2.0",
-    "asciidoctor.js": "^1.5.6-preview.2",
+    "asciidoctor.js": "^1.5.6-preview.3",
     "bootstrap": "4.0.0-alpha.6",
     "codemirror": "^5.27.4",
     "express": "^4.15.3",

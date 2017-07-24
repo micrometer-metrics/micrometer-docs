@@ -1,3 +1,6 @@
+/* eslint no-useless-escape: off */
+/* eslint no-useless-concat: off */
+
 module.exports = function(hljs) {
   var LITERALS = 'true false yes no null';
 
