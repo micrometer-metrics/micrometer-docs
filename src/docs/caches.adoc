@@ -1,5 +1,4 @@
-Guava caches can be instrumented with the registry, but it is important that you call `recordStats()` on
-the `CacheBuilder`, as it is not possible to turn this on after the `Cache` is constructed.
+Guava caches can be instrumented with the registry. Because it is not possible to turn on metrics after the cache is constructed, you must call `recordStats()` on the `CacheBuilder`.
 
 ```java
 @Repository
@@ -16,7 +15,7 @@ class PersonRepository {
 ```
 
 Cache instrumentation results in several gauges whose names are
-prefixed by the provided name ("people_cache" in this example),
+prefixed by the provided name (`people_cache` in this example),
 corresponding to the stats recorded in `CacheStats`.
 
 The original cache instance is _unchanged_ by instrumentation.

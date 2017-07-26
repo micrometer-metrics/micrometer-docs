@@ -3,5 +3,4 @@
 new LogbackMetrics().bindTo(registry);
 ----
 
-This binder counts every interaction with the Logback system, adding a tag for the log level so you
-could, for example, alert on a rolling count of error log events.
+This binder counts every interaction with the Logback system, adding a tag for the log level so you could, for example, alert on a rolling count of error log events.

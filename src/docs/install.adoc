@@ -1,4 +1,4 @@
-Pre-release artifacts are being published frequently, but are NOT intended for production use yet.
+Pre-release artifacts are published frequently, but are NOT yet intended for production use.
 
 In Gradle:
 
