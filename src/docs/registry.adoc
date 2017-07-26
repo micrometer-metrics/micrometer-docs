@@ -1,8 +1,4 @@
-A `Meter` is the interface for collecting a set of measurements (which we individually call metrics) about your
-application. Meters in Micrometer are created from and held in a `MeterRegistry`, for which there is an implementation
-for each supported monitoring system. When publishing metrics, meter registry implementations iterate over the set of
-meters instrumenting your application, and then further iterate over each meter's metrics, generally resulting in a time
-series in the metrics backend for each combination of metrics and their dimension values.
+A `Meter` is the interface for collecting a set of measurements (which we individually call metrics) about your application. Meters in Micrometer are created from and held in a `MeterRegistry`. Each supported monitoring system has an implementation of `MeterRegistry`. Micrometer includes a set of `Meter` primitives, including: `Timer`, `Counter`, `Gauge`, `DistributionSummary`, and `LongTaskTimer`. Note that different meter types result in a different number of metrics. For example, while there is a single metric that represents a `Gauge`, a `Timer` measures both number of timed events and the total time of all events being timed. Exporters use the meter registry to iterate over the set of meters instrumenting your application and then further iterate over each meter's metrics, generally resulting in a time series in the metrics backend for each combination of metrics and their dimension values.
 
 To create the registry:
 
@@ -24,9 +20,7 @@ spectatorAtlas.start();
 MeterRegistry registry = new SpectatorMeterRegistry(spectatorAtlas);
 ----
 
-`AtlasConfig` is an interface with a set of default methods. If in the implementation of `get(String k)`,
-rather than returning `null` you instead bind it to a property source, you can override default configuration
-through properties prefixed with atlas. For example, if properties were loaded from a yml configuration:
+`AtlasConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override default configuration through properties prefixed with `atlas`. For example, if properties were loaded from a yml configuration:
 
 [source,yml]
 ----
@@ -45,8 +39,7 @@ endif::[]
 ifeval::["{system}" == "datadog"]
 == Spectator-backed registry that pushes directly to datadoghq
 
-Metrics are rate-normalized and pushed to datadoghq on a periodic interval. Rate normalization performed by the
-Spectator-backed registry yields datasets that are quite similar to those produced by dogstatsd.
+Metrics are rate-normalized and pushed to datadoghq on a periodic interval. Rate normalization performed by the Spectator-backed registry yields datasets that are quite similar to those produced by dogstatsd.
 
 .Two metrics with the same input data, one aggregated by dogstatsd and the other by the Spectator-backed registry.
 image::img/datadog-agent-vs-api.png[Datadog Agent vs. API]
@@ -68,9 +61,7 @@ spectatorDatadog.start();
 MeterRegistry registry = new SpectatorMeterRegistry(spectatorDatadog);
 ----
 
-`DatadogConfig` is an interface with a set of default methods. If in the implementation of `get(String k)`,
-rather than returning `null` you instead bind it to a property source, you can override default configuration
-through properties prefixed with datadog. For example, if properties were loaded from a yml configuration:
+`DatadogConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override default configuration through properties prefixed with `datadog`. For example, if properties were loaded from a yml configuration:
 
 [source, yaml]
 ----

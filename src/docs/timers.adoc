@@ -1,8 +1,6 @@
-Timers are useful for measuring short-duration latencies and the frequency of such events. All implementations of
-`Timer` report at least the total time and count of events as separate time series.
+Timers are useful for measuring short-duration latencies and the frequency of such events. All implementations of `Timer` report at least the total time and count of events as separate time series.
 
-As an example, consider a graph showing request latency to a typical web server. The server can be
-expected to respond to many requests quickly, so the timer will be getting updated many times per second.
+As an example, consider a graph showing request latency to a typical web server. The server can be expected to respond to many requests quickly, so the timer will be getting updated many times per second.
 
 ifeval::["{system}" == "atlas"]
 :baseunit: Atlas expects nanoseconds as its base unit of time
@@ -17,10 +15,7 @@ ifeval::["{system}" == "prometheus"]
 endif::[]
 
 
-The appropriate base unit for timers does vary by metrics backend for good reason.
-{baseunit}. Micrometer is decidedly un-opinionated about this, but because of the potential for confusion,
-requires a `TimeUnit` when interacting with `Timers`. Micrometer is aware of the preferences of each
-implementation and stores your timing in the appropriate base unit based on the implementation.
+The appropriate base unit for timers varies by metrics backend for good reason. {baseunit}. Micrometer is decidedly un-opinionated about this, but because of the potential for confusion, requires a `TimeUnit` when interacting with `Timers`. Micrometer is aware of the preferences of each implementation and stores your timing in the appropriate base unit based on the implementation.
 
 [source,java]
 ----
@@ -53,8 +48,7 @@ name,timer,:eq,statistic,count,:eq,:and
 
 Notice that `statistic` is just a dimension that can be drilled down and selected like any other.
 
-Furthermore, `totalTime/count` represents average latency, and can be selected with a short-hand `:dist-avg` query,
-which selects the `totalTime` and `count` time series and performs the division for us:
+Furthermore, `totalTime/count` represents average latency, and can be selected with a short-hand `:dist-avg` query, which selects the `totalTime` and `count` time series and performs the division for us:
 
 ```http
 name,timer,:eq,:dist-avg
@@ -79,8 +73,7 @@ The Datadog `Timer` produces four time series, each with a different `statistic`
 .Timer over a simulated service.
 image::img/datadog-timer.png[Datadog-rendered timer,float="right"]
 
-To generate a graph of average latency, we divide the time series `totaltime/count`.
-The `count` series alone gives you a measure of throughput in requests per second.
+To generate a graph of average latency, we divide the time series by the count, as follows: `totaltime/count`. The `count` series alone gives you a measure of throughput in requests per second.
 
 *Average Latency Query*
 [source,json]
@@ -109,11 +102,7 @@ The Prometheus `Timer` produces two counter time series with different names:
 1. `${name}_count` - Total number of all calls.
 2. `${name}_sum` - Total time of all calls.
 
-For the same reasons cited in the Counters section, it is generally most useful to rate
-normalize these time series to reason about them. Since Prometheus keeps track of discrete
-events across all time, it has the advantage of allowing for the selection of an arbitrary
-time window across which to normalize at query time (e.g. `rate(timer_count[10s])` provides
-a notion of requests per second over 10 second windows).
+For the same reasons cited in the Counters section, it is generally most useful to rate normalize these time series to reason about them. Since Prometheus keeps track of discrete events across all time, it has the advantage of allowing for the selection of an arbitrary time window across which to normalize at query time (for example, `rate(timer_count[10s])` provides a notion of requests per second over 10 second windows).
 endif::[]
 
 *Prometheus Queries*

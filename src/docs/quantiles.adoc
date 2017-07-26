@@ -1,5 +1,4 @@
-Timers and distribution summaries can be enriched with [quantiles](https://en.wikipedia.org/wiki/Quantile) computed in your app prior to shipping
-to a monitoring backend.
+Timers and distribution summaries can be enriched with quantiles (https://en.wikipedia.org/wiki/Quantile) computed in your app prior to shipping to a monitoring backend.
 
 ```java
 Timer timer = meterRegistry.timerBuilder("my_timer")
@@ -7,23 +6,13 @@ Timer timer = meterRegistry.timerBuilder("my_timer")
                 .create();
 ```
 
-In the above example, two time series will be generated, one represents the median time (0.5), and the other represents
-the value that places an upper bound on 95% of the samples. These values are sometimes referred to as percentiles,
-somewhat inaccurately, as the set of percentiles is the set of 100 individual quantile series that equally divide
-the distribution, i.e. percentiles are a specific type of quantile.
+In the above example, two time series will be generated. One represents the median time (0.5), and the other represents the value that places an upper bound on 95% of the samples. These values are sometimes referred to as percentiles - somewhat inaccurately, as the set of percentiles is the set of 100 individual quantile series that equally divide the distribution. That is, percentiles are a specific type of quantile.
 
-Depending on the size of your deployments, computing quantiles like this at instrumentation time may or may not be useful.
-It is *not possible* to aggregate quantiles across a cluster. Suppose you had a two node cluster, one of which reports
-a 95% quantile of 100ms for request latency and the other reports a 95% quantile of 50ms. To aggregate in the monitoring
-backend, you could average the two quantiles to arrive at a 75ms latency, but what if one node receives 1000 requests and
-the other 10? The proper weighting of the quantiles is lost, making any such aggregation difficult. Nevertheless, if
-you have a relatively small cluster size, plotting the individual quantiles as separate lines does give you some useful
-information about the nature of latency across the cluster while providing a visual cue if one node strays from the norm.
+Depending on the size of your deployments, computing quantiles like this at instrumentation time may or may not be useful. It is *not possible* to aggregate quantiles across a cluster. Suppose you had a two node cluster, one of which reports a 95% quantile of 100ms for request latency and the other reports a 95% quantile of 50ms. To aggregate in the monitoring backend, you could average the two quantiles to arrive at a 75ms latency, but what if one node receives 1000 requests and the other 10? The proper weighting of the quantiles is lost, making any such aggregation difficult. Nevertheless, if you have a relatively small cluster size, plotting the individual quantiles as separate lines does give you some useful information about the nature of latency across the cluster while providing a visual cue if one node strays from the norm.
 
 For distribution summaries, you can use `summaryBuilder(name)` which mirrors this construction.
 
-This would result in additional gauges with tags `quantile=0.5` and `quantile=0.95`. The 0.95 quantile is the
-the value below which 95% of observations in a group of observations fall. 0.5 represents the media of our
+This would result in additional gauges with tags `quantile=0.5` and `quantile=0.95`. The 0.95 quantile is the the value below which 95% of observations in a group of observations fall. 0.5 represents the media of our
 observations thus far.
 
 It is also possible to indicate that you want to compute quantiles in an `@Timed` annotation:
@@ -38,8 +27,7 @@ public class MyController {
 
 Four quantile algorithms are provided out of the box with different tradeoffs:
 
-* `WindowSketchQuantiles` - The importance of an observation is decayed as it ages. This is the most computationally
-costly algorithm.
+* `WindowSketchQuantiles` - The importance of an observation is decayed as it ages. This is the most computationally costly algorithm.
 
 ```java
 WindowSketchQuantiles.quantiles(0.5, 0.95)
@@ -47,8 +35,7 @@ WindowSketchQuantiles.quantiles(0.5, 0.95)
     .create()
 ```
 
-* `Frugal2UQuantiles` - Successive approximation algorithm that converges towards the true quantile with enough
-observations. This is by least costly algorithm, but exhibits a higher error ratio in early observations.
+* `Frugal2UQuantiles` - Successive approximation algorithm that converges towards the true quantile with enough observations. This is by least costly algorithm, but exhibits a higher error ratio in early observations.
 
 ```java
 Frugal2UQuantiles
@@ -58,9 +45,7 @@ Frugal2UQuantiles
     .create()
 ```
 
-* `CKMSQuantiles` - Allows you to tradeoff computational complexity for error ratio on a per quantile basis. Often,
-it is desirable for higher quantiles to have a lower error ratio (e.g. 0.99 at 1% error vs. 0.5 at 5% error). Still
-more computationally expensive than Frugal.
+* `CKMSQuantiles` - Lets you trade computational complexity for error ratio on a per-quantile basis. Often, it is desirable for higher quantiles to have a lower error ratio (e.g. 0.99 at 1% error vs. 0.5 at 5% error). This algorithm is still more computationally expensive than Frugal.
 
 ```java
 CKMSQuantiles
@@ -69,8 +54,7 @@ CKMSQuantiles
     .create()
 ```
 
-* `GKQuantiles` - Allows you to tradeoff computational complexity for error ratio across all quantiles. This is
-used inside of `WindowSketchQuantiles`.
+* `GKQuantiles` - Lets you trade computational complexity for error ratio across all quantiles. This is used inside of `WindowSketchQuantiles`.
 
 ```java
 GKQuantiles.quantiles(0.5, 0.95)
@@ -78,7 +62,6 @@ GKQuantiles.quantiles(0.5, 0.95)
     .create()
 ```
 
-Here is a demonstration of all four algorithms operating simultaneously on the
-same distribution:
+Here is a demonstration of all four algorithms operating simultaneously on the same distribution:
 
 image::img/quantile-algorithms.png[Quantile algorithms]

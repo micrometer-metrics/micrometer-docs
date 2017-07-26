@@ -10,7 +10,6 @@ new ThreadMetrics().bindTo(registry); <5>
 ----
 <1> Gauges loaded and unloaded classes.
 <2> Gauges buffer and memory pool utilization.
-<3> Gauges max and live data size, promotion and allocation rates,
-and times GC pauses (or concurrent phase time in the case of CMS).
+<3> Gauges max and live data size, promotion and allocation rates, and times GC pauses (or concurrent phase time in the case of CMS).
 <4> Gauges current CPU total and load average.
 <5> Gauges thread peak, number of daemon threads, and live threads.
