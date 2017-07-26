@@ -33,7 +33,7 @@ public interface Timer extends Meter {
 
 ifeval::["{system}" == "atlas"]
 While reading directly from a `Timer` returns a `double`, the underlying value
-stored in Spectator is a nanosecond-precise `long`. What precision is lost by
+is stored in what is called a Spectator, as a nanosecond-precise `long`. What precision is lost by
 converting to a `double` in the `Timer` interface will not affect a system like
 Atlas, because it will be configured to read measurements from the underlying
 Spectator `Timer` that `spring-metrics` is hiding from you.
