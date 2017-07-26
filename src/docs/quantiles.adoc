@@ -23,7 +23,7 @@ information about the nature of latency across the cluster while providing a vis
 For distribution summaries, you can use `summaryBuilder(name)` which mirrors this construction.
 
 This would result in additional gauges with tags `quantile=0.5` and `quantile=0.95`. The 0.95 quantile is the
-the value below which 95% of observations in a group of observations fall. 0.5 represents the media of our
+the value below which 95% of observations in a group of observations fall. 0.5 represents the median of our
 observations thus far.
 
 It is also possible to indicate that you want to compute quantiles in an `@Timed` annotation:
