@@ -1,8 +1,4 @@
-A `Meter` is the interface for collecting a set of measurements (which we individually call metrics) about your application. Meters in Micrometer are created from and held in a `MeterRegistry`. Each supported monitoring system has an implementation of `MeterRegistry`.
-
-Micrometer includes a set of `Meter` primitives, including: `Timer`, `Counter`, `Gauge`, `DistributionSummary`, and `LongTaskTimer`. Note that different meter types result in a different number of metrics. For example, while there is a single metric that represents a `Gauge`, a `Timer` measures both number of timed events and the total time of all events being timed.
-
-Exporters use the meter registry to iterate over the set of meters instrumenting your application and then further iterate over each meter's metrics, generally resulting in a time series in the metrics backend for each combination of metrics and their dimension values.
+A `Meter` is the interface for collecting a set of measurements (which we individually call metrics) about your application. Meters in Micrometer are created from and held in a `MeterRegistry`. Each supported monitoring system has an implementation of `MeterRegistry`. Micrometer includes a set of `Meter` primitives, including: `Timer`, `Counter`, `Gauge`, `DistributionSummary`, and `LongTaskTimer`. Note that different meter types result in a different number of metrics. For example, while there is a single metric that represents a `Gauge`, a `Timer` measures both number of timed events and the total time of all events being timed. Exporters use the meter registry to iterate over the set of meters instrumenting your application and then further iterate over each meter's metrics, generally resulting in a time series in the metrics backend for each combination of metrics and their dimension values.
 
 To create the registry:
 

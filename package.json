@@ -9,6 +9,7 @@
     "codemirror": "^5.27.4",
     "express": "^4.15.3",
     "font-awesome": "^4.7.0",
+    "history": "^4.6.3",
     "octicons": "^5.0.1",
     "react": "^15.6.1",
     "react-codemirror": "^1.0.0",
