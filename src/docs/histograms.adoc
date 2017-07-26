@@ -1,6 +1,6 @@
 Timers and distribution summaries can be enriched with histogram statistics that yield a counter time series for each of a set of buckets.
 
-Histograms can be used to compute quantiles or other summary statistics in some monitoring backends (an example from Prometheus is (https://prometheus.io/docs/querying/functions/#histogram_quantile)). Because histograms buckets are exposed as individual counters to the monitoring backend, it is possible to aggregate observations across a distributed system and compute summary statistics like quantiles for an entire cluster.
+Histograms can be used to compute quantiles or other summary statistics in some monitoring backends. Because histograms buckets are exposed as individual counters to the monitoring backend, it is possible to aggregate observations across a distributed system and compute summary statistics like quantiles for an entire cluster.
 
 Naturally, the error rate of the computed summary statistic will be higher because of the lossy nature of putting data in buckets.
 

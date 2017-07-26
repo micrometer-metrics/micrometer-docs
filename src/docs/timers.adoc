@@ -28,7 +28,7 @@ public interface Timer extends Meter {
 
 ifeval::["{system}" == "atlas"]
 While reading directly from a `Timer` returns a `double`, the underlying value
-stored in Spectator is a nanosecond-precise `long`. What precision is lost by
+stored in https://github.com/netflix/spectator[Spectator] as a nanosecond-precise `long`. What precision is lost by
 converting to a `double` in the `Timer` interface will not affect a system like
 Atlas, because it will be configured to read measurements from the underlying
 Spectator `Timer` that `spring-metrics` is hiding from you.
@@ -102,10 +102,10 @@ The Prometheus `Timer` produces two counter time series with different names:
 1. `${name}_count` - Total number of all calls.
 2. `${name}_sum` - Total time of all calls.
 
-For the same reasons cited in the Counters section, it is generally most useful to rate normalize these time series to reason about them. Since Prometheus keeps track of discrete events across all time, it has the advantage of allowing for the selection of an arbitrary time window across which to normalize at query time (for example, `rate(timer_count[10s])` provides a notion of requests per second over 10 second windows).
-endif::[]
+Representing a counter without rate normalization over some time window is rarely useful, as the representation is a function of both the rapidity with which the counter is incremented and the longevity of the service. It is generally most useful to rate normalize these time series to reason about them. Since Prometheus keeps track of discrete events across all time, it has the advantage of allowing for the selection of an arbitrary time window across which to normalize at query time (for example, `rate(timer_count[10s])` provides a notion of requests per second over 10 second windows).
 
 *Prometheus Queries*
 
 1. Average latency: `rate(timer_sum[10s])/rate(timer_count[10s])`
 2. Throughput (requests per second): `rate(timer_count[10s])`
+endif::[]

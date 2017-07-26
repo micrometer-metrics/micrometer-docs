@@ -81,7 +81,7 @@ include::logback.adoc[leveloffset=+2]
 
 == Spring integration
 
-As of Spring Boot 2.0 / Spring Framework 5.0, Micrometer
+As of Spring Boot 2.0 / Spring Framework 5.0, Micrometer is the instrumentation library powering the delivery of application metrics from Spring.
 
 === Web monitoring
 

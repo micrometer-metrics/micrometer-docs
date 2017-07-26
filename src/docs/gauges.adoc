@@ -4,7 +4,7 @@ TIP: Gauges are useful for monitoring things with natural upper bounds. We don't
 
 Micrometer takes the stance that gauges should be sampled and not set, so there is no information about what might have occurred between samples. After all, any intermediate values set on a gauge are lost by the time the gauge value is reported to a metrics backend anyway, so there seems to be little value in setting those intermediate values in the first place.
 
-If it helps, think of a `Gauge` as a "heisenberg gauge" - a meter that only changes when it is observed.
+If it helps, think of a `Gauge` as a "heisen-gauge" - a meter that only changes when it is observed.
 
 The `MeterRegistry` interface contains a number of convenience methods for instrumenting collections, maps, executors, and caches with gauges.
 

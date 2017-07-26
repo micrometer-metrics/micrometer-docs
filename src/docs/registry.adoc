@@ -20,7 +20,7 @@ spectatorAtlas.start();
 MeterRegistry registry = new SpectatorMeterRegistry(spectatorAtlas);
 ----
 
-`AtlasConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override default configuration through properties prefixed with `atlas`. For example, if properties were loaded from a yml configuration:
+Micrometer uses Netflix's https://github.com/netflix/spectator[Spectator] as the underlying instrumentation library when recording metrics destined for Atlas. `AtlasConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override default configuration through properties prefixed with `atlas`. For example, if properties were loaded from a yml configuration:
 
 [source,yml]
 ----
@@ -46,7 +46,7 @@ image::img/datadog-agent-vs-api.png[Datadog Agent vs. API]
 
 [source, java]
 ----
-DatadogRegistry spectatorDatadog = new DatadogRegistry(Clock.SYSTEM, new DatadogConfig() {
+DatadogConfig config = new DatadogConfig() {
     @Override
     public Duration step() {
         return Duration.ofSeconds(10);
@@ -56,9 +56,8 @@ DatadogRegistry spectatorDatadog = new DatadogRegistry(Clock.SYSTEM, new Datadog
     public String get(String k) {
         return null; // accept the rest of the defaults
     }
-});
-spectatorDatadog.start();
-MeterRegistry registry = new SpectatorMeterRegistry(spectatorDatadog);
+};
+MeterRegistry registry = new DatadogMeterRegistry(Clock.SYSTEM, config);
 ----
 
 `DatadogConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override default configuration through properties prefixed with `datadog`. For example, if properties were loaded from a yml configuration:
