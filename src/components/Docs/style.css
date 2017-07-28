@@ -1,14 +1,11 @@
-.system-card {
-    text-decoration: none;
-    color: black;
-    height: 100%;
+.sectlevel1 > li > a {
+    font-size: 1.5em;
 }
 
-.system-card:hover, .system-card:visited {
-    text-decoration: none;
+.sectlevel2 > li > a {
+    font-size: 1.2em;
 }
 
-.system-card.active {
-    background-color: #1ba89c;
-    color: white;
+.container-fluid .toctitle {
+    font-weight: bold;
 }

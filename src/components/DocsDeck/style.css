@@ -1,0 +1,14 @@
+.system-card {
+    text-decoration: none;
+    color: black;
+    height: 100%;
+}
+
+.system-card:hover, .system-card:visited {
+    text-decoration: none;
+}
+
+.system-card.active {
+    background-color: #1ba89c;
+    color: white;
+}
