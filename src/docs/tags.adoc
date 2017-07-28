@@ -43,3 +43,5 @@ registry.commonTags(Arrays.asList(Tag.of("stack", "prod"), Tag.of("region", "us-
 ----
 
 Calls to `commonTags` append additional common tags.
+
+IMPORTANT: If you are in the Spring environment, add common tags by adding a `MetricRegistryConfigurer` bean to be sure that common tags are applied before autoconfigured meter binders.

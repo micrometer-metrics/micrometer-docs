@@ -2,6 +2,17 @@
 Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
+:dimensional: true
+
+ifeval::["{system}" == "jmx"]
+:dimensional: false
+endif::[]
+ifeval::["{system}" == "graphite"]
+:dimensional: false
+endif::[]
+ifeval::["{system}" == "ganglia"]
+:dimensional: false
+endif::[]
 
 == Install
 
@@ -44,6 +55,8 @@ include::gauges.adoc[leveloffset=+2]
 
 include::distribution-summaries.adoc[leveloffset=+2]
 
+ifeval::["{dimensional}" == "true"]
+
 == Summary statistics
 
 Micrometer provides quantile statistics computed at instrumentation time and histograms for use
@@ -56,6 +69,8 @@ include::quantiles.adoc[leveloffset=+2]
 === Histograms
 
 include::histograms.adoc[leveloffset=+2]
+
+endif::[]
 
 == Binders
 
@@ -82,6 +97,119 @@ include::logback.adoc[leveloffset=+2]
 == Spring integration
 
 As of Spring Boot 2.0 / Spring Framework 5.0, Micrometer is the instrumentation library powering the delivery of application metrics from Spring.
+The `micrometer-spring-legacy` module provides drop-down support for Spring Boot 1.x / Spring Framework 4.x.
+
+In Gradle:
+
+[source,groovy,subs=+attributes]
+----
+compile 'io.micrometer:micrometer-spring-legacy:latest.release'
+----
+
+Or in Maven:
+
+[source,xml,subs=+attributes]
+----
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-spring-legacy-starter</artifactId>
+  <version>${micrometer.version}</version>
+</dependency>
+----
+
+=== Configuring
+
+ifeval::["{system}" == "atlas"]
+:enableAnnotation: @EnableAtlasMetrics
+endif::[]
+ifeval::["{system}" == "prometheus"]
+:enableAnnotation: @EnablePrometheusMetrics
+endif::[]
+ifeval::["{system}" == "datadog"]
+:enableAnnotation: @EnableDatadogMetrics
+endif::[]
+ifeval::["{system}" == "graphite"]
+:enableAnnotation: @EnableGraphiteMetrics
+endif::[]
+ifeval::["{system}" == "ganglia"]
+:enableAnnotation: @EnableGangliaMetrics
+endif::[]
+ifeval::["{system}" == "jmx"]
+:enableAnnotation: @EnableJmxMetrics
+endif::[]
+
+[source,java,subs=+attributes]
+----
+@SpringBootApplication
+{enableAnnotation} <1>
+public class MyApplication {
+    @Bean
+    MeterRegistryConfigurer configurer() { <2>
+      return registry -> registry.commonTags("region", "us-east-1");
+    }
+}
+----
+<1> Metrics collection is enabled with an annotation.
+<2> *Optionally* register any number of `MeterRegistryConfigurer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
+
+ifeval::["{system}" == "atlas"]
+Below is a list of the most common configuration properties you will want to change and their default values
+(from any property source, e.g. application.yml):
+
+```yml
+# The location of your Atlas server
+atlas.uri: http://localhost:7101/api/v1/publish
+
+# You will probably want disable Atlas publishing in a local development profile.
+atlas.enabled: true
+
+# The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
+# The default is 1 minute.
+atlas.step: PT1M
+```
+
+For a full list of configuration properties that can influence Atlas publishing, see
+`com.netflix.spectator.atlas.AtlasConfig`.
+endif::[]
+
+ifeval::["{system}" == "prometheus"]
+A Spring Boot Actuator endpoint will be wired to `/prometheus` that presents a Prometheus
+scrape with the appropriate format.
+
+Here is an example `scrape_config` to add to prometheus.yml:
+
+```yml
+scrape_configs:
+  - job_name: 'spring'
+    metrics_path: '/prometheus'
+    static_configs:
+      - targets: ['HOST:PORT']
+```
+endif::[]
+
+ifeval::["{system}" == "datadog"]
+The Datadog registry pushes metrics to datadoghq periodically. Below is a list of
+the most common configuration properties you will want to change and their default values
+(from any property source, e.g. application.yml):
+
+```yml
+datadog.apiKey: YOURKEY
+
+# You will probably want disable Atlas publishing in a local development profile.
+datadog.enabled: true
+
+# The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
+# The default is 10 seconds, which matches the Datadog Agent publishes at.
+datadog.step: PT10S
+```
+
+For a full list of configuration properties that can influence Datadog publishing, see
+`io.micrometer.core.instrument.datadog.DatadogConfig`.
+endif::[]
+
+Lastly, the `JvmMemoryMetrics` binder will be automatically configured to record memory and buffer pool utilization.
+In the presence of Logback, the `LogbackMetrics` binder will also be configured to record the number of events logged
+to Logback at each level.
 
 === Web monitoring
 

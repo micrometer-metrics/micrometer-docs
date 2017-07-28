@@ -15,19 +15,12 @@ export default function App() {
 
       <Route exact path="/" component={Home}/>
 
-      {/*<Route exact path="/docs" render={() => <Redirect to="/docs/atlas" />}/>*/}
-      {/*<Route path="/docs/prometheus" component={Docs} />*/}
-      {/*<Route path="/docs/atlas" component={Docs} />*/}
-      {/*<Route path="/docs/datadog" component={Docs} />*/}
-
-      {/*<Switch>*/}
-        <Route exact path="/docs" component={DocsDeck}/>
-        <Route path="/docs/:system" render={({ match }) =>
-          systems.includes(match.params.system) ?
-            <Docs system={match.params.system} /> :
-            <Redirect to="/docs" />
-        }/>
-      {/*</Switch>*/}
+      <Route exact path="/docs" component={DocsDeck}/>
+      <Route path="/docs/:system" render={({ match }) =>
+        systems.includes(match.params.system) ?
+          <Docs system={match.params.system} /> :
+          <Redirect to="/docs" />
+      }/>
 
       <div className="container-fluid" style={{paddingRight: 0, paddingLeft: 0}}>
         <Footer className="row"/>

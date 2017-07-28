@@ -72,3 +72,24 @@ Representing a counter without rate normalization over some time window is rarel
 image::img/prometheus-counter-norate.png[Grafana-rendered Prometheus counter (no rate)]
 
 endif::[]
+
+ifeval::["{system}" == "ganglia"]
+Ganglia counters measure mean throughput and one-, five-, and fifteen-minute exponentially-weighted moving average throughputs.
+
+.A Ganglia rendered graph of the random walk counter.
+image::img/ganglia-counter.png[Ganglia-rendered counter]
+endif::[]
+
+ifeval::["{system}" == "graphite"]
+Graphite counters measure mean throughput and one-, five-, and fifteen-minute exponentially-weighted moving average throughputs.
+
+.A Graphite rendered graph of the random walk counter.
+image::img/graphite-counter.png[Graphite-rendered counter]
+endif::[]
+
+ifeval::["{system}" == "jmx"]
+JMX counters measure mean throughput and one-, five-, and fifteen-minute exponentially-weighted moving average throughputs.
+
+.The JMX rendered values of the random walk counter.
+image::img/jmx-counter.png[JMX-rendered counter]
+endif::[]

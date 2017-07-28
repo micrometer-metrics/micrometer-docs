@@ -14,14 +14,14 @@ export default function DocOptions() {
       </p>
 
       <p>
-        Micrometer is <i>not</i> distributed tracing system or an event logger. Adrian Cole's talk on <a
+        Micrometer is <i>not</i> a distributed tracing system or an event logger. Adrian Cole's talk on <a
         href="https://www.dotconferences.com/2017/04/adrian-cole-observability-3-ways-logging-metrics-tracing">"Observability
         3 Ways"</a> talk does a great job of highlighting the differences between these different types of systems.
       </p>
 
       <p>
         Join the discussion with any comments and feature requests on Micrometer's
-        public <a href="http://slack.micrometer.io">Slack team</a>.
+        public <a href="http://slack.micrometer.io"><i className="fa fa-lg fa-slack"/> Slack team</a>.
       </p>
 
       <p>
@@ -50,6 +50,10 @@ export default function DocOptions() {
         <dd>Datadog is a dimensional time-series SAAS with built-in
           dashboarding and alerting. Micrometer supports shipping metrics to Datadog directly
           via its API.
+        </dd>
+
+        <dt><h3>Micrometer Influx <a href="https://github.com/micrometer-metrics/micrometer/issues/46">(coming)</a></h3></dt>
+        <dd>The InfluxData suite of tools supports real-time stream processing and storage of time-series data. It supports downsampling, automatically expiring and deleting unwanted data, as well as backup and restore. Analysis of data is done via a SQL-like query language.
         </dd>
 
         <dt><h3><NavLink to="/docs/graphite">Micrometer Graphite</NavLink></h3></dt>
