@@ -41,7 +41,7 @@ export default function Home() {
           </div>
         </div>
         <div className="row justify-content-center" style={{ padding: 30 }}>
-          <div className="col-6">
+          <div className="col-lg-6 col-md-12">
             <h2>Support for popular monitoring systems</h2>
             <p>As an instrumentation facade, Micrometer allows you to instrument your code with dimensional metrics with a
               vendor-neutral interface and decide on the monitoring system as a last step. Instrumenting your core library
