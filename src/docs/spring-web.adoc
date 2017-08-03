@@ -36,6 +36,26 @@ controllers or request methods via the `extraTags` attribute on `@Timed`:
 @Timed(extraTags = {"authenticated", "false"})
 ```
 
+If you have any exception handling defined in `@ExceptionHandler` (such as those found in `@ControllerAdvice`) or a `HandlerExceptionResolver`, this
+handling will pre-empt the ability interceptor's ability to complete the timing. You can inject a `ControllerMetrics` instance into your custom
+exception handling class and manually call `record`, like so:
+
+```java
+@ControllerAdvice
+class CustomExceptionHandler {
+    @Autowired
+    ControllerMetrics metrics;
+
+    @ExceptionHandler
+    ResponseEntity<String> handleExceptions(HttpServletRequest request,
+                                             HttpServletResponse response,
+                                             Throwable ex) {
+        metrics.record(request, response, ex); // <-- record the metric with the exception
+        return new ResponseEntity<>("this is a custom exception body", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+```
+
 == Webflux Functional
 
 Micrometer contains a filter that you can add to a `RouterFunction` to instrument timings to its routes.
@@ -75,3 +95,10 @@ Enabling metrics in your Spring Boot application configures a `BeanPostProcessor
 
 A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http_client_requests` and can be changed via the `spring.metrics.web.client_requests.name`
 property.
+
+The `Timer` contains a set of dimensions for every request, governed by the primary bean `RestTemplateTagConfigurer` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
+
+1. `method`, the HTTP method (for example, `GET` or `PUT`)
+2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
+3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
+4. `clientName`, the host portion of the URI

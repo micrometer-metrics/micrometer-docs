@@ -5,7 +5,7 @@ To create the registry:
 ifeval::["{system}" == "atlas"]
 [source,java]
 ----
-AtlasRegistry spectatorAtlas = new AtlasRegistry(Clock.SYSTEM, new AtlasConfig() {
+AtlasConfig atlasConfig = new AtlasConfig() {
     @Override
     public Duration step() {
         return Duration.ofSeconds(10);
@@ -15,9 +15,8 @@ AtlasRegistry spectatorAtlas = new AtlasRegistry(Clock.SYSTEM, new AtlasConfig()
     public String get(String k) {
         return null; // accept the rest of the defaults
     }
-});
-spectatorAtlas.start();
-MeterRegistry registry = new SpectatorMeterRegistry(spectatorAtlas);
+};
+MeterRegistry registry = new AtlasMeterRegistry(atlasConfig, Clock.SYSTEM);
 ----
 
 Micrometer uses Netflix's https://github.com/netflix/spectator[Spectator] as the underlying instrumentation library when recording metrics destined for Atlas. `AtlasConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override default configuration through properties prefixed with `atlas`. For example, if properties were loaded from a yml configuration:
@@ -57,7 +56,7 @@ DatadogConfig config = new DatadogConfig() {
         return null; // accept the rest of the defaults
     }
 };
-MeterRegistry registry = new DatadogMeterRegistry(Clock.SYSTEM, config);
+MeterRegistry registry = new DatadogMeterRegistry(config, Clock.SYSTEM);
 ----
 
 `DatadogConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override default configuration through properties prefixed with `datadog`. For example, if properties were loaded from a yml configuration:
@@ -72,5 +71,43 @@ datadog.enabled: true
 # The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
 # The default is 10 seconds, which matches the Datadog Agent publishes at.
 datadog.step: PT10S
+----
+endif::[]
+
+ifeval::["{system}" == "influx"]
+[source,java]
+----
+InfluxConfig influxConfig = new InfluxConfig() {
+    @Override
+    public Duration step() {
+        return Duration.ofSeconds(10);
+    }
+
+    @Override
+    public String get(String k) {
+        return null; // accept the rest of the defaults
+    }
+};
+MeterRegistry registry = new InfluxMeterRegistry(influxConfig, Clock.SYSTEM);
+----
+
+Micrometer uses Netflix's https://github.com/netflix/spectator[Spectator] as the underlying instrumentation library when recording metrics destined for Influx. `InfluxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override default configuration through properties prefixed with `atlas`. For example, if properties were loaded from a yml configuration:
+
+[source,yml]
+----
+# The location of your Influx server's publish endpoint
+influx.uri: http://localhost:8086/write
+
+# You will probably want to conditionally disable Influx publishing in local development.
+influx.enabled: true
+
+# User authentication. These secrets should really be kept in a secret store like Hashicorp Vault and be made
+# available as properties with a different mechanism.
+influx.userName: myuser
+influx.password: mypassword
+
+# The interval at which metrics are sent to Influx. See Duration.parse for the expected format.
+# The default is 10 seconds.
+influx.step: PT10S
 ----
 endif::[]

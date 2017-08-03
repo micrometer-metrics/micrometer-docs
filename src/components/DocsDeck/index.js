@@ -52,7 +52,7 @@ export default function DocOptions() {
           via its API.
         </dd>
 
-        <dt><h3>Micrometer Influx <a href="https://github.com/micrometer-metrics/micrometer/issues/46">(coming)</a></h3></dt>
+        <dt><h3><NavLink to="/docs/influx">Micrometer Influx</NavLink></h3></dt>
         <dd>The InfluxData suite of tools supports real-time stream processing and storage of time-series data. It supports downsampling, automatically expiring and deleting unwanted data, as well as backup and restore. Analysis of data is done via a SQL-like query language.
         </dd>
 

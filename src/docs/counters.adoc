@@ -63,7 +63,7 @@ ifeval::["{system}" == "prometheus"]
 The query that generates a graph for the random-walk counter is
 `rate(counter[10s])`.
 
-.A grafana rendered graph of the random walk counter.
+.A Grafana rendered graph of the random walk counter.
 image::img/prometheus-counter.png[Grafana-rendered Prometheus counter]
 
 Representing a counter without rate normalization over some time window is rarely useful, as the representation is a function of both the rapidity with which the counter is incremented and the longevity of the service. The following image shows how the counter drops back to zero on service restart. The rate-normalized graph above would return back to a value around 55 as soon as the new instance (say on a production deployment) was in service.
@@ -92,4 +92,14 @@ JMX counters measure mean throughput and one-, five-, and fifteen-minute exponen
 
 .The JMX rendered values of the random walk counter.
 image::img/jmx-counter.png[JMX-rendered counter]
+endif::[]
+
+ifeval::["{system}" == "influx"]
+Influx instrumentation rate normalizes counters over the step window. The query that generates this graph is:
+
+`SELECT sum("value") FROM "counter" WHERE $timeFilter GROUP BY time(10s) fill(null)`
+
+.A Grafana-rendered graph of the random walk counter.
+image::img/influx-counter.png[Grafana-rendered Influx counter]
+
 endif::[]

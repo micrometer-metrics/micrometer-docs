@@ -1,0 +1,101 @@
+ifeval::["{system}" == "atlas"]
+:enableAnnotation: @EnableAtlasMetrics
+endif::[]
+ifeval::["{system}" == "prometheus"]
+:enableAnnotation: @EnablePrometheusMetrics
+endif::[]
+ifeval::["{system}" == "datadog"]
+:enableAnnotation: @EnableDatadogMetrics
+endif::[]
+ifeval::["{system}" == "graphite"]
+:enableAnnotation: @EnableGraphiteMetrics
+endif::[]
+ifeval::["{system}" == "ganglia"]
+:enableAnnotation: @EnableGangliaMetrics
+endif::[]
+ifeval::["{system}" == "jmx"]
+:enableAnnotation: @EnableJmxMetrics
+endif::[]
+
+[source,java,subs=+attributes]
+----
+@SpringBootApplication
+{enableAnnotation} <1>
+public class MyApplication {
+    @Bean
+    MeterRegistryConfigurer configurer() { <2>
+      return registry -> registry.commonTags("region", "us-east-1");
+    }
+}
+----
+<1> Metrics collection is enabled with an annotation.
+<2> *Optionally* register any number of `MeterRegistryConfigurer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
+
+ifeval::["{system}" == "atlas"]
+Below is a list of the most common configuration properties you will want to change and their default values
+(from any property source, e.g. application.yml):
+
+```yml
+# The location of your Atlas server
+atlas.uri: http://localhost:7101/api/v1/publish
+
+# You will probably want disable Atlas publishing in a local development profile.
+atlas.enabled: true
+
+# The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
+# The default is 1 minute.
+atlas.step: PT1M
+```
+
+For a full list of configuration properties that can influence Atlas publishing, see
+`com.netflix.spectator.atlas.AtlasConfig`.
+endif::[]
+
+ifeval::["{system}" == "prometheus"]
+A Spring Boot Actuator endpoint will be wired to `/prometheus` that presents a Prometheus
+scrape with the appropriate format.
+
+Here is an example `scrape_config` to add to prometheus.yml:
+
+```yml
+scrape_configs:
+  - job_name: 'spring'
+    metrics_path: '/prometheus'
+    static_configs:
+      - targets: ['HOST:PORT']
+```
+endif::[]
+
+ifeval::["{system}" == "datadog"]
+The Datadog registry pushes metrics to datadoghq periodically. Below is a list of
+the most common configuration properties you will want to change and their default values
+(from any property source, e.g. application.yml):
+
+```yml
+datadog.apiKey: YOURKEY
+
+# You will probably want disable Atlas publishing in a local development profile.
+datadog.enabled: true
+
+# The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
+# The default is 10 seconds, which matches the Datadog Agent publishes at.
+datadog.step: PT10S
+```
+
+For a full list of configuration properties that can influence Datadog publishing, see
+`io.micrometer.core.instrument.datadog.DatadogConfig`.
+endif::[]
+
+== Meter Binders
+
+The `JvmMemoryMetrics` binder will be automatically configured to record memory and buffer pool utilization. In the presence of Logback, the `LogbackMetrics` binder will also be configured to record the number of events logged to Logback at each level.
+
+To register other binders with the registry, add them as `@Bean`s to your application context:
+
+[source,java]
+----
+@Bean
+ThreadMetrics threadMetrics() {
+    return new ThreadMetrics();
+}
+----

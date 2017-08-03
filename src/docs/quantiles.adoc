@@ -65,3 +65,10 @@ GKQuantiles.quantiles(0.5, 0.95)
 Here is a demonstration of all four algorithms operating simultaneously on the same distribution:
 
 image::img/quantile-algorithms.png[Quantile algorithms]
+
+ifeval::["{system}" == "influx"]
+The following query is sufficient to graph the 95% latency of a timer in Grafana. Quantile values for Influx are always reported in nanosecond precise time. To represent the Grafana y-axis in milliseconds, we divide by 1000000 in the query.
+
+`SELECT sum("value") / 1000000 FROM "timer" WHERE "quantile" = '0.95' AND $timeFilter GROUP BY time(10s) fill(null)`
+
+endif::[]

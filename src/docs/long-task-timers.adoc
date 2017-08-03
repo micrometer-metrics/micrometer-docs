@@ -92,3 +92,16 @@ The Prometheus query to plot the long task timer is `longTaskTimer{statistic="du
 image::img/prometheus-long-task-timer.png[Grafana-rendered Prometheus long task timer]
 
 endif::[]
+
+ifeval::["{system}" == "influx"]
+
+The Influx query to plot the long task timer is:
+
+`SELECT sum("duration") FROM "longTaskTimer" WHERE $timeFilter GROUP BY time(10s) fill(null)`
+
+In Grafana, we can set an alert threshold at some fixed point.
+
+.Simulated back-to-back long tasks with a fixed alert threshold.
+image::img/influx-long-task-timer.png[Grafana-rendered Influx long task timer]
+
+endif::[]

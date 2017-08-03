@@ -109,3 +109,25 @@ Representing a counter without rate normalization over some time window is rarel
 1. Average latency: `rate(timer_sum[10s])/rate(timer_count[10s])`
 2. Throughput (requests per second): `rate(timer_count[10s])`
 endif::[]
+
+ifeval::["{system}" == "influx"]
+.Timer over a simulated service.
+image::img/influx-timer.png[Grafana-rendered Influx timer,float="right"]
+
+The Influx `Timer` produces four time series whose field names are:
+
+1. `count` - Rate of calls per second.
+2. `totaltime` - Rate of total time per second.
+3. `totalofsquares` - Rate of total time squared per second (useful for standard deviation).
+4. `max` - The maximum amount recorded.
+
+*InfluxDB Queries*
+
+The following queries function to represent the timer in Grafana.
+
+1. Average latency: `SELECT sum("totalTime") / sum("count") FROM "timer" WHERE $timeFilter GROUP BY time(10s) fill(null)`
+2. Throughput (requests per second): `SELECT sum("count") FROM "timer" WHERE $timeFilter GROUP BY time(10s) fill(null)`
+
+TIP: Grafana's GUI-based Influx query builder does not support dividing two time series like we see above. To construct the query, you will have to click the hamburger icon to the right of the query builder, select "Toggle Edit Mode", and edit the query in plain text.
+
+endif::[]
