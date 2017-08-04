@@ -47,11 +47,14 @@ class CustomExceptionHandler {
     ControllerMetrics metrics;
 
     @ExceptionHandler
-    ResponseEntity<String> handleExceptions(HttpServletRequest request,
-                                             HttpServletResponse response,
-                                             Throwable ex) {
-        metrics.record(request, response, ex); // <-- record the metric with the exception
+    ResponseEntity<String> handleError(HttpServletRequest request, Exception1 ex) throws Throwable {
+        metrics.tagWithException(ex);
         return new ResponseEntity<>("this is a custom exception body", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    ResponseEntity<String> rethrowError(HttpServletRequest request, Exception2 ex) throws Throwable {
+        throw ex;
     }
 }
 ```
