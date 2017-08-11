@@ -52,8 +52,13 @@ For a full list of configuration properties that can influence Atlas publishing,
 endif::[]
 
 ifeval::["{system}" == "prometheus"]
-A Spring Boot Actuator endpoint will be wired to `/prometheus` that presents a Prometheus
-scrape with the appropriate format.
+A Spring Boot Actuator endpoint will be wired to `/prometheus` by default that presents a Prometheus scrape with the appropriate format.
+
+If you'd like the endpoint to be wired to a different endpoint, add a property:
+
+```yml
+endpoints.prometheus.id: micrometheus
+```
 
 Here is an example `scrape_config` to add to prometheus.yml:
 

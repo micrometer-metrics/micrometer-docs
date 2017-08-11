@@ -94,7 +94,7 @@ include::executors.adoc[leveloffset=+2]
 
 include::logback.adoc[leveloffset=+2]
 
-== Spring integration
+== Spring support
 
 As of Spring Boot 2.0 / Spring Framework 5.0, Micrometer is the instrumentation library powering the delivery of application metrics from Spring.
 The `micrometer-spring-legacy` module provides drop-down support for Spring Boot 1.x / Spring Framework 4.x.
@@ -104,6 +104,7 @@ In Gradle:
 [source,groovy,subs=+attributes]
 ----
 compile 'io.micrometer:micrometer-spring-legacy:latest.release'
+compile 'io.micrometer:micrometer-{system}-starter:latest.release
 ----
 
 Or in Maven:
@@ -112,7 +113,12 @@ Or in Maven:
 ----
 <dependency>
   <groupId>io.micrometer</groupId>
-  <artifactId>micrometer-spring-legacy-starter</artifactId>
+  <artifactId>micrometer-spring-legacy</artifactId>
+  <version>${micrometer.version}</version>
+</dependency>
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-{system}-starter</artifactId>
   <version>${micrometer.version}</version>
 </dependency>
 ----
