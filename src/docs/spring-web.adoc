@@ -73,7 +73,7 @@ RouterFunction<ServerResponse> routes = RouterFunctions
     .route(GET("/person/{id}").and(accept(APPLICATION_JSON)),
         request -> ServerResponse.ok().build())
     .filter(metrics.timer(
-        "http_server_requests", // metric name
+        "http.server.requests", // metric name
         "instance", MY_INSTANCE_ID // optional tags
     ));
 ```
@@ -96,7 +96,7 @@ endif::[]
 
 Enabling metrics in your Spring Boot application configures a `BeanPostProcessor` for `RestTemplate`, so every instance you create via the application context will be instrumented.
 
-A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http_client_requests` and can be changed via the `spring.metrics.web.client_requests.name`
+A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http.client.requests` and can be changed via the `spring.metrics.web.client_requests.name`
 property.
 
 The `Timer` contains a set of dimensions for every request, governed by the primary bean `RestTemplateTagConfigurer` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:

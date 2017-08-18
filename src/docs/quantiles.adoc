@@ -1,7 +1,7 @@
 Timers and distribution summaries can be enriched with https://en.wikipedia.org/wiki/Quantile[quantiles] computed in your app prior to shipping to a monitoring backend.
 
 ```java
-Timer timer = meterRegistry.timerBuilder("my_timer")
+Timer timer = meterRegistry.timerBuilder("my.timer")
                 .quantiles(WindowSketchQuantiles.quantiles(0.5, 0.95).create())
                 .create();
 ```
@@ -20,7 +20,7 @@ It is also possible to indicate that you want to compute quantiles in an `@Timed
 ```java
 @RestController
 public class MyController {
-    @Timed(value = "list_people", quantiles = {0.5, 0.95})
+    @Timed(value = "list.people", quantiles = {0.5, 0.95})
     @GetMapping("/api/people")
     public List<Person> listPeople() { ... }
 ```

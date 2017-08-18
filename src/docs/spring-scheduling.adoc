@@ -1,10 +1,10 @@
-Enabling metrics in your Spring Boot application plus enabling AOP configures AOP advice that times `@Scheduled` methods. For a method to be timed, it must be marked as `@Timed` with a name - for example: `Timed("my_metric_name")`.
+Enabling metrics in your Spring Boot application plus enabling AOP configures AOP advice that times `@Scheduled` methods. For a method to be timed, it must be marked as `@Timed` with a name - for example: `Timed("my.metric.name")`.
 
 Depending on the duration of the scheduled task, you may want to choose to time the method with a `LongTaskTimer`, a `Timer`, or both. The following code snippet shows an example of measuring a scheduled task with b oth long task and regular timings:
 
 ```java
 @Timed("beep")
-@Timed(value = "long_beep", longTask = true)
+@Timed(value = "long.beep", longTask = true)
 @Scheduled(fixedRate = 1000)
 void longBeep() {
     // calculate the meaning of life, then beep...

@@ -18,13 +18,13 @@ class MyConfiguration {
             registry,
             dataSource,
             metadataProviders,
-            "data_source", // base metric name
+            "data.source", // base metric name
             "stack", env.acceptsProfiles("prod") ? "prod" : "test", // <- any number of tags
         );
     }
 }
 ```
 
-Data source instrumentation results in gauges representing the currently active, maximum allowed, and minimum allowed connections in the pool. Each of these gauges has a name which is prefixed by the provided name ("data_source" in this example).
+Data source instrumentation results in gauges representing the currently active, maximum allowed, and minimum allowed connections in the pool. Each of these gauges has a name which is prefixed by the provided name ("data.source" in this example).
 
 The original data source instance is unchanged by instrumentation.

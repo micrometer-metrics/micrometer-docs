@@ -17,7 +17,7 @@ It is up to the application framework to make something happen with `@Timed`. If
 
 [source, java]
 ----
-LongTaskTimer scrapeTimer = registry.longTaskTimer("scrape");
+LongTaskTimer scrapeTimer = registry.more().longTaskTimer("scrape");
 void scrapeResources() {
     scrapeTimer.record(() => {
         // find instances, volumes, auto-scaling groups, etc...
@@ -105,3 +105,14 @@ In Grafana, we can set an alert threshold at some fixed point.
 image::img/influx-long-task-timer.png[Grafana-rendered Influx long task timer]
 
 endif::[]
+
+The registry contains a fluent builder for long task timers:
+
+[source, java]
+----
+LongTaskTimer longTaskTimer = registry
+    .longTaskTimerBuilder("timer")
+    .description("a description of what this timer does") // optional
+    .tags("region", "test") // optional
+    .create();
+----

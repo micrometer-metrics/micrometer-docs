@@ -12,10 +12,10 @@ The `MeterRegistry` interface contains a number of convenience methods for instr
 ----
 AtomicInteger n = registry.gauge("numberGauge", new AtomicInteger(0)); <1>
 List<String> list = registry.gauge("listGauge", Collections.emptyList(), new ArrayList<>(), List::size); <2>
-List<String> list = registry.collectionSize(new ArrayList<>(), "listGauge2"); <3>
-Map<String, Integer> map = registry.mapSize(new HashMap<>(), "mapGauge"); 
+List<String> list = registry.gaugeCollectionSize(new ArrayList<>(), "listGauge2"); <3>
+Map<String, Integer> map = registry.gaugeMapSize(new HashMap<>(), "mapGauge");
 ----
-<1> The simplest form of gauge monitors any `Number` instance. Note that unlike other meter types you don't get a reference to the `Gauge` when creating one, but rather the thing being observed. This is because of the heisenguage principal; the gauge is self sufficient once created, so you should never need to interact with it. This allows us to give you back only the instrumented object, which allows for quick one liners that both create the object to be observed and set up metrics around it.
+<1> The simplest form of gauge monitors any `Number` instance. Note that unlike other meter types you don't get a reference to the `Gauge` when creating one, but rather the thing being observed. This is because of the heisen-gauge principal; the gauge is self sufficient once created, so you should never need to interact with it. This allows us to give you back only the instrumented object, which allows for quick one liners that both create the object to be observed and set up metrics around it.
 <2> A slightly more common form of gauge is one that monitors some non-numeric object. The last argument establishes the function that is used to determine the value of the gauge when the gauge is observed.
 <3> A more convenient form of (2) for when you simply want to monitor collection size.
 
@@ -24,3 +24,16 @@ All of the different forms of creating a gauge maintain only a weak reference to
 ifeval::["{system}" == "prometheus"]
 NOTE: In Prometheus, a gauge is a generalization of a counter that also happens to allow for decrementing. If you view a gauge as something that is actively set by the application application code rather than sampled, it is clear that your code would have to increment and decrement the gauge as the size of the thing being measured changes. Diligent incrementing and decrementing throughout the application code yields the same result as the "Heisenberg gauge," ultimately.
 endif::[]
+
+The registry contains a fluent builder for gauges:
+
+[source, java]
+----
+registry
+    .gaugeBuilder("gauge", myObj, myObj::gaugeValue)
+    .description("a description of what this gauge does") // optional
+    .tags("region", "test") // optional
+    .create();
+----
+
+Generally the returned `Gauge` instance is not useful, as the gauge is already set up to track a value automatically.

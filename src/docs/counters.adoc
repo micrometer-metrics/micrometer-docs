@@ -103,3 +103,30 @@ Influx instrumentation rate normalizes counters over the step window. The query 
 image::img/influx-counter.png[Grafana-rendered Influx counter]
 
 endif::[]
+
+The registry contains a fluent builder for counters:
+
+[source, java]
+----
+Counter counter = registry
+    .counterBuilder("counter")
+    .description("a description of what this counter does") // optional
+    .tags("region", "test") // optional
+    .create();
+----
+
+== Function-tracking counters
+
+Micrometer also provides a more infrequently used counter pattern that tracks a monotonically increasing function (a function that stays the same or increases over time, but never decreases). Some monitoring systems, like Prometheus, push cumulative values for counters to the backend, but others publish the rate at which a counter is incrementing over the push interval. By employing this pattern, you allow the Micrometer implementation for your monitoring system to choose whether to rate normalize the counter or not and your counter remains portable across different types of monitoring systems.
+
+[source, java]
+-----
+Cache c = ...; // suppose we have a Guava cache with stats recording on
+registry.more().counter("evictions", tags, cache, c -> c.stats().evictionCount()); <1>
+-----
+
+1. `evictionCount()` is a monotonically increasing function incrementing with every cache eviction from the beginning of its life.
+
+The function-tracking counter, in concert with the monitoring system's rate normalizing functionality (whether this is an artifact of the query language or the way data is pushed to the system), adds a layer of richness on top of the cumulative value of the function itself. You can reason about the _rate_ at which the value is increasing, whether that rate is within an acceptable bound, is increasing or decreasing over time, etc.
+
+WARNING: Micrometer cannot guarantee the monotonicity of the function for you. By using this signature, you are asserting its monotonicity based on what you know about its definition.

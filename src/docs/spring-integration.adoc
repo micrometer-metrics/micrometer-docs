@@ -2,10 +2,10 @@ Metrics for Spring integration are collected automatically if Spring integration
 
 Three gauges are monitored:
 
-1. `spring_integration_channelNames` - Number of channel names
-2. `spring_integration_handlerNames` - Number of handler names
-3. `spring_integration_sourceNames` - Number of source names
+1. `spring.integration.channelNames` - Number of channel names
+2. `spring.integration.handlerNames` - Number of handler names
+3. `spring.integration.sourceNames` - Number of source names
 
-For each source, a counter (`spring_integration_source_messages`) is registered.
+For each source, a counter (`spring.integration.source.messages`) is registered.
 
 

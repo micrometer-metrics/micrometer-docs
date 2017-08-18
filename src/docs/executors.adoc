@@ -3,11 +3,11 @@
 ```java
 @Configuration
 class MyConfiguration {
-    @Bean("worker_pool")
+    @Bean("worker.pool")
     ExecutorService workerPool(MeterRegistry registry) {
-        return Meters.monitor(registry,
+        return ExecutorServiceMetrics.monitor(registry,
             Executors.newFixedThreadPool(8),
-            "worker_pool",
+            "worker.pool",
             "threads", "8" // any number of tag key value pairs
         );
     }
