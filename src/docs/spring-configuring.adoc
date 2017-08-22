@@ -24,7 +24,7 @@ endif::[]
 public class MyApplication {
     @Bean
     MeterRegistryConfigurer configurer() { <2>
-      return registry -> registry.commonTags("region", "us-east-1");
+      return registry -> registry.config().commonTags("region", "us-east-1");
     }
 }
 ----
