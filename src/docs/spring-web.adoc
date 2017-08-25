@@ -16,11 +16,11 @@ The interceptors need to be enabled for every request handler or controller that
 public class MyController {
     @GetMapping("/api/people")
     @Timed // (2)
-    @Timed(value = "all_people", longTask = true) // (3)
+    @Timed(value = "all.people", longTask = true) // (3)
     public List<Person> listPeople() { ... }
 ```
 
-The `Timer` is registered with a name of `http_server_requests` by default. This can be changed by setting `spring.metrics.web.server_requests.name`.
+The `Timer` is registered with a name of `http.server.requests` by default. This can be changed by setting `spring.metrics.web.server_requests.name`.
 
 The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebfluxTagConfigurer` or `WebmvcTagConfigurer` (depending on which programming model you are using) registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
 

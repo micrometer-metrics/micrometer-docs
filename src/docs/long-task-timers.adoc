@@ -6,7 +6,7 @@ For example, in a Spring application, it is common for such long running process
 
 [source, java]
 ----
-@Timed(value = "aws_scrape", longTask = true)
+@Timed(value = "aws.scrape", longTask = true)
 @Scheduled(fixedDelay = 360000)
 void scrapeResources() {
     // find instances, volumes, auto-scaling groups, etc...
