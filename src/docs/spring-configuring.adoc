@@ -1,35 +1,33 @@
-ifeval::["{system}" == "atlas"]
-:enableAnnotation: @EnableAtlasMetrics
-endif::[]
-ifeval::["{system}" == "prometheus"]
-:enableAnnotation: @EnablePrometheusMetrics
-endif::[]
-ifeval::["{system}" == "datadog"]
-:enableAnnotation: @EnableDatadogMetrics
-endif::[]
-ifeval::["{system}" == "graphite"]
-:enableAnnotation: @EnableGraphiteMetrics
-endif::[]
-ifeval::["{system}" == "ganglia"]
-:enableAnnotation: @EnableGangliaMetrics
-endif::[]
-ifeval::["{system}" == "jmx"]
-:enableAnnotation: @EnableJmxMetrics
-endif::[]
+Spring Boot autoconfigures a composite meter registry and adds a registry to the composite for each of the supported implementations that it finds on the classpath. Having a dependency on `micrometer-{system}-starter` in your runtime classpath is enough for Spring Boot to configure the registry. Spring Boot will also add any autoconfigured registries to the global static composite registry on the `Metrics` class unless you explicitly tell it not to by setting:
 
-[source,java,subs=+attributes]
+[source,yml]
+----
+# true by default
+metrics.useGlobalRegistry: false
+----
+
+Leaving configuration of the global registry on enables you to collect metrics from libraries that use the static global registry to wire their metrics without doing anything further.
+
+You can control whether a registry implementation is autoconfigured via a property, even if it is otherwise present on the classpath:
+
+[source,yml,subs=+attributes]
+----
+# true by default
+metrics.{system}.enabled: false
+----
+
+*Optionally* register any number of `MeterRegistryConfigurer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
+
+[source,java]
 ----
 @SpringBootApplication
-{enableAnnotation} <1>
 public class MyApplication {
     @Bean
-    MeterRegistryConfigurer configurer() { <2>
+    MeterRegistryConfigurer configurer() {
       return registry -> registry.config().commonTags("region", "us-east-1");
     }
 }
 ----
-<1> Metrics collection is enabled with an annotation.
-<2> *Optionally* register any number of `MeterRegistryConfigurer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
 
 ifeval::["{system}" == "atlas"]
 Below is a list of the most common configuration properties you will want to change and their default values
@@ -37,14 +35,14 @@ Below is a list of the most common configuration properties you will want to cha
 
 ```yml
 # The location of your Atlas server
-atlas.uri: http://localhost:7101/api/v1/publish
+metrics.atlas.uri: http://localhost:7101/api/v1/publish
 
 # You will probably want disable Atlas publishing in a local development profile.
-atlas.enabled: true
+metrics.atlas.enabled: true
 
 # The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
 # The default is 1 minute.
-atlas.step: PT1M
+metrics.atlas.step: PT1M
 ```
 
 For a full list of configuration properties that can influence Atlas publishing, see
@@ -52,7 +50,24 @@ For a full list of configuration properties that can influence Atlas publishing,
 endif::[]
 
 ifeval::["{system}" == "prometheus"]
-A Spring Boot Actuator endpoint will be wired to `/prometheus` by default that presents a Prometheus scrape with the appropriate format.
+If Spring Boot Actuator is on the classpath, an actuator endpoint will be wired to `/prometheus` by default that presents a Prometheus scrape with the appropriate format.
+
+To add actuator if it isn't already present on your classpath in Gradle:
+
+[source,groovy]
+----
+compile 'org.springframework.boot:spring-boot-actuator'
+----
+
+Or in Maven:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-actuator</artifactId>
+</dependency>
+----
 
 If you'd like the endpoint to be wired to a different endpoint, add a property:
 
@@ -77,14 +92,14 @@ the most common configuration properties you will want to change and their defau
 (from any property source, e.g. application.yml):
 
 ```yml
-datadog.apiKey: YOURKEY
+metrics.datadog.apiKey: YOURKEY
 
 # You will probably want disable Atlas publishing in a local development profile.
-datadog.enabled: true
+metrics.datadog.enabled: true
 
 # The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
 # The default is 10 seconds, which matches the Datadog Agent publishes at.
-datadog.step: PT10S
+metrics.datadog.step: PT10S
 ```
 
 For a full list of configuration properties that can influence Datadog publishing, see
