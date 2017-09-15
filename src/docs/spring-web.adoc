@@ -33,20 +33,20 @@ The `Timer` is registered with a name of `http.server.requests` by default. This
 metrics.web.serverRequestsName: i.want.to.be.different
 ----
 
-The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebfluxTagConfigurer` or `WebmvcTagConfigurer` (depending on which programming model you are using) registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
+The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebFluxTagsProvider` or `WebMvcTagsProvider` (depending on which programming model you are using) registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
 
 1. `method`, the HTTP method (for example, `GET` or `PUT`)
 2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
 3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
 4. `exception`, the simple name of the exception class thrown (only if an exception is thrown)
 
-If you have any exception handling defined in `@ExceptionHandler` (such as those found in `@ControllerAdvice`) or a `HandlerExceptionResolver`, this handling will pre-empt the ability interceptor's ability to complete the timing. You can inject a `ControllerMetrics` instance into your custom exception handling class and manually call `record`, like so:
+If you have any exception handling defined in `@ExceptionHandler` (such as those found in `@ControllerAdvice`) or a `HandlerExceptionResolver`, this handling will pre-empt the ability interceptor's ability to complete the timing. You can inject a `WebMvcMetrics` instance into your custom exception handling class and manually call `record`, like so:
 
 ```java
 @ControllerAdvice
 class CustomExceptionHandler {
     @Autowired
-    ControllerMetrics metrics;
+    WebMvcMetrics metrics;
 
     @ExceptionHandler
     ResponseEntity<String> handleError(HttpServletRequest request, Exception1 ex) throws Throwable {
@@ -104,9 +104,11 @@ Spring Boot configures a `BeanPostProcessor` for `RestTemplate`, so every instan
 metrics.web.clientRequestsName: i.want.to.be.different.again
 ----
 
-The `Timer` contains a set of dimensions for every request, governed by the primary bean `RestTemplateTagConfigurer` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
+The `Timer` contains a set of dimensions for every request, governed by the primary bean `RestTemplateExchangeTagsProvider` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
 
 1. `method`, the HTTP method (for example, `GET` or `PUT`)
 2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
 3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
 4. `clientName`, the host portion of the URI
+
+You can use the convenience static functions in `RestTemplateExchangeTags` to construct your own `RestTemplateExchangeTagsProvider`.

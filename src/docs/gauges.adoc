@@ -29,11 +29,11 @@ The registry contains a fluent builder for gauges:
 
 [source, java]
 ----
-registry
-    .gaugeBuilder("gauge", myObj, myObj::gaugeValue)
+Gauge gauge = Gauge
+    .builder("gauge", myObj, myObj::gaugeValue)
     .description("a description of what this gauge does") // optional
     .tags("region", "test") // optional
-    .create();
+    .register(registry);
 ----
 
 Generally the returned `Gauge` instance is not useful, as the gauge is already set up to track a value automatically.

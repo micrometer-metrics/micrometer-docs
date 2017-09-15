@@ -108,11 +108,11 @@ The registry contains a fluent builder for counters:
 
 [source, java]
 ----
-Counter counter = registry
-    .counterBuilder("counter")
+Counter counter = Counter
+    .builder("counter")
     .description("a description of what this counter does") // optional
     .tags("region", "test") // optional
-    .create();
+    .register(registry);
 ----
 
 == Function-tracking counters

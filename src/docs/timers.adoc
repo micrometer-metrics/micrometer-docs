@@ -31,7 +31,7 @@ While reading directly from a `Timer` returns a `double`, the underlying value
 stored in https://github.com/netflix/spectator[Spectator] as a nanosecond-precise `long`. What precision is lost by
 converting to a `double` in the `Timer` interface will not affect a system like
 Atlas, because it will be configured to read measurements from the underlying
-Spectator `Timer` that `spring-metrics` is hiding from you.
+Spectator `Timer` that Micrometer is hiding from you.
 
 The Spectator Atlas `Timer` produces four time series, each with a different `statistic` tag:
 

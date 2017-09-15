@@ -1,4 +1,4 @@
-Spring Boot autoconfigures a composite meter registry and adds a registry to the composite for each of the supported implementations that it finds on the classpath. Having a dependency on `micrometer-{system}-starter` in your runtime classpath is enough for Spring Boot to configure the registry. Spring Boot will also add any autoconfigured registries to the global static composite registry on the `Metrics` class unless you explicitly tell it not to by setting:
+Spring Boot autoconfigures a composite meter registry and adds a registry to the composite for each of the supported implementations that it finds on the classpath. Having a dependency on `micrometer-registry-{system}` in your runtime classpath is enough for Spring Boot to configure the registry. Spring Boot will also add any autoconfigured registries to the global static composite registry on the `Metrics` class unless you explicitly tell it not to by setting:
 
 [source,yml]
 ----

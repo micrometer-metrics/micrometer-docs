@@ -10,17 +10,19 @@ class MyConfiguration {
     private Collection<DataSourcePoolMetadataProvider> metadataProviders;
 
     @Autowired
+    private MeterRegistry registry;
+
+    @Autowired
     private Environment env;
 
     @PostConstruct
     private void instrumentDataSource() {
-        Meters.monitor(
-            registry,
+        new DataSourcePoolMetrics(
             dataSource,
             metadataProviders,
             "data.source", // base metric name
-            "stack", env.acceptsProfiles("prod") ? "prod" : "test", // <- any number of tags
-        );
+            Tags.zip("stack", env.acceptsProfiles("prod") ? "prod" : "test")
+        ).bindTo(registry);
     }
 }
 ```

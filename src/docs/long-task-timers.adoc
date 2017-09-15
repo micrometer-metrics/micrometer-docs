@@ -110,9 +110,9 @@ The registry contains a fluent builder for long task timers:
 
 [source, java]
 ----
-LongTaskTimer longTaskTimer = registry
-    .longTaskTimerBuilder("timer")
+LongTaskTimer longTaskTimer = LongTaskTimer
+    .builder("timer")
     .description("a description of what this timer does") // optional
     .tags("region", "test") // optional
-    .create();
+    .register(registry);
 ----

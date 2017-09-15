@@ -1,16 +1,17 @@
 Timers and distribution summaries can be enriched with https://en.wikipedia.org/wiki/Quantile[quantiles] computed in your app prior to shipping to a monitoring backend.
 
 ```java
-Timer timer = meterRegistry.timerBuilder("my.timer")
-                .quantiles(WindowSketchQuantiles.quantiles(0.5, 0.95).create())
-                .create();
+Timer timer = Timer
+        .builder("my.timer")
+        .quantiles(WindowSketchQuantiles.quantiles(0.5, 0.95).create())
+        .register(registry);
 ```
 
 In the above example, two time series will be generated. One represents the median time (0.5), and the other represents the value that places an upper bound on 95% of the samples. These values are sometimes referred to as percentiles - somewhat inaccurately, as the set of percentiles is the set of 100 individual quantile series that equally divide the distribution. That is, percentiles are a specific type of quantile.
 
 Depending on the size of your deployments, computing quantiles like this at instrumentation time may or may not be useful. It is *not possible* to aggregate quantiles across a cluster. Suppose you had a two node cluster, one of which reports a 95% quantile of 100ms for request latency and the other reports a 95% quantile of 50ms. To aggregate in the monitoring backend, you could average the two quantiles to arrive at a 75ms latency, but what if one node receives 1000 requests and the other 10? The proper weighting of the quantiles is lost, making any such aggregation difficult. Nevertheless, if you have a relatively small cluster size, plotting the individual quantiles as separate lines does give you some useful information about the nature of latency across the cluster while providing a visual cue if one node strays from the norm.
 
-For distribution summaries, you can use `summaryBuilder(name)` which mirrors this construction.
+For distribution summaries, you can use `DistributionSummary.builder(name)` which mirrors this construction.
 
 This would result in additional gauges with tags `quantile=0.5` and `quantile=0.95`. The 0.95 quantile is the the value below which 95% of observations in a group of observations fall. 0.5 represents the median of our
 observations thus far.

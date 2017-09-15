@@ -4,7 +4,7 @@ In Gradle:
 
 [source,groovy,subs=+attributes]
 ----
-compile 'io.micrometer:micrometer-{system}-starter:latest.release'
+compile 'io.micrometer:micrometer-registry-{system}:latest.release'
 ----
 
 Or in Maven:
@@ -13,7 +13,7 @@ Or in Maven:
 ----
 <dependency>
   <groupId>io.micrometer</groupId>
-  <artifactId>micrometer-{system}-starter</artifactId>
+  <artifactId>micrometer-registry-{system}</artifactId>
   <version>${micrometer.version}</version>
 </dependency>
 ----

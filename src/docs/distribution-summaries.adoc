@@ -11,12 +11,12 @@ The registry contains a fluent builder for distribution summaries:
 
 [source, java]
 ----
-DistributionSummary summary = registry
-    .summaryBuilder("response.size")
+DistributionSummary summary = DistributionSummary
+    .builder("response.size")
     .description("a description of what this summary does") // optional
     .baseUnit("bytes") // optional <1>
     .tags("region", "test") // optional
-    .create();
+    .register(registry);
 ----
 
 1. Add base units for maximum portability -- base units are part of the naming convention for some monitoring systems. Leaving it off and violating the naming convention will have no adverse effect if you forget.

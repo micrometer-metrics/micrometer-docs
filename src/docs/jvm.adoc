@@ -6,7 +6,7 @@ new ClassLoaderMetrics().bindTo(registry); <1>
 new JvmMemoryMetrics().bindTo(registry); <2>
 new JvmGcMetrics().bindTo(registry); <3>
 new ProcessorMetrics().bindTo(registry); <4>
-new ThreadMetrics().bindTo(registry); <5>
+new JvmThreadMetrics().bindTo(registry); <5>
 ----
 <1> Gauges loaded and unloaded classes.
 <2> Gauges buffer and memory pool utilization.
