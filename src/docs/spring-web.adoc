@@ -7,7 +7,7 @@ Spring Boot autoconfigures interceptors to record metrics on your endpoints. By 
 [source,yml]
 ----
 # true by default
-metrics.web.autoTimeServerRequests: false
+spring.metrics.web.autoTimeServerRequests: false
 ----
 
 If you turn off `autoTimeServerRequests`, or if you'd like to customize the timer for a particular endpoint, add `@io.micrometer.core.annotation.Timed` to:
@@ -30,7 +30,7 @@ The `Timer` is registered with a name of `http.server.requests` by default. This
 [source,yml]
 ----
 # default is `http.server.requests`
-metrics.web.serverRequestsName: i.want.to.be.different
+spring.metrics.web.serverRequestsName: i.want.to.be.different
 ----
 
 The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebFluxTagsProvider` or `WebMvcTagsProvider` (depending on which programming model you are using) registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
@@ -101,7 +101,7 @@ Spring Boot configures a `BeanPostProcessor` for `RestTemplate`, so every instan
 [source,yml]
 ----
 # default is http.client.requests
-metrics.web.clientRequestsName: i.want.to.be.different.again
+spring.metrics.web.clientRequestsName: i.want.to.be.different.again
 ----
 
 The `Timer` contains a set of dimensions for every request, governed by the primary bean `RestTemplateExchangeTagsProvider` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:

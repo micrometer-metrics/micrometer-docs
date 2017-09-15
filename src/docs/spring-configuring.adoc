@@ -3,7 +3,7 @@ Spring Boot autoconfigures a composite meter registry and adds a registry to the
 [source,yml]
 ----
 # true by default
-metrics.useGlobalRegistry: false
+spring.metrics.useGlobalRegistry: false
 ----
 
 Leaving configuration of the global registry on enables you to collect metrics from libraries that use the static global registry to wire their metrics without doing anything further.
@@ -13,7 +13,7 @@ You can control whether a registry implementation is autoconfigured via a proper
 [source,yml,subs=+attributes]
 ----
 # true by default
-metrics.{system}.enabled: false
+spring.metrics.{system}.enabled: false
 ----
 
 *Optionally* register any number of `MeterRegistryConfigurer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
@@ -35,14 +35,14 @@ Below is a list of the most common configuration properties you will want to cha
 
 ```yml
 # The location of your Atlas server
-metrics.atlas.uri: http://localhost:7101/api/v1/publish
+spring.metrics.atlas.uri: http://localhost:7101/api/v1/publish
 
 # You will probably want disable Atlas publishing in a local development profile.
-metrics.atlas.enabled: true
+spring.metrics.atlas.enabled: true
 
 # The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
 # The default is 1 minute.
-metrics.atlas.step: PT1M
+spring.metrics.atlas.step: PT1M
 ```
 
 For a full list of configuration properties that can influence Atlas publishing, see
@@ -92,14 +92,14 @@ the most common configuration properties you will want to change and their defau
 (from any property source, e.g. application.yml):
 
 ```yml
-metrics.datadog.apiKey: YOURKEY
+spring.metrics.datadog.apiKey: YOURKEY
 
 # You will probably want disable Atlas publishing in a local development profile.
-metrics.datadog.enabled: true
+spring.metrics.datadog.enabled: true
 
 # The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
 # The default is 10 seconds, which matches the Datadog Agent publishes at.
-metrics.datadog.step: PT10S
+spring.metrics.datadog.step: PT10S
 ```
 
 For a full list of configuration properties that can influence Datadog publishing, see
