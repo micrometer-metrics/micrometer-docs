@@ -115,7 +115,7 @@ To register other binders with the registry, add them as `@Bean`s to your applic
 [source,java]
 ----
 @Bean
-ThreadMetrics threadMetrics() {
-    return new ThreadMetrics();
+JvmThreadMetrics threadMetrics() {
+    return new JvmThreadMetrics();
 }
 ----
