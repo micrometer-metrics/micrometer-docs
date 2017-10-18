@@ -17,7 +17,7 @@ class MyConfiguration {
 
     @PostConstruct
     private void instrumentDataSource() {
-        new DataSourcePoolMetrics(
+        new DataSourceMetrics(
             dataSource,
             metadataProviders,
             "data.source", // base metric name
