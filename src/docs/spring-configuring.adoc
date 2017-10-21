@@ -16,6 +16,8 @@ You can control whether a registry implementation is autoconfigured via a proper
 spring.metrics.{system}.enabled: false
 ----
 
+The location of the endpoint in Spring Boot 2.0 is `/application/prometheus`. By default it is disabled, but can be enabled with `endpoints.default.web.enabled=true` in application.properties.
+
 *Optionally* register any number of `MeterRegistryConfigurer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
 
 [source,java]
