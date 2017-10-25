@@ -31,7 +31,7 @@ public class MyApplication {
 
 == Meter Binders
 
-Spring autoconfigures the most commonly used binders. This autoconfigured is governed by `MeterBindersConfiguration`.
+Spring Boot autoconfigures the most commonly used binders. This autoconfigured is governed by `MeterBindersConfiguration`.
 
 The `JvmMemoryMetrics` binder will be automatically configured to record memory and buffer pool utilization. In the presence of Logback, the `LogbackMetrics` binder will also be configured to record the number of events logged to Logback at each level. Lastly, `UptimeMetrics` reports a gauge for uptime and a fixed gauge representing the application's absolute start time.
 
