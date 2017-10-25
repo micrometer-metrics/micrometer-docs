@@ -31,4 +31,4 @@ Every successful https://circleci.com/gh/micrometer-metrics/micrometer[build] of
 
 == Spring Boot 1.5.x
 
-Micrometer support has been ported back to Spring Boot 1.5.x via an additional module `micrometer-spring-legacy`. Add this dependency to Boot 1.5.x apps along with your choice of registry implementation(s) to autoconfigure Micrometer metrics. See the Micrometer Spring Boot 1.5.x reference documentation for more on configuration options.
+Micrometer support has been ported back to Spring Boot 1.5.x via an additional module `micrometer-spring-legacy`. Add this dependency to Boot 1.5.x apps along with your choice of registry implementation(s) to autoconfigure Micrometer metrics. See the Micrometer Spring Boot 1.5.x link:/docs/ref/spring/1.5[reference documentation] for more on configuration options.
