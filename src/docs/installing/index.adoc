@@ -1,0 +1,34 @@
+Micrometer contains a core library with the instrumentation SPI and an in-memory implementation that doesn't export data anywhere, plus a series of modules with implementations for various monitoring systems, and a test module.
+
+To use Micrometer, add the dependency for your monitoring system of choice. For example, for Prometheus:
+
+In Gradle:
+
+[source,groovy]
+----
+compile 'io.micrometer:micrometer-registry-prometheus:latest.release'
+----
+
+Or in Maven:
+
+[source,xml]
+----
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-registry-prometheus</artifactId>
+  <version>${micrometer.version}</version>
+</dependency>
+----
+endif::[]
+
+Through Micrometer's composite meter repository (described in greater detail in link:/docs/concepts#_composite_registries["Concepts"]), you may configure more than one registry implementation if you intend to publish metrics to more than one monitoring system.
+
+If you haven't decided on a monitoring system yet and just want to try out the instrumentation SPI, you can add a dependency on `micrometer-core` instead and configure the `SimpleMeterRegistry`.
+
+== Snapshots
+
+Every successful https://circleci.com/gh/micrometer-metrics/micrometer[build] of Micrometer's master branch results in the publication of a new snapshot version. You can use the latest snapshot by adding the Maven repository `https://repo.spring.io/libs-snapshot` to your build and using the version `1.0.0-SNAPSHOT`.
+
+== Spring Boot 1.5.x
+
+Micrometer support has been ported back to Spring Boot 1.5.x via an additional module `micrometer-spring-legacy`. Add this dependency to Boot 1.5.x apps along with your choice of registry implementation(s) to autoconfigure Micrometer metrics. See the Micrometer Spring Boot 1.5.x reference documentation for more on configuration options.

@@ -1,0 +1,47 @@
+= Micrometer Influx
+Jon Schneider <jschneider@pivotal.io>
+:toc:
+:sectnums:
+:system: statsd
+
+StatsD is a UDP-based sidecar-driven metrics collection system. The maintainer of the original StatsD line protocol specification is Etsy. Datadog's Dogstatsd and Influx's Telegraf each accept a modified version of the line protocol, having each enriched the original specification with dimensionality in different ways.
+
+If you intend to use the Datadog or Telegraf flavors, see the documentation for Micrometer's link:/docs/registry/datadog[Datadog] or link:/docs/registry/influx[Influx] support.
+
+include::install.adoc[]
+
+== Configuring
+
+This configuration is used to ship metrics to a StatsD agent that is compatible with the original Etsy protocol. Metrics are shipped immediately over UDP to the agent.
+
+[source,java]
+----
+StatsdConfig config = new StatsdConfig() {
+    @Override
+    public String get(String k) {
+        return null;
+    }
+
+    @Override
+    public StatsdFlavor flavor() {
+        return StatsdFlavor.Etsy;
+    }
+};
+
+MeterRegistry registry = new StatsdMeterRegistry(config, Clock.SYSTEM);
+----
+
+`StatsdConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `spring.metrics.statsd` directly to the `StatsdConfig`:
+
+[source,yml]
+----
+spring.metrics.statsd:
+    flavor: etsy
+
+    # You will probably want to conditionally disable StatsD publishing in local development.
+    enabled: true
+
+    # The interval at which metrics are sent to StatsD. See Duration.parse for the expected format.
+    # The default is 1 minute.
+    step: PT10S
+----

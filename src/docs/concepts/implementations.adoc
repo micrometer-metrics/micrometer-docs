@@ -1,0 +1,37 @@
+Micrometer contains a core module with an instrumentation https://en.wikipedia.org/wiki/Service_provider_interface[SPI], a set of modules containing implementations for various monitoring systems (each is called a registry), and a test kit. There are three important characteristics of monitoring systems that it is important to understand:
+
+* *Dimensionality*. Whether the system supports metric names to be enriched with tag key/value pairs. If a system is not dimensional, it is _hierarchical_, which means it only supports a flat metric name. When publishing metrics to hierarchical systems, Micrometer flattens the set of tag/key value pairs and adds them to the name.
+
+[cols=2*,options="header"]
+|===
+|Dimensional
+|Hierarchical
+
+|Atlas, Prometheus, Datadog, Influx, Datadog StatsD, Telegraf StatsD
+|Graphite, Ganglia, JMX, Etsy StatsD
+|===
+
+
+* *<<rate-aggregation>>*. In this context, we mean aggregation of a set of samples over a prescribed time interval. Some monitoring systems expect for some types of discrete samples (such as counts) to be converted to a rate by the application prior to being published. Some expect cumulative values to always be sent. And still others have no opinion on it either way.
+
+[cols=2*,options="header"]
+|===
+|Client-side
+|Server-side
+
+|Atlas, Datadog, Influx, JMX, all StatsD flavors, Graphite, Ganglia
+|Prometheus
+|===
+
+* *Publishing*. Some systems expect to poll applications for metrics at their leisure, and others expect metrics to be pushed to them on a regular interval.
+
+[cols=2*,options="header"]
+|===
+|Client pushes
+|Server polls
+
+|Atlas, Datadog, Influx, JMX, all StatsD flavors, Graphite, Ganglia
+|Prometheus
+|===
+
+There are other, more minor, variations in expectations from one monitoring system to another, such as their conception of base units of measurement (particularly time) and the canonical naming convention for metrics. Micrometer customizes your metrics to meet these demands as well on a per-registry basis.

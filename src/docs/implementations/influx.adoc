@@ -1,0 +1,110 @@
+= Micrometer Influx
+Jon Schneider <jschneider@pivotal.io>
+:toc:
+:sectnums:
+:system: influx
+
+The InfluxData suite of tools supports real-time stream processing and storage of time-series data. It supports downsampling, automatically expiring and deleting unwanted data, as well as backup and restore. Analysis of data is done via a SQL-like query language.
+
+== Configuring
+
+Micrometer supports shipping metrics to Influx directly or through Telegraf via the StatsD registry.
+
+=== Direct to Influx
+
+In Gradle:
+
+[source,groovy]
+----
+compile 'io.micrometer:micrometer-registry-influx:latest.release'
+----
+
+Or in Maven:
+
+[source,xml]
+----
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-registry-influx</artifactId>
+  <version>${micrometer.version}</version>
+</dependency>
+----
+
+Metrics are rate-aggregated and pushed to Influx on a periodic interval. Rate aggregation performed by the Spectator-backed registry yields datasets that are quite similar to those produced by Telegraf.
+
+[source, java]
+----
+InfluxConfig config = new InfluxConfig() {
+    @Override
+    public Duration step() {
+        return Duration.ofSeconds(10);
+    }
+
+    @Override
+    public String db() {
+        return "mydb";
+    }
+
+    @Override
+    public String get(String k) {
+        return null; // accept the rest of the defaults
+    }
+};
+MeterRegistry registry = new InfluxMeterRegistry(config, Clock.SYSTEM);
+----
+
+`InfluxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `spring.metrics.influx` directly to the `InfluxConfig`:
+
+[source, yaml]
+----
+spring.metrics.influx:
+    db: mydb
+
+    # You will probably want disable Datadog publishing in a local development profile.
+    enabled: true
+
+    # The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
+    # The default is 10 seconds, which matches the Datadog Agent publishes at.
+    step: PT10S
+----
+
+=== Through Telegraf
+
+Telegraf is a StatsD agent expecting a modified flavor of the StatsD line protocol.
+
+In Gradle:
+
+[source,groovy]
+----
+compile 'io.micrometer:micrometer-registry-statsd:latest.release'
+----
+
+Or in Maven:
+
+[source,xml]
+----
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-registry-statsd</artifactId>
+  <version>${micrometer.version}</version>
+</dependency>
+----
+
+Metrics are shipped immediately over UDP to Telegraf using Telegraf's flavor of the StatsD line protocol.
+
+[source,java]
+----
+StatsdConfig config = new StatsdConfig() {
+    @Override
+    public String get(String k) {
+        return null;
+    }
+
+    @Override
+    public StatsdFlavor flavor() {
+        return StatsdFlavor.Telegraf;
+    }
+};
+
+MeterRegistry registry = new StatsdMeterRegistry(config, Clock.SYSTEM);
+----

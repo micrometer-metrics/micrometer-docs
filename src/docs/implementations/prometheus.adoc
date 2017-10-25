@@ -1,0 +1,79 @@
+= Micrometer Prometheus
+Jon Schneider <jschneider@pivotal.io>
+:toc:
+:sectnums:
+:system: prometheus
+
+Prometheus is an in-memory dimensional time series database with a simple built-in UI, a custom query language, and math operations. Prometheus is designed to operate on a pull model, scraping metrics from application instances periodically based on service discovery.
+
+include::install.adoc[]
+
+== Configuring
+
+Prometheus expects to scrape or poll individual app instances for metrics. In addition to creating a Prometheus registry, you also need to expose an HTTP endpoint to Prometheus' scraper. In a Spring environment, a Prometheus actuator endpoint is autoconfigured in the presence of Spring Boot Actuator. Otherwise, you can use any JVM-based HTTP server implementation to expose scrape data to Prometheus.
+
+The example below uses the JDK's `com.sun.net.httpserver.HttpServer` to expose a scrape endpoint:
+
+[source,java]
+----
+PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+
+try {
+    HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+    server.createContext("/prometheus", httpExchange -> {
+        String response = prometheusRegistry.scrape(); <1>
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    });
+
+    new Thread(server::start).run();
+} catch (IOException e) {
+    throw new RuntimeException(e);
+}
+----
+<1> The `PrometheusMeterRegistry` contains a `scrape()` function that knows how to supply the String data necessary for the scrape. All you have to do is wire it to an endpoint.
+
+== Graphing
+
+This section serves as a quickstart to rendering useful representations in Prometheus for metrics originating in Micrometer. See the https://prometheus.io/docs/querying/basics[Prometheus docs] for a far more complete reference of what is possible in Prometheus.
+
+=== Counters
+
+The query that generates a graph for the random-walk counter is
+`rate(counter[10s])`.
+
+.A Grafana rendered graph of the random walk counter.
+image::img/prometheus-counter.png[Grafana-rendered Prometheus counter]
+
+Representing a counter without rate normalization over some time window is rarely useful, as the representation is a function of both the rapidity with which the counter is incremented and the longevity of the service. It is generally most useful to rate normalize these time series to reason about them. Since Prometheus keeps track of discrete events across all time, it has the advantage of allowing for the selection of an arbitrary time window across which to normalize at query time (for example, `rate(counter[10s])` provides a notion of requests per second over 10 second windows). The rate-normalized graph above would return back to a value around 55 as soon as the new instance (say on a production deployment) was in service.
+
+.Counter over the same random walk, no rate normalization.
+image::img/prometheus-counter-norate.png[Grafana-rendered Prometheus counter (no rate)]
+
+In contrast, without rate normalization, the counter drops back to zero on service restart, and the count increases without bound for the duration of the service's uptime.
+
+=== Timers
+
+The Prometheus `Timer` produces two counter time series with different names:
+
+1. `${name}_count` - Total number of all calls.
+2. `${name}_sum` - Total time of all calls.
+
+Representing a counter without rate normalization over some time window is rarely useful, as the representation is a function of both the rapidity with which the counter is incremented and the longevity of the service.
+
+Using the following Prometheus queries, we can graph the most commonly used statistics about timers:
+
+1. Average latency: `rate(timer_sum[10s])/rate(timer_count[10s])`
+2. Throughput (requests per second): `rate(timer_count[10s])`
+
+.Timer over a simulated service.
+image::img/prometheus-timer.png[Grafana-rendered Prometheus timer]
+
+=== Long task timers
+
+The Prometheus query to plot the duration of a long task timer for a serial task is `long_task_timer_sum`. In Grafana, we can set an alert threshold at some fixed point.
+
+.Simulated back-to-back long tasks with a fixed alert threshold.
+image::img/prometheus-long-task-timer.png[Grafana-rendered Prometheus long task timer]

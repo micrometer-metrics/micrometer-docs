@@ -1,0 +1,53 @@
+= Concepts
+Jon Schneider <jschneider@pivotal.io>
+:toc:
+:sectnums:
+:dimensional: true
+
+== Purpose
+
+Micrometer is a metrics instrumentation library for JVM-based applications. It provides a simple facade over the instrumentation clients for the most popular monitoring systems, allowing you to instrument your JVM-based application code without vendor lock-in. It is designed to add little to no overhead to your metrics collection activity while maximizing the portability of your metrics effort.
+
+Micrometer is _not_ a distributed tracing system or an event logger. Adrian Cole's talk on https://www.dotconferences.com/2017/04/adrian-cole-observability-3-ways-logging-metrics-tracing[Observability
+3 Ways] talk does a great job of highlighting the differences between these different types of systems.
+
+== Supported monitoring systems
+
+include::implementations.adoc[leveloffset=+1]
+
+== Registry
+
+include::registry.adoc[leveloffset=+1]
+
+== Meters
+
+include::meters.adoc[leveloffset=+1]
+
+== Naming meters
+
+include::naming.adoc[leveloffset=+1]
+
+[[rate-aggregation]]
+== Rate aggregation
+
+include::rate-aggregation.adoc[leveloffset=+1]
+
+== Counters
+
+include::counters.adoc[leveloffset=+1]
+
+== Gauges
+
+include::gauges.adoc[leveloffset=+1]
+
+== Timers
+
+include::timers.adoc[leveloffset=+1]
+
+== Distribution summaries
+
+include::distribution-summaries.adoc[leveloffset=+1]
+
+== Long task timers
+
+include::long-task-timers.adoc[leveloffset=+1]

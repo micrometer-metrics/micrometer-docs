@@ -1,0 +1,125 @@
+Spring Boot autoconfigures a composite meter registry and adds a registry to the composite for each of the supported implementations that it finds on the classpath. Having a dependency on `micrometer-registry-{system}` in your runtime classpath is enough for Spring Boot to configure the registry. Spring Boot will also add any autoconfigured registries to the global static composite registry on the `Metrics` class unless you explicitly tell it not to by setting:
+
+[source,yml]
+----
+# true by default
+spring.metrics.useGlobalRegistry: false
+----
+
+Leaving configuration of the global registry on enables you to collect metrics from libraries that use the static global registry to wire their metrics without doing anything further.
+
+You can control whether a registry implementation is autoconfigured via a property, even if it is otherwise present on the classpath:
+
+[source,yml,subs=+attributes]
+----
+# true by default
+spring.metrics.{system}.enabled: false
+----
+
+*Optionally* register any number of `MeterRegistryConfigurer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
+
+[source,java]
+----
+@SpringBootApplication
+public class MyApplication {
+    @Bean
+    MeterRegistryConfigurer configurer() {
+      return registry -> registry.config().commonTags("region", "us-east-1");
+    }
+}
+----
+
+== Meter Binders
+
+Spring autoconfigures the most commonly used binders. This autoconfigured is governed by `MeterBindersConfiguration`.
+
+The `JvmMemoryMetrics` binder will be automatically configured to record memory and buffer pool utilization. In the presence of Logback, the `LogbackMetrics` binder will also be configured to record the number of events logged to Logback at each level. Lastly, `UptimeMetrics` reports a gauge for uptime and a fixed gauge representing the application's absolute start time.
+
+To register other binders with the registry, add them as `@Bean`s to your application context:
+
+[source,java]
+----
+@Bean
+ThreadMetrics threadMetrics() {
+    return new ThreadMetrics();
+}
+----
+
+== Atlas
+
+Below is a list of the most common configuration properties you will want to change and their default values
+(from any property source, e.g. application.yml):
+
+```yml
+# The location of your Atlas server
+spring.metrics.atlas.uri: http://localhost:7101/api/v1/publish
+
+# You will probably want disable Atlas publishing in a local development profile.
+spring.metrics.atlas.enabled: true
+
+# The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
+# The default is 1 minute.
+spring.metrics.atlas.step: PT1M
+```
+
+For a full list of configuration properties that can influence Atlas publishing, see
+`com.netflix.spectator.atlas.AtlasConfig`.
+
+== Prometheus
+
+ifeval::["{version}" == "1.5"]
+If Spring Boot Actuator is on the classpath, an actuator endpoint will be wired to `/prometheus` by default that presents a Prometheus scrape with the appropriate format.
+
+To add actuator if it isn't already present on your classpath in Gradle:
+
+[source,groovy]
+----
+compile 'org.springframework.boot:spring-boot-actuator'
+----
+
+Or in Maven:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-actuator</artifactId>
+</dependency>
+----
+endif::[]
+
+If you'd like the endpoint to be wired to a different endpoint, add a property:
+
+```yml
+endpoints.prometheus.id: micrometheus
+```
+
+Here is an example `scrape_config` to add to prometheus.yml:
+
+```yml
+scrape_configs:
+  - job_name: 'spring'
+    metrics_path: '/prometheus'
+    static_configs:
+      - targets: ['HOST:PORT']
+```
+
+== Datadog
+
+The Datadog registry pushes metrics to datadoghq periodically. Below is a list of
+the most common configuration properties you will want to change and their default values
+(from any property source, e.g. application.yml):
+
+```yml
+spring.metrics.datadog.apiKey: YOURKEY
+
+# You will probably want disable Atlas publishing in a local development profile.
+spring.metrics.datadog.enabled: true
+
+# The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
+# The default is 10 seconds, which matches the Datadog Agent publishes at.
+spring.metrics.datadog.step: PT10S
+```
+
+For a full list of configuration properties that can influence Datadog publishing, see
+`io.micrometer.core.instrument.datadog.DatadogConfig`.

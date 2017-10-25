@@ -1,0 +1,40 @@
+Timers are useful for measuring short-duration latencies and the frequency of such events. All implementations of `Timer` report at least the total time and count of events as separate time series.
+
+As an example, consider a graph showing request latency to a typical web server. The server can be expected to respond to many requests quickly, so the timer will be getting updated many times per second.
+
+The appropriate base unit for timers varies by metrics backend for good reason. Micrometer is decidedly un-opinionated about this, but because of the potential for confusion, requires a `TimeUnit` when interacting with `Timers`. Micrometer is aware of the preferences of each implementation and stores your timing in the appropriate base unit based on the implementation.
+
+[source,java]
+----
+public interface Timer extends Meter {
+    ...
+    void record(long amount, TimeUnit unit);
+    double totalTime(TimeUnit unit);
+}
+----
+
+The interface contains a fluent builder for timers:
+
+[source,java]
+----
+Timer timer = Timer
+    .builder("my.timer")
+    .description("a description of what this timer does") // optional
+    .tags("region", "test") // optional
+    .register(registry);
+----
+
+The `Timer` interfaces exposes several convenience overloads for recording timings inline, e.g.:
+
+[source,java]
+----
+timer.record(() -> dontCareAboutReturnValue());
+timer.recordCallable(() -> returnValue());
+
+Runnable r = timer.wrap(() -> dontCareAboutReturnValue()); <1>
+Callable c = timer.wrap(() -> returnValue());
+----
+<1> Wrap `Runnable` or `Callable` and return the instrumented version of it for use later.
+
+NOTE: A `Timer` is really just a specialized distribution summary that is aware of how to scale durations to the base unit of time of each monitoring system and has an automatically
+determined base unit. In every case where you want to measure time, you should use a `Timer` rather than a `DistributionSummary`.

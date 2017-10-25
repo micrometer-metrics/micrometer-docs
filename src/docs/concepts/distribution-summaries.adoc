@@ -1,0 +1,22 @@
+A distribution summary is used to track the distribution of events. It is similar to a timer structurally, but records values that do not represent a unit of time. For example, a distribution summary could be used to measure the payload sizes of requests hitting a server.
+
+To create a distribution summary:
+
+[source, java]
+----
+DistributionSummary summary = registry.summary("response.size");
+----
+
+The interface contains a fluent builder for distribution summaries:
+
+[source, java]
+----
+DistributionSummary summary = DistributionSummary
+    .builder("response.size")
+    .description("a description of what this summary does") // optional
+    .baseUnit("bytes") // optional <1>
+    .tags("region", "test") // optional
+    .register(registry);
+----
+
+1. Add base units for maximum portability -- base units are part of the naming convention for some monitoring systems. Leaving it off and violating the naming convention will have no adverse effect if you forget.

@@ -1,0 +1,41 @@
+Micrometer supports binding metrics to a variety of different popular caching libraries. Each implementation supports basics like cache hits vs. misses from which you can derive basic information about the cache hit ratio over a period of time. Micrometer uses a function tracking counter to monitor things like hits and misses, giving you a notion not just of hits and misses over the total life of the cache (the basic metric exposed from Guava's `CacheStats`, for example), but hits and misses inside a given interval.
+
+To demonstrate the features of cache monitoring, we'll start with a simple program that uses `reactor-netty` to read the entirety of Frankenstein, and puts each word in the cache if it hasn't been seen yet:
+
+[source,java]
+----
+// read all of Frankenstein
+HttpClient.create("www.gutenberg.org")
+    .get("/cache/epub/84/pg84.txt")
+    .flatMapMany(res -> res.addHandler(wordDecoder()).receive().asString())
+    .delayElements(Duration.ofMillis(10)) // one word per 10 ms
+    .filter(word -> !word.isEmpty())
+    .doOnNext(word -> {
+        if (cache.getIfPresent(word) == null)
+            cache.put(word, 1);
+    })
+    .blockLast();
+----
+
+Below is a representation of the hits vs. misses on a cache tuned to hold a maximum of 10,000 entries:
+
+.Hits vs. misses, viewed in Prometheus
+image::img/prometheus-guava-cache.png[Hits vs. misses,width=800]
+
+```
+rate(book_guava_requests_total[10s])
+```
+
+By dividing the hits by the the sum of all "get" operations regardless of whether or not they were a hit or miss, we can arrive at a notion of the upper bound for the hit ratio for reading Frankenstein with just 10,000 words.
+
+.Hit ratio, viewed by Prometheus
+image::img/prometheus-guava-cache-ratio.png[Hit ratio,width=800]
+
+```
+sum(rate(book_guava_requests_total{result="hit"}[1m])) / sum(rate(book_guava_requests_total[1m]))
+```
+
+In a real world scenario, we tune caches according to how we evaluate the tradeoff between storage and load efficiency. You could create an alert based on some upper bound for the rate at which misses occur, or a lower bound for the hit ratio. Setting an upper bound on miss ratio is better than a lower bound on hit ratio, for both ratios an absence of any activity drops the value to 0.
+
+.Alerting when the miss ratio exceeds 12%
+image::img/grafana-guava-miss-ratio.png[Miss ratio (alerted),width=800]
