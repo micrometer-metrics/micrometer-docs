@@ -1,16 +1,16 @@
 Spring Boot autoconfigures a composite meter registry and adds a registry to the composite for each of the supported implementations that it finds on the classpath. Having a dependency on `micrometer-registry-{system}` in your runtime classpath is enough for Spring Boot to configure the registry. Spring Boot will also add any autoconfigured registries to the global static composite registry on the `Metrics` class unless you explicitly tell it not to by setting:
 
-[source,yml]
+[source,properties]
 ----
 # true by default
-spring.metrics.useGlobalRegistry: false
+spring.metrics.use-global-registry: false
 ----
 
 Leaving configuration of the global registry on enables you to collect metrics from libraries that use the static global registry to wire their metrics without doing anything further.
 
 You can control whether a registry implementation is autoconfigured via a property, even if it is otherwise present on the classpath:
 
-[source,yml,subs=+attributes]
+[source,properties,subs=+attributes]
 ----
 # true by default
 spring.metrics.{system}.enabled: false
@@ -50,7 +50,7 @@ ThreadMetrics threadMetrics() {
 Below is a list of the most common configuration properties you will want to change and their default values
 (from any property source, e.g. application.yml):
 
-```yml
+```properties
 # The location of your Atlas server
 spring.metrics.atlas.uri: http://localhost:7101/api/v1/publish
 
@@ -90,7 +90,7 @@ endif::[]
 
 If you'd like the endpoint to be wired to a different endpoint, add a property:
 
-```yml
+```properties
 endpoints.prometheus.id: micrometheus
 ```
 
@@ -110,8 +110,8 @@ The Datadog registry pushes metrics to datadoghq periodically. Below is a list o
 the most common configuration properties you will want to change and their default values
 (from any property source, e.g. application.yml):
 
-```yml
-spring.metrics.datadog.apiKey: YOURKEY
+```properties
+spring.metrics.datadog.api-key: YOURKEY
 
 # You will probably want disable Atlas publishing in a local development profile.
 spring.metrics.datadog.enabled: true

@@ -4,10 +4,10 @@ Micrometer contains built-in instrumentation for timings of requests made to Spr
 
 Spring Boot autoconfigures interceptors to record metrics on your endpoints. By default, timings are recorded for every endpoint in your app (WebFlux support is coming in Spring Boot 2.0). You can turn this off by setting:
 
-[source,yml]
+[source,properties]
 ----
 # true by default
-spring.metrics.web.autoTimeServerRequests: false
+spring.metrics.web.auto-time-server-requests: false
 ----
 
 If you turn off `autoTimeServerRequests`, or if you'd like to customize the timer for a particular endpoint, add `@io.micrometer.core.annotation.Timed` to:
@@ -27,10 +27,10 @@ public class MyController {
 
 The `Timer` is registered with a name of `http.server.requests` by default. This can be changed by setting:
 
-[source,yml]
+[source,properties]
 ----
 # default is `http.server.requests`
-spring.metrics.web.serverRequestsName: i.want.to.be.different
+spring.metrics.web.server-requests-name: i.want.to.be.different
 ----
 
 The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebFluxTagsProvider` or `WebMvcTagsProvider` (depending on which programming model you are using) registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
@@ -98,10 +98,10 @@ endif::[]
 
 Spring Boot configures a `BeanPostProcessor` for `RestTemplate`, so every instance you create via the application context will be instrumented. A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http.client.requests` and can be changed by setting:
 
-[source,yml]
+[source,properties]
 ----
 # default is http.client.requests
-spring.metrics.web.clientRequestsName: i.want.to.be.different.again
+spring.metrics.web.client-requests-name: i.want.to.be.different.again
 ----
 
 The `Timer` contains a set of dimensions for every request, governed by the primary bean `RestTemplateExchangeTagsProvider` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
