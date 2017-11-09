@@ -1,0 +1,15 @@
+Each registry can be configured with meter filters, which allow you to exercise greater control over how and when meters are registered. Some use cases this covers:
+
+1. Replacing tag values contribute to a high-cardinality dimension with a substitute to lower the cardinality.
+2. Ignoring certain tags entirely.
+3. Preventing meters from being registered (instead returning a NOOP equivalent).
+4. Anything else you want to do to affect the meter's ID.
+
+[source,java]
+----
+registry.config()
+   .meterFilter(MeterFilter.replaceTagValues("status", s -> s.charAt(0) + "xx", "200"));
+   .meterFilter(MeterFilter.ignoreTags("expensive"))
+   .meterFilter(MeterFilter.deny(id -> "bytes".equals(id.getBaseUnit())) // contrived
+   .meterFilter(MeterFilter.denyNameStartsWith("jvm"));
+----

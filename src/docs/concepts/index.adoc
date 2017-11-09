@@ -27,6 +27,10 @@ include::meters.adoc[leveloffset=+1]
 
 include::naming.adoc[leveloffset=+1]
 
+== Meter filters
+
+include::meter-filters.adoc[leveloffset=+1]
+
 [[rate-aggregation]]
 == Rate aggregation
 
@@ -51,3 +55,7 @@ include::distribution-summaries.adoc[leveloffset=+1]
 == Long task timers
 
 include::long-task-timers.adoc[leveloffset=+1]
+
+== Histograms and percentiles
+
+include::histogram-quantiles.adoc[leveloffset=+1]
