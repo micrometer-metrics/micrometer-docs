@@ -2,7 +2,7 @@ Spring Boot provides a metrics actuator endpoint that can be used diagnostically
 
 [source,yml]
 ----
-endpoints.default.web.enabled: true
+endpoints.metrics.web.enabled: true
 ----
 
 Navigating to `/application/metrics` displays a list of available meter names.
