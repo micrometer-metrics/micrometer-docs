@@ -130,10 +130,10 @@ The StatsD registry pushes metrics over UDP to a StatsD agent eagerly. Below is 
 common configuration properties you will want to change:
 
 ```yml
-spring.metrics.statsd.enabled: true
-spring.metrics.flavor: etsy # or datadog, telegraf
-spring.metrics.host: localhost
-spring.metrics.port: 8125
+spring.metrics.export.statsd.enabled: true
+spring.metrics.export.statsd.flavor: etsy # or datadog, telegraf
+spring.metrics.export.statsd.host: localhost
+spring.metrics.export.statsd.port: 8125
 ```
 
 ifeval::["{version}" == "1.5"]
