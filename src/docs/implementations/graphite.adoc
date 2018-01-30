@@ -27,11 +27,11 @@ GraphiteConfig graphiteConfig = new GraphiteConfig() {
 MeterRegistry registry = new GraphiteMeterRegistry(graphiteConfig, HierarchicalNameMapper.DEFAULT, Clock.SYSTEM);
 ----
 
-Micrometer uses Dropwizard Metrics as the underlying instrumentation library when recording metrics destined for Graphite. `GraphiteConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `spring.metrics.graphite` directly to the `GraphiteConfig`:
+Micrometer uses Dropwizard Metrics as the underlying instrumentation library when recording metrics destined for Graphite. `GraphiteConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `management.metrics.export.graphite` directly to the `GraphiteConfig`:
 
 [source,yml]
 ----
-spring.metrics.graphite:
+management.metrics.export.graphite:
     # The location of your Graphite server
     host: mygraphitehost
 

@@ -49,11 +49,11 @@ DatadogConfig config = new DatadogConfig() {
 MeterRegistry registry = new DatadogMeterRegistry(config, Clock.SYSTEM);
 ----
 
-`DatadogConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration through properties. For example, Micrometer's Spring support binds properties prefixed with `spring.metrics.datadog` directly to the `DatadogConfig`:
+`DatadogConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration through properties. For example, Micrometer's Spring support binds properties prefixed with `management.metrics.export.datadog` directly to the `DatadogConfig`:
 
 [source, yaml]
 ----
-spring.metrics.datadog:
+management.metrics.export.datadog:
     apiKey: YOURKEY
 
     # You will probably want disable Datadog publishing in a local development profile.

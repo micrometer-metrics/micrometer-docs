@@ -53,11 +53,11 @@ InfluxConfig config = new InfluxConfig() {
 MeterRegistry registry = new InfluxMeterRegistry(config, Clock.SYSTEM);
 ----
 
-`InfluxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `spring.metrics.influx` directly to the `InfluxConfig`:
+`InfluxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `management.metrics.export.influx` directly to the `InfluxConfig`:
 
 [source, yaml]
 ----
-spring.metrics.influx:
+management.metrics.export.influx:
     db: mydb
 
     # You will probably want disable Datadog publishing in a local development profile.

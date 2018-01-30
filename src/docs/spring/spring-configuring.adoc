@@ -3,7 +3,7 @@ Spring Boot autoconfigures a composite meter registry and adds a registry to the
 [source,yml]
 ----
 # true by default
-spring.metrics.useGlobalRegistry: false
+management.metrics.export.useGlobalRegistry: false
 ----
 
 Leaving configuration of the global registry on enables you to collect metrics from libraries that use the static global registry to wire their metrics without doing anything further.
@@ -13,7 +13,7 @@ You can control whether a registry implementation is autoconfigured via a proper
 [source,yml,subs=+attributes]
 ----
 # true by default
-spring.metrics.{system}.enabled: false
+management.metrics.export.{system}.enabled: false
 ----
 
 *Optionally* register any number of `MeterRegistryConfigurer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
@@ -52,14 +52,14 @@ Below is a list of the most common configuration properties you will want to cha
 
 ```yml
 # The location of your Atlas server
-spring.metrics.atlas.uri: http://localhost:7101/api/v1/publish
+management.metrics.export.atlas.uri: http://localhost:7101/api/v1/publish
 
 # You will probably want disable Atlas publishing in a local development profile.
-spring.metrics.atlas.enabled: true
+management.metrics.export.atlas.enabled: true
 
 # The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
 # The default is 1 minute.
-spring.metrics.atlas.step: PT1M
+management.metrics.export.atlas.step: PT1M
 ```
 
 For a full list of configuration properties that can influence Atlas publishing, see
@@ -111,14 +111,14 @@ the most common configuration properties you will want to change and their defau
 (from any property source, e.g. application.yml):
 
 ```yml
-spring.metrics.datadog.apiKey: YOURKEY
+management.metrics.export.datadog.apiKey: YOURKEY
 
 # You will probably want disable Atlas publishing in a local development profile.
-spring.metrics.datadog.enabled: true
+management.metrics.export.datadog.enabled: true
 
 # The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
 # The default is 10 seconds, which matches the Datadog Agent publishes at.
-spring.metrics.datadog.step: PT10S
+management.metrics.export.datadog.step: PT10S
 ```
 
 For a full list of configuration properties that can influence Datadog publishing, see
@@ -130,10 +130,10 @@ The StatsD registry pushes metrics over UDP to a StatsD agent eagerly. Below is 
 common configuration properties you will want to change:
 
 ```yml
-spring.metrics.statsd.enabled: true
-spring.metrics.flavor: etsy # or datadog, telegraf
-spring.metrics.host: localhost
-spring.metrics.port: 8125
+management.metrics.export.statsd.enabled: true
+management.metrics.export.flavor: etsy # or datadog, telegraf
+management.metrics.export.host: localhost
+management.metrics.export.port: 8125
 ```
 
 ifeval::["{version}" == "1.5"]
