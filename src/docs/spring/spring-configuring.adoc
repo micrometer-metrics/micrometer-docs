@@ -86,13 +86,6 @@ Or in Maven:
   <artifactId>spring-boot-actuator</artifactId>
 </dependency>
 ----
-endif::[]
-
-If you'd like the endpoint to be wired to a different endpoint, add a property:
-
-```yml
-endpoints.prometheus.id: micrometheus
-```
 
 Here is an example `scrape_config` to add to prometheus.yml:
 
@@ -103,6 +96,34 @@ scrape_configs:
     static_configs:
       - targets: ['HOST:PORT']
 ```
+endif::[]
+
+ifeval::["{version}" == "2.0"]
+An actuator endpoint will be wired to `/actuator/prometheus` by default that presents a Prometheus scrape with the appropriate format.
+
+The endpoint is configured but inaccessible from the web by default, in line with Spring Boot 2's litmus test that any endpoint that potentially exposes sensitive data about an application should be inaccessible by default. It can be enabled by setting:
+
+[source,yml]
+----
+management.endpoints.web.expose: prometheus
+----
+
+Here is an example `scrape_config` to add to prometheus.yml:
+
+```yml
+scrape_configs:
+  - job_name: 'spring'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['HOST:PORT']
+```
+endif::[]
+
+If you'd like the endpoint to be wired to a different endpoint, add a property:
+
+```yml
+endpoints.prometheus.id: micrometheus
+```
 
 == Datadog
 
@@ -111,7 +132,10 @@ the most common configuration properties you will want to change and their defau
 (from any property source, e.g. application.yml):
 
 ```yml
-management.metrics.export.datadog.apiKey: YOURKEY
+management.metrics.export.datadog.api-key: YOURKEY
+
+# Needed to send meter-level metadata like descriptions and base units to Datadog, but not strictly required.
+management.metrics.export.datadog.application-key: YOURKEY
 
 # You will probably want disable Atlas publishing in a local development profile.
 management.metrics.export.datadog.enabled: true

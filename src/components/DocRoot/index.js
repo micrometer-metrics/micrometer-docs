@@ -86,7 +86,7 @@ export default function DocRoot() {
               `micrometer-spring-legacy` module provides drop-down support for Spring Boot 1.5.x.
               <ul>
                 <li><NavLink className="doc-section" to="/docs/ref/spring/1.5">Spring Boot 1.5.x</NavLink></li>
-                <li><NavLink className="doc-section" to="/docs/ref/spring/2.0">Spring Boot 2.0.0.M5</NavLink></li>
+                <li><NavLink className="doc-section" to="/docs/ref/spring/2.0">Spring Boot 2.0.0.RC1</NavLink></li>
               </ul>
             </li>
             <li><NavLink className="doc-section" to="/docs/ref/jvm">JVM</NavLink>. Metrics on classloaders, memory,
