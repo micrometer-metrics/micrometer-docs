@@ -16,34 +16,39 @@ You can control whether a registry implementation is autoconfigured via a proper
 management.metrics.export.{system}.enabled: false
 ----
 
-*Optionally* register any number of `MeterRegistryConfigurer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
+*Optionally* register any number of `MeterRegistryCustomizer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
 
 [source,java]
 ----
 @SpringBootApplication
 public class MyApplication {
     @Bean
-    MeterRegistryConfigurer configurer() {
+    MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
       return registry -> registry.config().commonTags("region", "us-east-1");
+    }
+}
+----
+
+You can apply customizations to particular registry implementations by being more specific about the generic type:
+
+[source,java]
+----
+@SpringBootApplication
+public class MyApplication {
+    @Bean
+    MeterRegistryCustomizer<GraphiteMeterRegistry> metricsCommonTags() {
+      return registry -> registry.config().namingConvention(MY_CUSTOM_CONVENTION);
     }
 }
 ----
 
 == Meter Binders
 
-Spring autoconfigures the most commonly used binders. This autoconfigured is governed by `MeterBindersConfiguration`.
+Spring autoconfigures the most commonly used binders.
 
 The `JvmMemoryMetrics` binder will be automatically configured to record memory and buffer pool utilization. In the presence of Logback, the `LogbackMetrics` binder will also be configured to record the number of events logged to Logback at each level. Lastly, `UptimeMetrics` reports a gauge for uptime and a fixed gauge representing the application's absolute start time.
 
-To register other binders with the registry, add them as `@Bean`s to your application context:
-
-[source,java]
-----
-@Bean
-ThreadMetrics threadMetrics() {
-    return new ThreadMetrics();
-}
-----
+To register other binders with the registry, add them as `@Bean`s to your application context.
 
 == Atlas
 
@@ -55,7 +60,7 @@ Below is a list of the most common configuration properties you will want to cha
 management.metrics.export.atlas.uri: http://localhost:7101/api/v1/publish
 
 # You will probably want disable Atlas publishing in a local development profile.
-management.metrics.export.atlas.enabled: true
+management.metrics.export.atlas.enabled: true # default is true
 
 # The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
 # The default is 1 minute.
@@ -138,7 +143,7 @@ management.metrics.export.datadog.api-key: YOURKEY
 management.metrics.export.datadog.application-key: YOURKEY
 
 # You will probably want disable Atlas publishing in a local development profile.
-management.metrics.export.datadog.enabled: true
+management.metrics.export.datadog.enabled: true # default is true
 
 # The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
 # The default is 10 seconds, which matches the Datadog Agent publishes at.
@@ -154,7 +159,7 @@ The StatsD registry pushes metrics over UDP to a StatsD agent eagerly. Below is 
 common configuration properties you will want to change:
 
 ```yml
-management.metrics.export.statsd.enabled: true
+management.metrics.export.statsd.enabled: true # default is true
 management.metrics.export.flavor: etsy # or datadog, telegraf
 management.metrics.export.host: localhost
 management.metrics.export.port: 8125

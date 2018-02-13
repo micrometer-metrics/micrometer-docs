@@ -40,27 +40,6 @@ The `Timer` contains a set of dimensions for every request, governed by the prim
 3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
 4. `exception`, the simple name of the exception class thrown (only if an exception is thrown)
 
-If you have any exception handling defined in `@ExceptionHandler` (such as those found in `@ControllerAdvice`) or a `HandlerExceptionResolver`, this handling will pre-empt the ability interceptor's ability to complete the timing. You can inject a `WebMvcMetrics` instance into your custom exception handling class and manually call `record`, like so:
-
-```java
-@ControllerAdvice
-class CustomExceptionHandler {
-    @Autowired
-    WebMvcMetrics metrics;
-
-    @ExceptionHandler
-    ResponseEntity<String> handleError(HttpServletRequest request, Exception1 ex) throws Throwable {
-        metrics.tagWithException(ex);
-        return new ResponseEntity<>("this is a custom exception body", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler
-    ResponseEntity<String> rethrowError(HttpServletRequest request, Exception2 ex) throws Throwable {
-        throw ex;
-    }
-}
-```
-
 == Webflux Functional (coming in Spring Boot 2.0)
 
 Micrometer contains a filter that you can add to a `RouterFunction` to instrument timings to its routes.
