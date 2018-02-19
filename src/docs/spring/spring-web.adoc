@@ -2,17 +2,18 @@ Micrometer contains built-in instrumentation for timings of requests made to Spr
 
 == Web MVC and Annotation-Based WebFlux
 
-Spring Boot autoconfigures interceptors to record metrics on your endpoints. By default, timings are recorded for every endpoint in your app (WebFlux support is coming in Spring Boot 2.0). You can turn this off by setting:
+Spring Boot autoconfigures interceptors to record metrics on your endpoints. By default, timings are recorded for every endpoint in your app. You can turn this off by setting:
 
-[source,yml]
+[source,properties]
 ----
 # true by default
-management.metrics.export.web.autoTimeServerRequests: false
+management.metrics.export.web.auto-time-server-requests=false
 ----
 
 If you turn off `autoTimeServerRequests`, or if you'd like to customize the timer for a particular endpoint, add `@io.micrometer.core.annotation.Timed` to:
 
-```java
+[source,properties]
+----
 @RestController
 @Timed <1>
 public class MyController {
@@ -20,67 +21,34 @@ public class MyController {
     @Timed(extraTags = { "region", "us-east-1" }) <2>
     @Timed(value = "all.people", longTask = true) <3>
     public List<Person> listPeople() { ... }
-```
-1. A controller class to enable timings on every request handler in the controller.
-2. A method to enable for an individual endpoint. This is not necessary if you have it on the class, but can be used to further customize the timer for this particular endpoint.
-3. A method with `longTask = true` to enable a long task timer for the method. Long task timers require a separate metric name, and can be stacked with a short task timer.
+----
+<1> A controller class to enable timings on every request handler in the controller.
+<2> A method to enable for an individual endpoint. This is not necessary if you have it on the class, but can be used to further customize the timer for this particular endpoint.
+<3> A method with `longTask = true` to enable a long task timer for the method. Long task timers require a separate metric name, and can be stacked with a short task timer.
 
 The `Timer` is registered with a name of `http.server.requests` by default. This can be changed by setting:
 
-[source,yml]
+[source,properties]
 ----
 # default is `http.server.requests`
-management.metrics.export.web.serverRequestsName: i.want.to.be.different
+management.metrics.export.web.server-requests-name=i.want.to.be.different
 ----
 
-The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebFluxTagsProvider` or `WebMvcTagsProvider` (depending on which programming model you are using) registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
+The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebMvcTagsProvider` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
 
 1. `method`, the HTTP method (for example, `GET` or `PUT`)
 2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
 3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
 4. `exception`, the simple name of the exception class thrown (only if an exception is thrown)
 
-== Webflux Functional (coming in Spring Boot 2.0)
-
-Micrometer contains a filter that you can add to a `RouterFunction` to instrument timings to its routes.
-
-```java
-RouterFunctionMetrics metrics = new RouterFunctionMetrics(registry);
-
-// OPTIONAL: the default is to record tags on method and status
-metrics.defaultTags((req, resp) -> { /* custom tags here */ });
-
-RouterFunction<ServerResponse> routes = RouterFunctions
-    .route(GET("/person/{id}").and(accept(APPLICATION_JSON)),
-        request -> ServerResponse.ok().build())
-    .filter(metrics.timer(
-        "http.server.requests", // metric name
-        "instance", MY_INSTANCE_ID // optional tags
-    ));
-```
-
-The filter applies to all routes defined by this router function.
-
-ifeval::["{system}" == "prometheus"]
-Separately, a router function generator is provided to add a Prometheus scraping endpoint to a Webflux functional application:
-
-```java
-PrometheusMeterRegistry meterRegistry = new PrometheusMeterRegistry();
-RouterFunction<ServerResponse> route = route(GET("/prometheus"),
-    PrometheusFunctions.scrape(meterRegistry));
-```
-
-You can compose this router function with other router functions that are instrumented with metrics.
-endif::[]
-
 == Client-side HTTP Instrumentation
 
-Spring Boot configures a `BeanPostProcessor` for `RestTemplate`, so every instance you create via the application context will be instrumented. A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http.client.requests` and can be changed by setting:
+The instrumentation of any `RestTemplate` created using the auto-configured `RestTemplateBuilder` is enabled. It is also possible to apply MetricsRestTemplateCustomizer manually. A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http.client.requests` and can be changed by setting:
 
-[source,yml]
+[source,properties]
 ----
 # default is http.client.requests
-management.metrics.export.web.clientRequestsName: i.want.to.be.different.again
+management.metrics.export.web.client-requests-name=i.want.to.be.different.again
 ----
 
 The `Timer` contains a set of dimensions for every request, governed by the primary bean `RestTemplateExchangeTagsProvider` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:

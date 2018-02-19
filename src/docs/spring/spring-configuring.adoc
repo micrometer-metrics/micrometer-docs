@@ -1,19 +1,19 @@
 Spring Boot autoconfigures a composite meter registry and adds a registry to the composite for each of the supported implementations that it finds on the classpath. Having a dependency on `micrometer-registry-{system}` in your runtime classpath is enough for Spring Boot to configure the registry. Spring Boot will also add any autoconfigured registries to the global static composite registry on the `Metrics` class unless you explicitly tell it not to by setting:
 
-[source,yml]
+[source,properties]
 ----
 # true by default
-management.metrics.export.useGlobalRegistry: false
+management.metrics.use-global-registry=false
 ----
 
 Leaving configuration of the global registry on enables you to collect metrics from libraries that use the static global registry to wire their metrics without doing anything further.
 
 You can control whether a registry implementation is autoconfigured via a property, even if it is otherwise present on the classpath:
 
-[source,yml,subs=+attributes]
+[source,properties,subs=+attributes]
 ----
 # true by default
-management.metrics.export.{system}.enabled: false
+management.metrics.export.{system}.enabled=false
 ----
 
 *Optionally* register any number of `MeterRegistryCustomizer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
@@ -36,7 +36,7 @@ You can apply customizations to particular registry implementations by being mor
 @SpringBootApplication
 public class MyApplication {
     @Bean
-    MeterRegistryCustomizer<GraphiteMeterRegistry> metricsCommonTags() {
+    MeterRegistryCustomizer<GraphiteMeterRegistry> graphiteMetricsNamingConvention() {
       return registry -> registry.config().namingConvention(MY_CUSTOM_CONVENTION);
     }
 }
@@ -55,31 +55,31 @@ To register other binders with the registry, add them as `@Bean`s to your applic
 Below is a list of the most common configuration properties you will want to change and their default values
 (from any property source, e.g. application.yml):
 
-```yml
+[source,properties]
+----
 # The location of your Atlas server
-management.metrics.export.atlas.uri: http://localhost:7101/api/v1/publish
+management.metrics.export.atlas.uri=http://localhost:7101/api/v1/publish
 
 # You will probably want disable Atlas publishing in a local development profile.
-management.metrics.export.atlas.enabled: true # default is true
+management.metrics.export.atlas.enabled=true # default is true
 
 # The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
 # The default is 1 minute.
-management.metrics.export.atlas.step: PT1M
-```
+management.metrics.export.atlas.step=PT1M
+----
 
 For a full list of configuration properties that can influence Atlas publishing, see
 `com.netflix.spectator.atlas.AtlasConfig`.
 
 == Prometheus
 
-ifeval::["{version}" == "1.5"]
 If Spring Boot Actuator is on the classpath, an actuator endpoint will be wired to `/prometheus` by default that presents a Prometheus scrape with the appropriate format.
 
 To add actuator if it isn't already present on your classpath in Gradle:
 
 [source,groovy]
 ----
-compile 'org.springframework.boot:spring-boot-actuator'
+compile 'org.springframework.boot:spring-boot-starter-actuator'
 ----
 
 Or in Maven:
@@ -88,67 +88,48 @@ Or in Maven:
 ----
 <dependency>
   <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-actuator</artifactId>
+  <artifactId>spring-boot-starter-actuator</artifactId>
 </dependency>
 ----
 
 Here is an example `scrape_config` to add to prometheus.yml:
 
-```yml
+[source,yml]
+----
 scrape_configs:
   - job_name: 'spring'
     metrics_path: '/prometheus'
     static_configs:
       - targets: ['HOST:PORT']
-```
-endif::[]
-
-ifeval::["{version}" == "2.0"]
-An actuator endpoint will be wired to `/actuator/prometheus` by default that presents a Prometheus scrape with the appropriate format.
-
-The endpoint is configured but inaccessible from the web by default, in line with Spring Boot 2's litmus test that any endpoint that potentially exposes sensitive data about an application should be inaccessible by default. It can be enabled by setting:
-
-[source,yml]
 ----
-management.endpoints.web.expose: prometheus
-----
-
-Here is an example `scrape_config` to add to prometheus.yml:
-
-```yml
-scrape_configs:
-  - job_name: 'spring'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: ['HOST:PORT']
-```
-endif::[]
 
 If you'd like the endpoint to be wired to a different endpoint, add a property:
 
-```yml
-endpoints.prometheus.id: micrometheus
-```
+[source,properties]
+----
+endpoints.prometheus.id=micrometheus
+----
 
 == Datadog
 
 The Datadog registry pushes metrics to datadoghq periodically. Below is a list of
 the most common configuration properties you will want to change and their default values
-(from any property source, e.g. application.yml):
+(from any property source, e.g. `application.yml`):
 
-```yml
-management.metrics.export.datadog.api-key: YOURKEY
+[source,properties]
+----
+management.metrics.export.datadog.api-key=YOURKEY
 
 # Needed to send meter-level metadata like descriptions and base units to Datadog, but not strictly required.
-management.metrics.export.datadog.application-key: YOURKEY
+management.metrics.export.datadog.application-key=YOURKEY
 
 # You will probably want disable Atlas publishing in a local development profile.
-management.metrics.export.datadog.enabled: true # default is true
+management.metrics.export.datadog.enabled=true # default is true
 
 # The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
 # The default is 10 seconds, which matches the Datadog Agent publishes at.
-management.metrics.export.datadog.step: PT10S
-```
+management.metrics.export.datadog.step=PT10S
+----
 
 For a full list of configuration properties that can influence Datadog publishing, see
 `io.micrometer.core.instrument.datadog.DatadogConfig`.
@@ -158,15 +139,15 @@ For a full list of configuration properties that can influence Datadog publishin
 The StatsD registry pushes metrics over UDP to a StatsD agent eagerly. Below is a list of the most
 common configuration properties you will want to change:
 
-```yml
-management.metrics.export.statsd.enabled: true # default is true
-management.metrics.export.flavor: etsy # or datadog, telegraf
-management.metrics.export.host: localhost
-management.metrics.export.port: 8125
-```
+[source,properties]
+----
+management.metrics.export.statsd.enabled=true # default is true
+management.metrics.export.flavor=etsy # or datadog, telegraf
+management.metrics.export.host=localhost
+management.metrics.export.port=8125
+----
 
-ifeval::["{version}" == "1.5"]
-For Spring Boot 1.5.x, because the StatsD implementation requires reactor 3.1.0, set the Reactor version to use by adding this property to the properties in your pom.xml:
+Because the StatsD implementation requires reactor 3.1.0, set the Reactor version to use by adding this property to the properties in your pom.xml:
 
 [source,xml]
 ----
@@ -179,11 +160,10 @@ If you are using Gradle, override it with:
 ----
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.boot:spring-boot-dependencies:1.5.4.RELEASE'
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:1.5.10.RELEASE'
     }
     dependencies {
         dependency 'io.projectreactor:reactor-core:3.1.0.RELEASE'
     }
 }
 ----
-endif::[]
