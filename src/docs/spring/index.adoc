@@ -5,7 +5,6 @@ Jon Schneider <jschneider@pivotal.io>
 :dimensional: true
 
 == Installing
-ifeval::["{version}" == "1.5"]
 Micrometer provides a legacy bridge to Spring Boot 1.5. To install the required dependency in Gradle:
 
 In Gradle:
@@ -25,27 +24,6 @@ Or in Maven:
   <version>${micrometer.version}</version>
 </dependency>
 ----
-endif::[]
-
-ifeval::["{version}" == "2.0"]
-Spring Boot 2.0.x supports Micrometer out of the box via Spring Boot Actuator. To use, express a dependency on Spring Boot Actuator, if you haven't already. In Gradle:
-
-[source,groovy,subs=+attributes]
-----
-compile 'org.springframework.boot:spring-boot-starter-actuator'
-----
-
-Or in Maven:
-
-[source,xml,subs=+attributes]
-----
-<dependency>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-starter-actuator</artifactId>
-</dependency>
-----
-
-endif::[]
 
 This dependency should be added alongside any registry implementations you want to use, e.g. `micrometer-registry-prometheus`.
 
@@ -64,9 +42,3 @@ include::spring-scheduling.adoc[leveloffset=+1]
 == Data source monitoring
 
 include::spring-datasource.adoc[leveloffset=+1]
-
-ifeval::["{version}" == "2.0"]
-== Actuator endpoint
-
-include::spring-actuator.adoc[leveloffset=+1]
-endif::[]
