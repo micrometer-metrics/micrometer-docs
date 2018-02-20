@@ -19,7 +19,7 @@ registry.timer("http.server.requests");
 
 By adhering to Micrometer's dot notation convention, you guarantee the maximum degree of portability for your metric names across monitoring systems.
 
-=== Tag naming
+== Tag naming
 
 Suppose we are trying to measure the number of http requests and the number of database calls.
 
@@ -48,7 +48,7 @@ registry.counter("calls",
 
 In this approach, if we select `calls` we will get a value that is an aggregate of the number of calls to the database and to our API endpoint. This time series is not useful without further dimensional drill-down.
 
-=== Common tags
+== Common tags
 
 Common tags can be defined at the registry level and are added to every metric reported to the monitoring system. This is generally used for dimensional drill-down on the operating environment like host, instance, region, stack, etc.
 
@@ -62,6 +62,6 @@ Calls to `commonTags` append additional common tags.
 
 IMPORTANT: If you are in the Spring environment, add common tags by adding a `MeterRegistryConfigurer` bean to be sure that common tags are applied before autoconfigured meter binders.
 
-=== Tag values
+== Tag values
 
 WARNING: Beware of the potential for tag values coming from user-supplied sources to blow up the cardinality of a metric. You should always carefully normalize and bound user-supplied input. Sometimes the cause is sneaky. Consider the URI tag for recording HTTP requests on service endpoints. If we don't constrain 404's to a value like NOT_FOUND, the dimensionality of the metric would grow with each resource that can't be found.
