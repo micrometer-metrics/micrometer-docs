@@ -36,12 +36,7 @@ export default function DocRoutes() {
           <Redirect to="/docs" />;
       }} />
 
-      <Route path="/docs/ref/spring/1.5" render={() => <DocSection title="Spring Boot 1.5"
-                                                                     content={docsSpring}
-                                                                     attrs={{ version: '1.5' }} />} />
-      <Route path="/docs/ref/spring/2.0" render={() => <DocSection title="Spring Boot 2.0"
-                                                                     content={docsSpring}
-                                                                     attrs={{ version: '2.0' }} />} />
+      <Route path="/docs/ref/spring/1.5" render={() => <DocSection title="Spring Boot 1.5" content={docsSpring} />} />
 
       <Route path="/docs/ref/jvm" render={() =>
         <DocSection title="JVM and System Metrics" content={docsJvm}/>
