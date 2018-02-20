@@ -16,7 +16,9 @@ DistributionSummary summary = DistributionSummary
     .description("a description of what this summary does") // optional
     .baseUnit("bytes") // optional <1>
     .tags("region", "test") // optional
+    .scale(100) // optional <2>
     .register(registry);
 ----
 
 1. Add base units for maximum portability -- base units are part of the naming convention for some monitoring systems. Leaving it off and violating the naming convention will have no adverse effect if you forget.
+2. Optionally, you may provide a scaling factor that each recorded sample will be multipled by as it is recorded.
