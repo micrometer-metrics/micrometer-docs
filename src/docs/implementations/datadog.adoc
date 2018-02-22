@@ -30,8 +30,7 @@ Or in Maven:
 </dependency>
 ----
 
-
-Metrics are rate-aggregated and pushed to datadoghq on a periodic interval. Rate aggregation performed by the Spectator-backed registry yields datasets that are quite similar to those produced by dogstatsd.
+Metrics are rate-aggregated and pushed to datadoghq on a periodic interval. Rate aggregation performed by the registry yields datasets that are quite similar to those produced by dogstatsd.
 
 [source, java]
 ----

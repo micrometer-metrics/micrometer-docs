@@ -11,7 +11,7 @@ let docsConcepts = require('!asciidoc-loader!../../docs/concepts/index.adoc');
 let docsJvm = require('!asciidoc-loader!../../docs/jvm/index.adoc');
 let docsCache = require('!asciidoc-loader!../../docs/cache/index.adoc');
 
-const systems = ['atlas', 'prometheus', 'datadog', 'graphite', 'ganglia', 'jmx', 'influx', 'statsd'];
+const systems = ['atlas', 'datadog', 'ganglia', 'graphite', 'influx', 'jmx', 'prometheus', 'statsd', 'wavefront'];
 
 let docsBySystem = {};
 systems.forEach(sys => docsBySystem[sys] = require(`!asciidoc-loader!../../docs/implementations/${sys}.adoc`));

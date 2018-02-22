@@ -1,0 +1,93 @@
+= Micrometer Prometheus
+Jon Schneider <jschneider@pivotal.io>
+:toc:
+:sectnums:
+:system: wavefront
+
+Wavefront is a dimensional monitoring system offered as a SaaS with a full UI, custom query language, and advanced math operations. Wavefront operates on a push model. Metrics may either be pushed through a sidecar process running on the same host (called the Wavefront proxy) or directly to the Wavefront API.
+
+include::install.adoc[]
+
+== Configuring
+
+=== Direct to Wavefront
+
+[source,java]
+----
+WavefrontConfig config = new WavefrontConfig() {
+    @Override
+    public String uri() {
+        return "https://longboard.wavefront.com"; <1>
+    }
+
+    @Override
+    public String apiToken() {
+        return "MYAPIKEY"; <2>
+    }
+
+    @Override
+    public String get(String key) {
+        return null; <3>
+    }
+};
+MeterRegistry registry = new WavefrontMeterRegistry(config, Clock.SYSTEM);
+----
+<1> "longboard" is the name of the co-tenant instance that most organizations start on. Once you reach a sufficient scale, Wavefront may move you
+to a dedicated host.
+<2> This is required when pushing directly to Wavefront's API.
+<3> Accept the rest of the defaults
+
+=== Through a Wavefront proxy sidecar
+
+[source,java]
+----
+MeterRegistry registry = new WavefrontMeterRegistry(WavefrontConfig.DEFAULT_PROXY, Clock.SYSTEM);
+----
+
+The default proxy configuration will push metrics to a Wavefront proxy sitting on localhost:7828.
+
+NOTE: If publishing metrics to a Wavefront proxy, the URI must be expressed in the form proxy://HOST:PORT.
+
+== Graphing
+
+This section serves as a quickstart to rendering useful representations in Wavefront for metrics originating in Micrometer. See the http://somewhere[Wavefront docs] for a far more complete reference of what is possible in Wavefront.
+
+=== Counters
+
+The query that generates a graph for a random-walk counter is
+`ts(counter)`.
+
+.A Wavefront rendered graph of the random walk counter.
+image::img/wavefront-counter.png[Wavefront-rendered counter]
+
+Micrometer pre-computes rates for counters destined for Wavefront.
+
+=== Timers
+
+The Wavefront `Timer` produces several time series:
+
+1. `${name}.avg` - A mean latency for the publishing interval.
+2. `${name}.count` - Throughput per second over the publishing interval.
+3. `${name}.sum` - Total time per second over the publishing interval (used with `${name}.count`) to create aggregable means.
+4. `${name}.percentiles` - Micrometer calculated percentiles for the publishing interval. These cannot be aggregated across dimensions!
+5. `${name}.histogram` - Cumulative counts of events less than or equal to SLA boundaries over the publishing interval.
+
+To generate a quick view of latency in Wavefront:
+
+.Timer latency.
+image::img/wavefront-timer-latency.png[Wavefront-rendered timer]
+
+This chart demonstrates the average (`ts(timer.avg)` in green), 95th percentile (`ts(timer.percentile, phi="0.95")` in orange), and
+max (`ts(timer.max)` in blue).
+
+.Timer throughput.
+image::img/wavefront-timer-throughput.png[Wavefront-rendered timer throughput]
+
+Additionally, `ts(timer.count)` represents a rate/second throughput of events being timed.
+
+.Timer SLA boundaries.
+image::img/wavefront-timer-sla.png[Wavefront-rendered SLA boundaries]
+
+Lastly, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries. In this example, we set SLA boundaries at 275 (blue), 300 (orange), and 500 (green) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
+
+Where the lines converge at 4:55.30 and 4:57.30 it is evident that no sample exceeded the 275 ms SLA boundary.

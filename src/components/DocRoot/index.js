@@ -38,15 +38,19 @@ export default function DocRoot() {
               solution.
             </li>
 
-            <li><NavLink className="doc-section" to="/docs/registry/prometheus">Prometheus</NavLink>.
-              An in-memory dimensional time series database with a simple built-in UI, a custom query language, and math
-              operations. Prometheus is designed to operate on a pull model, scraping metrics from application instances
-              periodically based on service discovery.
-            </li>
-
             <li><NavLink className="doc-section" to="/docs/registry/datadog">Datadog</NavLink>. Datadog
               is a dimensional time-series SAAS with built-in dashboarding and alerting. Micrometer supports shipping
               metrics to Datadog directly via its API or through Dogstatsd via the StatsD registry.
+            </li>
+
+            <li><NavLink className="doc-section" to="/docs/registry/ganglia">Ganglia</NavLink>. An
+              aging hierarchical metrics system which enjoyed wide popularity in Linux system monitoring and is still in
+              place in many organizations. It originated in the early 2000s at the University of California, Berkeley.
+            </li>
+
+            <li><NavLink className="doc-section" to="/docs/registry/graphite">Graphite</NavLink>. One
+              of the most popular current hierarchical metrics systems backed by a fixed-size database, similar in
+              design and purpose to RRD. It originated at Orbitz in 2006 and was open sourced in 2008.
             </li>
 
             <li><NavLink className="doc-section" to="/docs/registry/influx">Influx</NavLink>.
@@ -55,26 +59,28 @@ export default function DocRoot() {
               Analysis of data is done via a SQL-like query language.
             </li>
 
+            <li><NavLink className="doc-section" to="/docs/registry/jmx">JMX</NavLink>. Micrometer
+              provides a hierarchical mapping to JMX, primarily as a cheap and portable way to view metrics locally.
+              Where JMX exporting is found in production, the same metrics are generally exported to another, more
+              purpose-fit monitoring system.
+            </li>
+
+            <li><NavLink className="doc-section" to="/docs/registry/prometheus">Prometheus</NavLink>.
+              An in-memory dimensional time series database with a simple built-in UI, a custom query language, and math
+              operations. Prometheus is designed to operate on a pull model, scraping metrics from application instances
+              periodically based on service discovery.
+            </li>
+
             <li><NavLink className="doc-section" to="/docs/registry/statsd">StatsD</NavLink>.
               Micrometer supports three flavors of StatsD: the original Etsy format plus the Datadog and Telegraf
               (Influx) extensions of StatsD that add dimensional support. Use this registry if you prefer to publish
               metrics to a StatsD agent.
             </li>
 
-            <li><NavLink className="doc-section" to="/docs/registry/graphite">Graphite</NavLink>. One
-              of the most popular current hierarchical metrics systems backed by a fixed-size database, similar in
-              design and purpose to RRD. It originated at Orbitz in 2006 and was open sourced in 2008.
-            </li>
-
-            <li><NavLink className="doc-section" to="/docs/registry/ganglia">Ganglia</NavLink>. An
-              aging hierarchical metrics system which enjoyed wide popularity in Linux system monitoring and is still in
-              place in many organizations. It originated in the early 2000s at the University of California, Berkeley.
-            </li>
-
-            <li><NavLink className="doc-section" to="/docs/registry/jmx">JMX</NavLink>. Micrometer
-              provides a hierarchical mapping to JMX, primarily as a cheap and portable way to view metrics locally.
-              Where JMX exporting is found in production, the same metrics are generally exported to another, more
-              purpose-fit monitoring system.
+            <li><NavLink className="doc-section" to="/docs/registry/wavefront">Wavefront</NavLink>.
+              Wavefront is a SaaS-based metrics monitoring and analytics platform that lets you visualize, query, and
+              alert over data from across your entire stack (infrastructure, network, custom app metrics, business KPIs,
+              etc.)
             </li>
           </ul>
         </li>
@@ -82,10 +88,13 @@ export default function DocRoot() {
           instrumentation provided by Micrometer.
           <ul>
             <li><span className="doc-section">Spring Boot</span>. As of Spring Boot 2.0.0.M5, Micrometer is the
-              instrumentation library powering the delivery of application metrics from Spring. The <i>micrometer-spring-legacy</i> module provides drop-down support for Spring Boot 1.5.x.
+              instrumentation library powering the delivery of application metrics from Spring. The <i>micrometer-spring-legacy</i>
+              module provides drop-down support for Spring Boot 1.5.x.
               <ul>
                 <li><NavLink className="doc-section" to="/docs/ref/spring/1.5">Spring Boot 1.5.x</NavLink></li>
-                <li><a className="doc-section" href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-metrics">Spring Boot 2.0</a></li>
+                <li><a className="doc-section"
+                       href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-metrics">Spring
+                  Boot 2.0</a></li>
               </ul>
             </li>
             <li><NavLink className="doc-section" to="/docs/ref/jvm">JVM</NavLink>. Metrics on classloaders, memory,

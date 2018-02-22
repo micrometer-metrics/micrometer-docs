@@ -23,10 +23,7 @@ export default function Home() {
           <div className="col-lg-4 text-center">
             <i className="fa fa-4x fa-database" aria-hidden="true" />
             <h2>Dimensional Metrics</h2>
-            <p>Micrometer provides vendor-neutral interfaces for <strong>timers</strong>, <strong>gauges</strong>,
-              <strong>counters</strong>, <strong>distribution summaries</strong>, and <strong>long task timers</strong>
-              with a dimensional data model that, when paired with a dimensional monitoring system, allows for efficient
-              access to a particular named metric with the ability to drill down across its dimensions.</p>
+            <p>Micrometer provides vendor-neutral interfaces for <strong>timers</strong>, <strong>gauges</strong>, <strong>counters</strong>, <strong>distribution summaries</strong>, and <strong>long task timers</strong> with a dimensional data model that, when paired with a dimensional monitoring system, allows for efficient access to a particular named metric with the ability to drill down across its dimensions.</p>
           </div>
           <div className="col-lg-4 text-center">
             <i className="fa fa-4x fa-area-chart" aria-hidden="true" />
