@@ -61,7 +61,7 @@ At each publishing interval, the New Relic `Timer` produces a single event with 
 
 Additionally, if any percentiles or SLA buckets are defined on the timer, additional events are produced:
 
-4. `${name}.percentiles` - Micrometer calculated percentiles for the publishing interval. One event is produced for each percentile, with a tag of with `phi` in the range [0,1].
+4. `${name}.percentiles` - Micrometer calculated percentiles for the publishing interval. One event is produced for each percentile, with a tag of `phi` in the range [0,1].
 5. `${name}.histogram` - One event is produced for each SLA boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLA boundaries over the publishing interval.
 
 To generate an aggregable view of latency in New Relic, divide `totalTime` by `count`:
@@ -91,7 +91,7 @@ To generate a plot of client-side percentiles:
 SELECT latest(value) from timerPercentile FACET phi since 30 minutes ago TIMESERIES auto
 ----
 
-.Timer SLA boundaries.
+.Timer Percentiles.
 image::img/new-relic-timer-percentiles.png[New Relic-rendered percentiles]
 
 Note how these percentiles are _not aggregable_. We've selected the `latest(value)` function to display this chart (i.e. it isn't correct to `average(value)` on a percentile value). The more dimensions you add to a timer, the less useful these values become.
@@ -106,4 +106,4 @@ SELECT sum(value) from timerHistogram FACET le since 30 minutes ago TIMESERIES a
 .Timer SLA boundaries.
 image::img/new-relic-timer-sla.png[New Relic-rendered SLA boundaries]
 
-Where the lines converge at 4:55.30 and 4:57.30 it is evident that no sample exceeded the 275 ms SLA boundary.
+Where the lines converge at various points it is evident that no sample exceeded the 275 ms SLA boundary.

@@ -76,7 +76,12 @@ export default function DocRoot() {
               periodically based on service discovery.
             </li>
 
-            <li><NavLink className="doc-section" to="/docs/registry/statsd">StatsD</NavLink>.
+            <li><NavLink className="doc-section" to="/docs/registry/signalFx">SignalFx</NavLink>.
+              SignalFx is a dimensional monitoring system SaaS with a full UI operating on a push model. It has a rich
+              set of alert "detectors".
+            </li>
+
+            <li><NavLink className="doc-section" to="/docs/registry/statsD">StatsD</NavLink>.
               Micrometer supports three flavors of StatsD: the original Etsy format plus the Datadog and Telegraf
               (Influx) extensions of StatsD that add dimensional support. Use this registry if you prefer to publish
               metrics to a StatsD agent.
