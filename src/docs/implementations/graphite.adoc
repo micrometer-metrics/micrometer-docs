@@ -40,7 +40,7 @@ management.metrics.export.graphite:
 
     # The interval at which metrics are sent to Graphite. See Duration.parse for the expected format.
     # The default is 1 minute.
-    step: PT1M
+    step: 1m
 ----
 
 include::hierarchical-name-mapping.adoc[]

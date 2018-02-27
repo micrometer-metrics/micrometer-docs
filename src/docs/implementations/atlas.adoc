@@ -37,9 +37,8 @@ management.metrics.export.atlas:
     # You will probably want to conditionally disable Atlas publishing in local development.
     enabled: true
 
-    # The interval at which metrics are sent to Atlas. See Duration.parse for the expected format.
-    # The default is 1 minute.
-    step: PT1M
+    # The interval at which metrics are sent to Atlas. The default is 1 minute.
+    step: 1m
 ----
 
 == Graphing

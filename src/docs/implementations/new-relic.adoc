@@ -1,0 +1,109 @@
+= Micrometer New Relic
+Jon Schneider <jschneider@pivotal.io>
+:toc:
+:sectnums:
+:system: new-relic
+
+New Relic offers a dimensional monitoring system product called Insights with a full UI and a query language called NRQL. New Relic Insights operates on a push model. Some features of NRQL assume that Insights receives a distinct event payload for every timing, count, etc. Micrometer instead ships aggregates at a prescribed interval, allowing your app's throughput to scale without concern for event propagation to Insights becoming a bottleneck.
+
+include::install.adoc[]
+
+== Configuring
+
+[source,java]
+----
+NewRelicConfig newRelicConfig = new NewRelicConfig() {
+    @Override
+    public String accountId() {
+        return "MYACCOUNT";
+    }
+
+    @Override
+    public String apiKey() {
+        return "MY_INSIGHTS_API_KEY";
+    }
+
+    @Override
+    public String get(String k) {
+        return null; // accept the rest of the defaults
+    }
+};
+
+MeterRegistry registry = new NewRelicMeterRegistry(newRelicConfig, Clock.SYSTEM);
+----
+
+There are two distinct sources of API keys in New Relic.
+
+`NewRelicConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `management.metrics.export.newrelic` directly to the `NewRelicConfig`:
+
+[source,yml]
+----
+management.metrics.export.newrelic:
+    account-id: MYACCOUNT
+    api-key: MY_INSIGHTS_API_KEY
+
+    # The interval at which metrics are sent to Ganglia. See Duration.parse for the expected format.
+    # The default is 1 minute.
+    step: 1m
+----
+
+== Graphing
+
+This section serves as a quickstart to rendering useful representations in New Relic for metrics originating in Micrometer. See the https://docs.newrelic.com/docs/insights/nrql-new-relic-query-language/using-nrql/introduction-nrql[New Relic NRQL docs] for a far more complete reference of what is possible in New Relic.
+
+=== Timers
+
+At each publishing interval, the New Relic `Timer` produces a single event with the timer's name and several attributes:
+
+1. `avg` - A mean latency for the publishing interval.
+2. `count` - Throughput per second over the publishing interval.
+3. `totalTime` - Total time per second over the publishing interval (used with `count`) to create aggregable means.
+
+Additionally, if any percentiles or SLA buckets are defined on the timer, additional events are produced:
+
+4. `${name}.percentiles` - Micrometer calculated percentiles for the publishing interval. One event is produced for each percentile, with a tag of with `phi` in the range [0,1].
+5. `${name}.histogram` - One event is produced for each SLA boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLA boundaries over the publishing interval.
+
+To generate an aggregable view of latency in New Relic, divide `totalTime` by `count`:
+
+[source,sql]
+----
+SELECT sum(totalTime)/sum(count) as 'Average Latency', max(max) as 'Max' FROM timer since 30 minutes ago TIMESERIES auto
+----
+
+.Timer latency.
+image::img/new-relic-timer-latency.png[New Relic-rendered timer]
+
+To generate a throughput chart:
+
+[source,sql]
+----
+SELECT average(count) as 'Average Throughput' FROM timer since 30 minutes ago TIMESERIES auto
+----
+
+.Timer throughput.
+image::img/new-relic-timer-throughput.png[New Relic-rendered timer throughput]
+
+To generate a plot of client-side percentiles:
+
+[source,sql]
+----
+SELECT latest(value) from timerPercentile FACET phi since 30 minutes ago TIMESERIES auto
+----
+
+.Timer SLA boundaries.
+image::img/new-relic-timer-percentiles.png[New Relic-rendered percentiles]
+
+Note how these percentiles are _not aggregable_. We've selected the `latest(value)` function to display this chart (i.e. it isn't correct to `average(value)` on a percentile value). The more dimensions you add to a timer, the less useful these values become.
+
+Lastly, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries. In this example, we set SLA boundaries at 275 (yellow), 300 (red), and 500 (blue) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
+
+[source,sql]
+----
+SELECT sum(value) from timerHistogram FACET le since 30 minutes ago TIMESERIES auto
+----
+
+.Timer SLA boundaries.
+image::img/new-relic-timer-sla.png[New Relic-rendered SLA boundaries]
+
+Where the lines converge at 4:55.30 and 4:57.30 it is evident that no sample exceeded the 275 ms SLA boundary.

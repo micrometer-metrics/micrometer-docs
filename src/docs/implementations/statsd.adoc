@@ -41,7 +41,6 @@ management.metrics.export.statsd:
     # You will probably want to conditionally disable StatsD publishing in local development.
     enabled: true
 
-    # The interval at which metrics are sent to StatsD. See Duration.parse for the expected format.
-    # The default is 1 minute.
-    step: PT10S
+    # The interval at which metrics are sent to StatsD. The default is 1 minute.
+    step: 1m
 ----

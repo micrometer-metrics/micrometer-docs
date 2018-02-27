@@ -60,12 +60,11 @@ MeterRegistry registry = new InfluxMeterRegistry(config, Clock.SYSTEM);
 management.metrics.export.influx:
     db: mydb
 
-    # You will probably want disable Datadog publishing in a local development profile.
+    # You will probably want disable Influx publishing in a local development profile.
     enabled: true
 
-    # The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
-    # The default is 10 seconds, which matches the Datadog Agent publishes at.
-    step: PT10S
+    # The interval at which metrics are sent to Influx. The default is 1 minute.
+    step: 1m
 ----
 
 === Through Telegraf

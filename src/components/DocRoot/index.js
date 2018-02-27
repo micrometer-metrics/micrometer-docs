@@ -65,6 +65,11 @@ export default function DocRoot() {
               purpose-fit monitoring system.
             </li>
 
+            <li><NavLink className="doc-section" to="/docs/registry/new-relic">New Relic</NavLink>.
+              Micrometer publishes to New Relic Insights, a SaaS offering with a full UI and a query language called NRQL.
+              New Relic Insights operates on a push model.
+            </li>
+
             <li><NavLink className="doc-section" to="/docs/registry/prometheus">Prometheus</NavLink>.
               An in-memory dimensional time series database with a simple built-in UI, a custom query language, and math
               operations. Prometheus is designed to operate on a pull model, scraping metrics from application instances

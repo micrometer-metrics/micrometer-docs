@@ -38,9 +38,8 @@ management.metrics.export.ganglia:
     # You will probably want to conditionally disable Ganglia publishing in local development.
     enabled: true
 
-    # The interval at which metrics are sent to Ganglia. See Duration.parse for the expected format.
-    # The default is 1 minute.
-    step: PT1M
+    # The interval at which metrics are sent to Ganglia. The default is 1 minute.
+    step: 1m
 ----
 
 include::hierarchical-name-mapping.adoc[]

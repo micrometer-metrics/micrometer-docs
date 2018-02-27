@@ -1,4 +1,4 @@
-= Micrometer Prometheus
+= Micrometer Wavefront
 Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
@@ -50,7 +50,7 @@ NOTE: If publishing metrics to a Wavefront proxy, the URI must be expressed in t
 
 == Graphing
 
-This section serves as a quickstart to rendering useful representations in Wavefront for metrics originating in Micrometer. See the http://somewhere[Wavefront docs] for a far more complete reference of what is possible in Wavefront.
+This section serves as a quickstart to rendering useful representations in Wavefront for metrics originating in Micrometer. See the https://docs.wavefront.com/query_language_getting_started.html[Wavefront docs] for a far more complete reference of what is possible in Wavefront.
 
 === Counters
 

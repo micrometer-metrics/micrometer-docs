@@ -11,7 +11,7 @@ let docsConcepts = require('!asciidoc-loader!../../docs/concepts/index.adoc');
 let docsJvm = require('!asciidoc-loader!../../docs/jvm/index.adoc');
 let docsCache = require('!asciidoc-loader!../../docs/cache/index.adoc');
 
-const systems = ['atlas', 'datadog', 'ganglia', 'graphite', 'influx', 'jmx', 'prometheus', 'statsd', 'wavefront'];
+const systems = ['atlas', 'datadog', 'ganglia', 'graphite', 'influx', 'jmx', 'prometheus', 'statsd', 'wavefront', 'new-relic'];
 
 let docsBySystem = {};
 systems.forEach(sys => docsBySystem[sys] = require(`!asciidoc-loader!../../docs/implementations/${sys}.adoc`));
@@ -31,7 +31,7 @@ export default function DocRoutes() {
       <Route path="/docs/registry/:system" render={({ match }) => {
         let system = match.params.system;
         return systems.includes(system) ?
-          <DocSection title={`Micrometer ${system[0].toUpperCase() + system.slice(1)}`}
+          <DocSection title={`Micrometer ${system.split('-').map(part => part[0].toUpperCase() + part.slice(1)).join(" ")}`}
                       content={docsBySystem[system]} /> :
           <Redirect to="/docs" />;
       }} />
