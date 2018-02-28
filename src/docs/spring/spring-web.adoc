@@ -2,7 +2,7 @@ Micrometer contains built-in instrumentation for timings of requests made to Spr
 
 == Web MVC and Annotation-Based WebFlux
 
-Spring Boot autoconfigures interceptors to record metrics on your endpoints. By default, timings are recorded for every endpoint in your app. You can turn this off by setting:
+Spring Boot auto-configures interceptors to record metrics on your endpoints. By default, timings are recorded for every endpoint in your app. You can turn this off by setting:
 
 [source,properties]
 ----
