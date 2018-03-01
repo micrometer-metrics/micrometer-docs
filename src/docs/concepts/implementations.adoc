@@ -7,7 +7,7 @@ Micrometer contains a core module with an instrumentation https://en.wikipedia.o
 |Dimensional
 |Hierarchical
 
-|Atlas, Prometheus, Datadog, Influx, Datadog StatsD, Telegraf StatsD
+|Atlas, Datadog, Datadog StatsD, Influx, Prometheus, SignalFx, Telegraf StatsD, Wavefront
 |Graphite, Ganglia, JMX, Etsy StatsD
 |===
 
@@ -19,7 +19,7 @@ Micrometer contains a core module with an instrumentation https://en.wikipedia.o
 |Client-side
 |Server-side
 
-|Atlas, Datadog, Influx, JMX, all StatsD flavors, Graphite, Ganglia
+|Atlas, Datadog, Influx, Graphite, Ganglia, JMX, all StatsD flavors, SignalFx, Wavefront
 |Prometheus
 |===
 
@@ -30,7 +30,7 @@ Micrometer contains a core module with an instrumentation https://en.wikipedia.o
 |Client pushes
 |Server polls
 
-|Atlas, Datadog, Influx, JMX, all StatsD flavors, Graphite, Ganglia
+|Atlas, Datadog, Graphite, Ganglia, Influx, JMX, all StatsD flavors, SignalFx, Wavefront
 |Prometheus
 |===
 

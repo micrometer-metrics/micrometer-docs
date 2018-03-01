@@ -9,6 +9,7 @@ The appropriate base unit for timers varies by metrics backend for good reason. 
 public interface Timer extends Meter {
     ...
     void record(long amount, TimeUnit unit);
+    void record(Duration duration);
     double totalTime(TimeUnit unit);
 }
 ----
@@ -24,6 +25,8 @@ Timer timer = Timer
     .register(registry);
 ----
 
+== Recording blocks of code
+
 The `Timer` interfaces exposes several convenience overloads for recording timings inline, e.g.:
 
 [source,java]
@@ -38,3 +41,55 @@ Callable c = timer.wrap(() -> returnValue());
 
 NOTE: A `Timer` is really just a specialized distribution summary that is aware of how to scale durations to the base unit of time of each monitoring system and has an automatically
 determined base unit. In every case where you want to measure time, you should use a `Timer` rather than a `DistributionSummary`.
+
+== Storing start state in `Timer.Sample`
+
+You may also store start state in a sample instance that can be stopped later. The sample records a start time based on the registry's clock. After starting a sample, execute the code to be timed and finish the operation by calling `stop(Timer)` on the sample.
+
+[source, java]
+----
+Timer.Sample sample = Timer.start(registry);
+
+// do stuff
+Response response = ...
+
+sample.stop(registry.timer("my.timer", "response", response.status()));
+----
+
+Note how we don't decide what timer we are accumulating the sample to until it is time to stop the sample. This allows us to dynamically determine certain tags from the end state of the operation we are timing.
+
+== Function-tracking timers
+
+Micrometer also provides a more infrequently used timer pattern that tracks two monotonically increasing functions (a function that stays the same or increases over time, but never decreases): a count function and a total time function. Some monitoring systems, like Prometheus, push cumulative values for counters (which applies to both the count and total time functions in this case) to the backend, but others publish the rate at which a counter is incrementing over the push interval. By employing this pattern, you allow the Micrometer implementation for your monitoring system to choose whether to rate normalize the timer or not and your timer remains portable across different types of monitoring systems.
+
+[source, java]
+-----
+IMap<?, ?> cache = ...; // suppose we have a Hazelcast cache
+registry.more().timer("cache.gets.latency", Tags.of("name", cache.getName()), cache,
+    c -> c.getLocalMapStats().getGetOperationCount(), <1>
+    c -> c.getLocalMapStats().getTotalGetLatency(),
+    TimeUnit.NANOSECONDS <2>
+);
+-----
+
+1. `getOperationCount()` is a monotonically increasing function incrementing with every cache get from the beginning of its life.
+2. This represents the unit of time represented by `getTotalGetLatency()`. Each registry implementation specifies what its expected base unit of time is, and the total time reported will be scaled to this value.
+
+The function-tracking timer, in concert with the monitoring system's rate normalizing functionality (whether this is an artifact of the query language or the way data is pushed to the system), adds a layer of richness on top of the cumulative value of the functions themselves. You can reason about the _rate_ of throughput and latency, whether that rate is within an acceptable bound, is increasing or decreasing over time, etc.
+
+WARNING: Micrometer cannot guarantee the monotonicity of the count and total time functions for you. By using this signature, you are asserting their monotonicity based on what you know about their definitions.
+
+There is also a fluent builder for function timers on the `FunctionTimer` interface itself, providing access to less frequently used options like base units and description. You can register the timer as the last step of its construction by calling `register(MeterRegistry)`.
+
+[source, java]
+----
+IMap<?, ?> cache = ...
+
+FunctionTimer.builder("cache.gets.latency", cache,
+        c -> c.getLocalMapStats().getGetOperationCount(),
+        c -> c.getLocalMapStats().getTotalGetLatency(),
+        TimeUnit.NANOSECONDS)
+    .tags("name", cache.getName())
+    .description("Cache gets")
+    .register(registry);
+----

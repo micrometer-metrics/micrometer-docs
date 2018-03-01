@@ -1,4 +1,4 @@
-Micrometer employs a naming convention that separates words with '.'. Because different monitoring systems have different recommendations regarding naming convention, and some naming conventions may actually be breaking for one system and not another, each Micrometer implementation for a monitor system packs with a naming convention that transforms dot notation names to the recommended naming convention. Additionally, this naming convention implementation sanitizes names and tags of special characters that are disallowed by the monitoring system they are designed for. You can override the default naming convention for a registry if you'd like by implementing `NamingConvention` and setting it on the registry with:
+Micrometer employs a naming convention that separates words with '.' (dot). Because different monitoring systems have different recommendations regarding naming convention, and some naming conventions may actually be breaking for one system and not another, each Micrometer implementation for a monitor system packs with a naming convention that transforms dot notation names to the recommended naming convention. Additionally, this naming convention implementation sanitizes names and tags of special characters that are disallowed by the monitoring system they are designed for. You can override the default naming convention for a registry if you'd like by implementing `NamingConvention` and setting it on the registry with:
 
 [source,java]
 ----
@@ -63,5 +63,7 @@ Calls to `commonTags` append additional common tags.
 IMPORTANT: If you are in the Spring environment, add common tags by adding a `MeterRegistryCustomizer` bean to be sure that common tags are applied before autoconfigured meter binders.
 
 == Tag values
+
+Tag values must be non-null.
 
 WARNING: Beware of the potential for tag values coming from user-supplied sources to blow up the cardinality of a metric. You should always carefully normalize and bound user-supplied input. Sometimes the cause is sneaky. Consider the URI tag for recording HTTP requests on service endpoints. If we don't constrain 404's to a value like NOT_FOUND, the dimensionality of the metric would grow with each resource that can't be found.
