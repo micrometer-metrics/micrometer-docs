@@ -38,12 +38,48 @@ management.metrics.export.graphite:
     # You will probably want to conditionally disable Graphite publishing in local development.
     enabled: true
 
-    # The interval at which metrics are sent to Graphite. See Duration.parse for the expected format.
-    # The default is 1 minute.
+    # The interval at which metrics are sent to Graphite. The default is 1 minute.
     step: 1m
 ----
 
 include::hierarchical-name-mapping.adoc[]
+
+== Prefixing your metrics
+
+To add a prefix to all metrics going to graphite, use the `GraphiteConfig#tagsAsPrefix` configuration option. This option applies the tag value of a set of common tags as a prefix. For example, if `tagsAsPrefix` contains "application", if a meter is created with a tag "application=APPNAME", it will appear in Graphite as "APPNAME.myTimer".
+
+Generally, when using `tagsAsPrefix` add a common tag to the registry so that the tag is present on all meters belonging to that registry:
+
+[source,java]
+----
+@Bean
+public MeterRegistryCustomizer<MeterRegistry> commonTags() {
+   return r -> r.config().commonTags("application", "APPNAME");
+}
+----
+
+The reason we do it this way is because generally a tag prefix in Graphite is correlated to a common tag elsewhere. Prefixes tend to be something like app name or host. By applying those values as common tags, you make your metrics more portable (i.e. if you ever switched to a dimensional monitoring system, you're set!).
+
+
+You may have to do this, for example, when the order of the prefix matters. Micrometer always sorts tags, so adding `application`, `host` to `tagsAsPrefix` results in a prefixed metric like `APP.HOST.myCounter`. If you need host first, consider a custom hierarchical name mapper that adds a prefix:
+
+[source,java]
+----
+GraphiteMeterRegistry r = new GraphiteMeterRegistry(
+            GraphiteConfig.DEFAULT,
+            (id, convention) -> "prefix." + HierarchicalNameMapper.DEFAULT.toHierarchicalName(id, convention),
+            Clock.SYSTEM);
+----
+
+== Further customizing the `GraphiteReporter`
+
+We give you the option to configure `GraphiteReporter` yourself if you need further customization. Just use this constructor and provide your own `GraphiteReporter`:
+
+[source,java]
+----
+GraphiteMeterRegistry(GraphiteConfig config, Clock clock, HierarchicalNameMapper nameMapper,
+                      MetricRegistry metricRegistry, GraphiteReporter reporter)
+----
 
 == Graphing
 
