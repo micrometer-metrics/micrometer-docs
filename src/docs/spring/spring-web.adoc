@@ -43,7 +43,7 @@ The `Timer` contains a set of dimensions for every request, governed by the prim
 
 == Client-side HTTP Instrumentation
 
-The instrumentation of any `RestTemplate` created using the auto-configured `RestTemplateBuilder` is enabled. It is also possible to apply MetricsRestTemplateCustomizer manually. A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http.client.requests` and can be changed by setting:
+The instrumentation of any `RestTemplate` created using the auto-configured `RestTemplateBuilder` is enabled. It is also possible to apply `MetricsRestTemplateCustomizer` manually. A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http.client.requests` and can be changed by setting:
 
 [source,properties]
 ----
