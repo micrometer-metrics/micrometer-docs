@@ -1,0 +1,13 @@
+Auto-configuration enables the instrumentation of all available ``Cache``s on startup
+with metrics prefixed with `cache`. Cache instrumentation is standardized for a basic set
+of metrics. Additional, cache-specific metrics are also available.
+
+The following cache libraries are supported:
+
+* Caffeine
+* EhCache 2
+* Hazelcast
+* Any compliant JCache (JSR-107) implementation
+
+Metrics are tagged by the name of the cache and by the name of the `CacheManager` that is
+derived from the bean name.
