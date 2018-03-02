@@ -10,6 +10,7 @@ let docsSpring = require('!asciidoc-loader!../../docs/spring/index.adoc');
 let docsConcepts = require('!asciidoc-loader!../../docs/concepts/index.adoc');
 let docsJvm = require('!asciidoc-loader!../../docs/jvm/index.adoc');
 let docsCache = require('!asciidoc-loader!../../docs/cache/index.adoc');
+let docsConsoleReporter = require('!asciidoc-loader!../../docs/guide/console-reporter.adoc')
 
 const systems = ['atlas', 'datadog', 'ganglia', 'graphite', 'influx', 'jmx', 'prometheus', 'statsD', 'wavefront', 'new-relic', 'signalFx'];
 
@@ -44,6 +45,10 @@ export default function DocRoutes() {
 
       <Route path="/docs/ref/cache" render={() =>
         <DocSection title="Cache Metrics" content={docsCache}/>
+      }/>
+
+      <Route path="/docs/guide/consoleReporter" render={() =>
+        <DocSection title="Passing through to Dropwizard's console reporter" content={docsConsoleReporter}/>
       }/>
     </div>
   )

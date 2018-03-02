@@ -118,17 +118,7 @@ export default function DocRoot() {
         <li><span className="doc-section">Guides</span>. Examples demonstrating how to build actionable
           insights from metrics data.
           <ul>
-            <li><span className="doc-section" to="/docs/guide/fixedAlerting">Fixed-threshold alerting</span></li>
-            <li><span className="doc-section" to="/docs/guide/responsiveAlerting">Responsive alerting</span>.
-              Employing double exponential smoothing to generate
-              dynamic alert thresholds that respond to the natural periodicity of your business.
-            </li>
-            <li><span className="doc-section">Automated canary analysis</span>. Automatically assessing the performance
-              of new code in production with Kayenta's Mann-Whitney U Tests.
-            </li>
-            <li><span className="doc-section" to="/docs/guide/apdex">Apdex scores</span>. Measuring user
-              experience with the standard apdex formula.
-            </li>
+            <li><NavLink className="doc-section" to="/docs/guide/consoleReporter">Passing through to Dropwizard's console reporter</NavLink></li>
           </ul>
         </li>
       </ol>

@@ -39,6 +39,39 @@ try {
 
 This section serves as a quickstart to rendering useful representations in Prometheus for metrics originating in Micrometer. See the https://prometheus.io/docs/querying/basics[Prometheus docs] for a far more complete reference of what is possible in Prometheus.
 
+=== Grafana Dashboard
+
+A publicly available Grafana dashboard for Micrometer-sourced JVM and Tomcat metrics is available https://grafana.com/dashboards/4701[here].
+
+image::img/prometheus-dashboard.png[Grafana dashboard for JVM and Tomcat binders]
+
+The dashboard features:
+
+* JVM memory
+* Process memory (provided by https://github.com/mweirauch/micrometer-jvm-extras[micrometer-jvm-extras])
+* CPU-Usage, Load, Threads, File Descriptors, Log Events
+* JVM Memory Pools (Heap, Non-Heap)
+* Garbage Collection
+* Classloading
+* Direct/Mapped buffer sizes
+
+Instead of using the `job` tag to distinct different applications, this dashboard makes use of a common tag called `application` applied to every metric. You can apply the common tag with:
+
+[source,java]
+----
+registry.config().commonTags("application", "MYAPPNAME");
+----
+
+In Spring Boot applications, you can use `MeterRegistryCustomizer` to apply common tags to auto-configured registries:
+
+[source,java]
+----
+@Bean
+MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+  return registry -> registry.config().commonTags("application", "MYAPPNAME");
+}
+----
+
 === Counters
 
 The query that generates a graph for the random-walk counter is
