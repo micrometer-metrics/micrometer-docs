@@ -115,8 +115,7 @@ export default function DocRoot() {
             </li>
           </ul>
         </li>
-        <li><span className="doc-section">Guides</span>. Examples demonstrating how to build actionable
-          insights from metrics data.
+        <li><span className="doc-section">Guides</span>.
           <ul>
             <li><NavLink className="doc-section" to="/docs/guide/consoleReporter">Passing through to Dropwizard's console reporter</NavLink></li>
           </ul>
