@@ -103,7 +103,7 @@ export default function DocRoot() {
               <ul>
                 <li><NavLink className="doc-section" to="/docs/ref/spring/1.5">Spring Boot 1.5.x</NavLink></li>
                 <li><a className="doc-section"
-                       href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-metrics">Spring
+                       href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics">Spring
                   Boot 2.0</a></li>
               </ul>
             </li>
