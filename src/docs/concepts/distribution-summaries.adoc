@@ -22,3 +22,24 @@ DistributionSummary summary = DistributionSummary
 
 1. Add base units for maximum portability -- base units are part of the naming convention for some monitoring systems. Leaving it off and violating the naming convention will have no adverse effect if you forget.
 2. Optionally, you may provide a scaling factor that each recorded sample will be multipled by as it is recorded.
+
+== Scaling and histograms
+
+Micrometer's preselected percentile histogram buckets are all integers from 1 to maximum long. Currently `minimumExpectedValue` and `maximumExpectedValue` serve to control the cardinality of the bucket set. If we attempt to detect that your min/max yields a small range and scale the preselected bucket domain to your summary's range, then we don't have another lever to control bucket cardinality.
+
+Instead, if your summary's domain is more constrained, scale your summary's range by a fixed factor. The use case we've heard so far is for summaries of ratios whose domain is [0,1]. Then:
+
+[source,java]
+----
+DistributionSummary.builder("my.ratio").scale(100).register(registry)
+----
+
+This way, the ratio winds up in the range [0,100] and we can set maximumExpectedValue = 100. Pair this with custom SLA boundaries if you care about particular ratios:
+
+[source,java]
+----
+DistributionSummary.builder("my.ratio")
+   .scale(100)
+   .sla(70, 80, 90)
+   .register(registry)
+----
