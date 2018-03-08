@@ -35,6 +35,15 @@ try {
 ----
 <1> The `PrometheusMeterRegistry` contains a `scrape()` function that knows how to supply the String data necessary for the scrape. All you have to do is wire it to an endpoint.
 
+=== The Prometheus rename filter
+
+In some cases, Micrometer provides out-of-the-box instrumentation that overlaps with commonly used Prometheus simpleclient modules, but has chosen a different naming scheme for consistency/portability. If you wish to use the Prometheus "standard" names, add the filter:
+
+[source,java]
+----
+prometheusRegistry.config().meterFilter(new PrometheusRenameFilter());
+----
+
 == Graphing
 
 This section serves as a quickstart to rendering useful representations in Prometheus for metrics originating in Micrometer. See the https://prometheus.io/docs/querying/basics[Prometheus docs] for a far more complete reference of what is possible in Prometheus.

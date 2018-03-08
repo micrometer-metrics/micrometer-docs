@@ -146,24 +146,3 @@ management.metrics.export.flavor=etsy # or datadog, telegraf
 management.metrics.export.host=localhost
 management.metrics.export.port=8125
 ----
-
-Because the StatsD implementation requires reactor 3.1.0, set the Reactor version to use by adding this property to the properties in your pom.xml:
-
-[source,xml]
-----
-<reactor.version>3.1.0.RELEASE</reactor.version>
-----
-
-If you are using Gradle, override it with:
-
-[source,groovy]
-----
-dependencyManagement {
-    imports {
-        mavenBom 'org.springframework.boot:spring-boot-dependencies:1.5.10.RELEASE'
-    }
-    dependencies {
-        dependency 'io.projectreactor:reactor-core:3.1.0.RELEASE'
-    }
-}
-----
