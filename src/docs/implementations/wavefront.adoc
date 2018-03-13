@@ -44,7 +44,7 @@ to a dedicated host.
 MeterRegistry registry = new WavefrontMeterRegistry(WavefrontConfig.DEFAULT_PROXY, Clock.SYSTEM);
 ----
 
-The default proxy configuration will push metrics to a Wavefront proxy sitting on localhost:7828.
+The default proxy configuration will push metrics to a Wavefront proxy sitting on localhost:2878.
 
 NOTE: If publishing metrics to a Wavefront proxy, the URI must be expressed in the form proxy://HOST:PORT.
 
