@@ -1,8 +1,48 @@
-Micrometer contains built-in instrumentation for timings of requests made to Spring MVC and Spring WebFlux server endpoints.
+Micrometer contains built-in instrumentation for timings of requests made to Spring MVC server endpoints.
 
-== Web MVC and Annotation-Based WebFlux
+== Spring Web MVC
 
-Spring Boot auto-configures interceptors to record metrics on your endpoints. By default, timings are recorded for every endpoint in your app. You can turn this off by setting:
+Spring Boot auto-configures interceptors to record metrics on your endpoints. By default, timings are recorded for every endpoint in your app. You don't need to do anything to your controller to instrument the endpoint:
+
+[source,properties]
+----
+@RestController
+public class MyController {
+    @GetMapping("/api/people")
+    public List<Person> listPeople() { ... }
+----
+
+The `Timer` is registered with a name of `http.server.requests` by default. This can be changed by setting:
+
+[source,properties]
+----
+# default is `http.server.requests`
+management.metrics.web.server.requests-metric-name=i.want.to.be.different
+----
+
+The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebMvcTagsProvider` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
+
+1. `method`, the HTTP method (for example, `GET` or `PUT`)
+2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
+3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
+4. `exception`, the simple name of the exception class thrown (only if an exception is thrown)
+
+=== Adding percentiles, histograms, and SLA boundaries
+
+The preferred way to add percentiles, percentile histograms, and SLA boundaries is to apply the general purpose property-based meter filter mechanism to this timer:
+
+[source,yml]
+----
+management.metrics.distribution:
+    percentiles.http.server.requests: 0.95, 0.99
+    percentiles-histogram.http.server.requests: true <1>
+    sla.http.server.requests: 10ms, 100ms
+----
+<1> If percentile approximations based on histograms are supported by your monitoring system, prefer this _instead_ of the `percentiles` option.
+
+=== Only timing endpoints you mark with @Timed
+
+You can turn this off by setting:
 
 [source,properties]
 ----
@@ -25,21 +65,6 @@ public class MyController {
 <1> A controller class to enable timings on every request handler in the controller.
 <2> A method to enable for an individual endpoint. This is not necessary if you have it on the class, but can be used to further customize the timer for this particular endpoint.
 <3> A method with `longTask = true` to enable a long task timer for the method. Long task timers require a separate metric name, and can be stacked with a short task timer.
-
-The `Timer` is registered with a name of `http.server.requests` by default. This can be changed by setting:
-
-[source,properties]
-----
-# default is `http.server.requests`
-management.metrics.web.server.requests-metric-name=i.want.to.be.different
-----
-
-The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebMvcTagsProvider` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
-
-1. `method`, the HTTP method (for example, `GET` or `PUT`)
-2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
-3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
-4. `exception`, the simple name of the exception class thrown (only if an exception is thrown)
 
 == Client-side HTTP Instrumentation
 
