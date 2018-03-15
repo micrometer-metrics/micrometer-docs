@@ -110,6 +110,8 @@ If you'd like the endpoint to be wired to a different endpoint, add a property:
 endpoints.prometheus.id=micrometheus
 ----
 
+NOTE: The endpoint is secured by default, so either include authentication in your Prometheus scrape endpoint or unsecure the prometheus endpoint with a property like `management.security.enabled=false`
+
 == Datadog
 
 The Datadog registry pushes metrics to datadoghq periodically. Below is a list of
