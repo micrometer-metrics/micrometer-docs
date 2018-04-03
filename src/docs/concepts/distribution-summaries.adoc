@@ -72,4 +72,4 @@ The total memory footprint of a distribution summary can vary dramatically depen
 
 NOTE: These estimations are based on improvements made in Micrometer 1.0.3, and assume at least that version.
 
-NOTE: For Prometheus specifically, R is _always_ equal to 1, regardless of how you attempt to configure it through `Timer.Builder`. This is special-cased for Prometheus because it expects cumulative histogram data that never rolls over.
+NOTE: For Prometheus specifically, R is _always_ equal to 1, regardless of how you attempt to configure it through `DistributionSummary.Builder`. This is special-cased for Prometheus because it expects cumulative histogram data that never rolls over.
