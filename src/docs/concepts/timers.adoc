@@ -111,3 +111,33 @@ registry.config().pauseDetector(new NoPauseDetector());
 ----
 
 In the future, we may provide further detector implementations. Some pauses may be able to be inferred from GC logging in some circumstances, for example, without requiring a constant CPU load however minimal. It's also possible that a future JDK will provide direct access to pause events.
+
+== Memory footprint estimation
+
+Timers are the most memory-consuming meter, and their total footprint can vary dramatically depending on which options you choose. Below is a table of memory consumption based on the use of various features. These figures assume no tags and a ring buffer length of 3. Adding tags of course adds somewhat to the total, as does increasing the buffer length. Total storage can also vary somewhat depending on the registry implementation.
+
+* R = Ring buffer length. We assume the default of 3 in all examples. R is set with `Timer.Builder#distributionStatisticBufferLength`.
+* B = Total histogram buckets. Can be SLA boundaries or percentile histogram buckets. By default, timers are clamped to a minimum expected value of 1ms and a maximum expected value of 30 seconds, yielding 66 buckets for percentile histograms, when applicable.
+* I = Interval estimator for pause compensation. 1.7 kb
+* M = Time-decaying max. 104 bytes
+* Fb = Fixed boundary histogram. 30b * B * (R+1)
+* Pp = Percentile precision. By default is 1. Generally in the range [0, 3]. Pp is set with `Timer.Builder#percentilePrecision`.
+* Hdr(Pp) = High dynamic range histogram.
+  - When Pp = 0: 1.9kb * R + 0.8kb
+  - When Pp = 1: 3.8kb * R + 1.1kb
+  - When Pp = 2: 18.2kb * R + 4.7kb
+  - When Pp = 3: 66kb * R + 33kb
+
+[width="80%",options="header"]
+|=========================================================
+|Pause detection |Client-side percentiles |Histogram and/or SLAs |Formula | Example
+
+|Yes |No  |No  |I + M| ~1.8kb
+|Yes |Yes |No  |I + M + Fb|For default percentile histogram, ~9.7kb
+|Yes |Yes |Yes |I + M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~14.3kb
+|No  |No  |No  |M| ~0.1kb
+|No  |Yes |No  |M + Fb|For default percentile histogram, ~7.9kb
+|No  |Yes |Yes |M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~12.6kb
+|=========================================================
+
+NOTE: These estimations are based on improvements made in Micrometer 1.0.3, and assume at least that version.
