@@ -60,13 +60,16 @@ The total memory footprint of a distribution summary can vary dramatically depen
   - When Pp = 2: 18.2kb * R + 4.7kb
   - When Pp = 3: 66kb * R + 33kb
 
+
 [width="80%",options="header"]
 |=========================================================
 |Client-side percentiles |Histogram and/or SLAs |Formula | Example
 
-|No  |No  |No  |M| ~0.1kb
-|No  |Yes |No  |M + Fb|For percentile histogram clamped to 66 buckets, ~7.9kb
-|No  |Yes |Yes |M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~12.6kb
+|No  |No  |M| ~0.1kb
+|Yes |No  |M + Fb|For percentile histogram clamped to 66 buckets, ~7.9kb
+|Yes |Yes |M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~12.6kb
 |=========================================================
 
 NOTE: These estimations are based on improvements made in Micrometer 1.0.3, and assume at least that version.
+
+NOTE: For Prometheus specifically, R is _always_ equal to 1, regardless of how you attempt to configure it through `Timer.Builder`. This is special-cased for Prometheus because it expects cumulative histogram data that never rolls over.
