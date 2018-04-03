@@ -43,3 +43,30 @@ DistributionSummary.builder("my.ratio")
    .sla(70, 80, 90)
    .register(registry)
 ----
+
+
+== Memory footprint estimation
+
+The total memory footprint of a distribution summary can vary dramatically depending on which options you choose. Below is a table of memory consumption based on the use of various features. These figures assume no tags and a ring buffer length of 3. Adding tags of course adds somewhat to the total, as does increasing the buffer length. Total storage can also vary somewhat depending on the registry implementation.
+
+* R = Ring buffer length. We assume the default of 3 in all examples. R is set with `DistributionSummary.Builder#distributionStatisticBufferLength`.
+* B = Total histogram buckets. Can be SLA boundaries or percentile histogram buckets. By default, summaries have NO mininimum and maximum expected value, so ship all 270 predetermined histogram buckets. You should always clamp distribution summaries with a `minimumExpectedValue` and `maximumExpectedValue` when you intend to ship percentile histograms.
+* M = Time-decaying max. 104 bytes
+* Fb = Fixed boundary histogram. 30b * B * (R+1)
+* Pp = Percentile precision. By default is 1. Generally in the range [0, 3]. Pp is set with `DistributionSummary.Builder#percentilePrecision`.
+* Hdr(Pp) = High dynamic range histogram.
+  - When Pp = 0: 1.9kb * R + 0.8kb
+  - When Pp = 1: 3.8kb * R + 1.1kb
+  - When Pp = 2: 18.2kb * R + 4.7kb
+  - When Pp = 3: 66kb * R + 33kb
+
+[width="80%",options="header"]
+|=========================================================
+|Client-side percentiles |Histogram and/or SLAs |Formula | Example
+
+|No  |No  |No  |M| ~0.1kb
+|No  |Yes |No  |M + Fb|For percentile histogram clamped to 66 buckets, ~7.9kb
+|No  |Yes |Yes |M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~12.6kb
+|=========================================================
+
+NOTE: These estimations are based on improvements made in Micrometer 1.0.3, and assume at least that version.
