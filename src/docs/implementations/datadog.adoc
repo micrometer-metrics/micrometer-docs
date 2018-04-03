@@ -1,4 +1,4 @@
-= Micrometer Atlas
+= Micrometer Datadog
 Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:

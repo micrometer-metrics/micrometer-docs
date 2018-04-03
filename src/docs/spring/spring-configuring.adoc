@@ -125,7 +125,7 @@ management.metrics.export.datadog.api-key=YOURKEY
 # Needed to send meter-level metadata like descriptions and base units to Datadog, but not strictly required.
 management.metrics.export.datadog.application-key=YOURKEY
 
-# You will probably want disable Atlas publishing in a local development profile.
+# You will probably want disable Datadog publishing in a local development profile.
 management.metrics.export.datadog.enabled=true # default is true
 
 # The interval at which metrics are sent to Datadog. See Duration.parse for the expected format.
