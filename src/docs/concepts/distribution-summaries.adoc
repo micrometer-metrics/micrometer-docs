@@ -52,7 +52,7 @@ The total memory footprint of a distribution summary can vary dramatically depen
 * R = Ring buffer length. We assume the default of 3 in all examples. R is set with `DistributionSummary.Builder#distributionStatisticBufferLength`.
 * B = Total histogram buckets. Can be SLA boundaries or percentile histogram buckets. By default, summaries have NO mininimum and maximum expected value, so ship all 270 predetermined histogram buckets. You should always clamp distribution summaries with a `minimumExpectedValue` and `maximumExpectedValue` when you intend to ship percentile histograms.
 * M = Time-decaying max. 104 bytes
-* Fb = Fixed boundary histogram. 30b * B * (R+1)
+* Fb = Fixed boundary histogram. 30b * B * R
 * Pp = Percentile precision. By default is 1. Generally in the range [0, 3]. Pp is set with `DistributionSummary.Builder#percentilePrecision`.
 * Hdr(Pp) = High dynamic range histogram.
   - When Pp = 0: 1.9kb * R + 0.8kb
@@ -66,7 +66,7 @@ The total memory footprint of a distribution summary can vary dramatically depen
 |Client-side percentiles |Histogram and/or SLAs |Formula | Example
 
 |No  |No  |M| ~0.1kb
-|Yes |No  |M + Fb|For percentile histogram clamped to 66 buckets, ~7.9kb
+|Yes |No  |M + Fb|For percentile histogram clamped to 66 buckets, ~7.7kb
 |Yes |Yes |M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~12.6kb
 |=========================================================
 
