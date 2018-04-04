@@ -66,7 +66,7 @@ The total memory footprint of a distribution summary can vary dramatically depen
 |Client-side percentiles |Histogram and/or SLAs |Formula | Example
 
 |No  |No  |M| ~0.1kb
-|Yes |No  |M + Fb|For percentile histogram clamped to 66 buckets, ~7.7kb
+|Yes |No  |M + Fb|For percentile histogram clamped to 66 buckets, ~6kb
 |Yes |Yes |M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~12.6kb
 |=========================================================
 

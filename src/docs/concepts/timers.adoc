@@ -136,7 +136,7 @@ Timers are the most memory-consuming meter, and their total footprint can vary d
 |Yes |Yes |No  |I + M + Fb|For default percentile histogram, ~7.7kb
 |Yes |Yes |Yes |I + M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~14.3kb
 |No  |No  |No  |M| ~0.1kb
-|No  |Yes |No  |M + Fb|For default percentile histogram, ~7.9kb
+|No  |Yes |No  |M + Fb|For default percentile histogram, ~6kb
 |No  |Yes |Yes |M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~12.6kb
 |=========================================================
 
