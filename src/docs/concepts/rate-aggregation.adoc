@@ -29,18 +29,15 @@ Micrometer efficiently maintains rate data by means of a step value that accumul
 
 image::img/rate-normalizing.png[Behavior of a step value,width=1200]
 
-The value returned by the poll function is always a _rate per second_. If the step value illustrated above represents the values of a counter, we could say that the counter saw "0.3 increments per second" in the first interval, which is reportable to the backend at any time during the second interval.
+The value returned by the poll function is always a _rate per second * interval_. If the step value illustrated above represents the values of a counter, we could say that the counter saw "0.3 increments per second" in the first interval, which is reportable to the backend at any time during the second interval.
 
 Micrometer timers track at least a count and total time as separate measurements. Suppose we configure publishing at 10 second intervals and we saw 20 requests that each took 100ms. Then for the first interval:
 
-1. `count` = 20 requests / 10 seconds = 2 requests / second
-2. `totalTime` = 20 * 100 ms / 10 seconds = 2 seconds / 10 seconds = 0.5
+1. `count` = 10 seconds * (20 requests / 10 seconds) = 20 requests
+2. `totalTime` = 10 seconds * (20 * 100 ms / 10 seconds) = 2 seconds
 
-The `count` statistic is meaningful standing alone -- it is a measure of _throughput_. Note that `totalTime` is dimensionless, and isn't really useful on its own. However:
+The `count` statistic is meaningful standing alone -- it is a measure of _throughput_. `totalTime` represents the total latency of all requests in the interval. Additionally:
 
-`totalTime / count` = 0.5 / (2 requests / second) = 0.25 seconds / request
+`totalTime / count` = 2 seconds / 20 requests = 0.1 seconds / request = 100 ms / request
 
 This is a useful measure of _average latency_. When the same idea is applied to the `totalAmount` and `count` emanating from distribution summaries, the measure is called a _distribution average_. Average latency is just the distribution average for a distribution summary measured in time (a timer). Some monitoring systems like Atlas provide facilities for computing the distribution average from these statistics, and Micrometer will ship `totalTime` and `count` as separate statistics. Others like Datadog don't have this kind of operation built-in, and Micrometer will calculate the distribution average client-side and ship that.
-
-TIP: If the math here feels uncomfortable, check out this https://www.khanacademy.org/math/algebra/units-in-modeling/rate-conversion/v/dimensional-analysis-units-algebraically[short video] on dimensional analysis.
-
