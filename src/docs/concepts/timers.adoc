@@ -58,6 +58,26 @@ sample.stop(registry.timer("my.timer", "response", response.status()));
 
 Note how we don't decide what timer we are accumulating the sample to until it is time to stop the sample. This allows us to dynamically determine certain tags from the end state of the operation we are timing.
 
+== The `@Timed` annotation
+
+The `micrometer-core` modules contains a `@Timed` annotation that can be used by frameworks to add timing support to either specific types of methods such as those serving web request endpoints or generally to all methods.
+
+WARNING: Micrometer's Spring Boot configuration does _not_ recognize `@Timed` on arbitrary methods.
+
+An incubating AspectJ aspect is included in `micrometer-core` as well that you can use in your application either through compile/load time AspectJ weaving or through framework facilities that interpret AspectJ aspects and proxy targeted methods in some other way, such as Spring AOP. Here is a sample Spring AOP configuration:
+
+```java
+@Configuration
+public class TimedConfiguration {
+   @Bean
+   public TimedAspect timedAspect(MeterRegistry registry) {
+      return new TimedAspect(registry);
+   }
+}
+```
+
+Applying `TimedAspect` makes `@Timed` usable on any arbitrary method.
+
 == Function-tracking timers
 
 Micrometer also provides a more infrequently used timer pattern that tracks two monotonically increasing functions (a function that stays the same or increases over time, but never decreases): a count function and a total time function. Some monitoring systems, like Prometheus, push cumulative values for counters (which applies to both the count and total time functions in this case) to the backend, but others publish the rate at which a counter is incrementing over the push interval. By employing this pattern, you allow the Micrometer implementation for your monitoring system to choose whether to rate normalize the timer or not and your timer remains portable across different types of monitoring systems.
