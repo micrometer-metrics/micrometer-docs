@@ -70,7 +70,7 @@ The built-in Etsy, dogstatsd, and Telegraf flavors cover most known public Stats
 
 [source,java]
 ----
-Function<MeterId, StatsdLineBuilder> nameAndUnits = id -> new StatsdLineBuilder() {
+Function<Meter.Id, StatsdLineBuilder> nameAndUnits = id -> new StatsdLineBuilder() {
     String name = id.getName() + "/" + (id.getBaseUnit() == null ? "unknown" : id.getBaseUnit());
 
     @Override
