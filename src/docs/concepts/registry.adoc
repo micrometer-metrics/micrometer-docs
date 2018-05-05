@@ -57,5 +57,5 @@ class MyApplication {
 ----
 
 1. Wherever possible (and especially where instrumentation performance is critical), store `Meter` instances in fields to avoid a lookup on their name/tags on each use.
-2. When tags need to be determined from local context, you have no choice but to construct/lookup the Meter inside your method body. The lookup cost is just a single hash lookup, so will be acceptable for most uses.
+2. When tags need to be determined from local context, you have no choice but to construct/lookup the Meter inside your method body. The lookup cost is just a single hash lookup, so it will be acceptable for most uses.
 3. It is OK to add registries _after_ meters have been created like `Metrics.counter(...)`. These meters will be added to each registry as it is bound to the global composite.

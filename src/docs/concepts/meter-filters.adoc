@@ -57,7 +57,7 @@ new MeterFilter() {
 
 === Chaining deny/accept meters
 
-Meter filters are applied in the order in which they are configured on the repository, so it is possible to stack deny/accept filters to achieve more complex rules:
+Meter filters are applied in the order in which they are configured on the registry, so it is possible to stack deny/accept filters to achieve more complex rules:
 
 [source, java]
 ----
@@ -90,7 +90,7 @@ This filter adds a name prefix and an additional tag conditionally to meters sta
 `MeterFilter` provides convenience builders for many common transformation cases:
 
 * `commonTags(Iterable<Tag>)` - Add a set of tags to all metrics. Adding common tags for app name, host, region, etc is a highly recommended practice.
-* `ignoreTags(String..)` - Drops match tag keys from every meter. This is particularly useful when a tag provably becomes
+* `ignoreTags(String...)` - Drop matching tag keys from every meter. This is particularly useful when a tag provably becomes
 too high cardinality and starts stressing your monitoring system or costing too much, but you can't change all the instrumentation points quickly.
 * `replaceTagValues(String tagKey, Function<String, String> replacement, String... exceptions)` - Replace tag values according to the provided mapping for all matching tag keys. This can be used to reduce the total cardinality of a tag by mapping some portion of tag values to something else.
 * `renameTag(String meterNamePrefix, String fromTagKey, String toTagKey)` - Rename a tag key for every metric beginning with a given prefix.
@@ -115,7 +115,7 @@ new MeterFilter() {
 };
 ----
 
-Generally, you should create a new `DistributionStatisticConfig` with just the pieces you wish to configure and then `merge` it with the input configuration. This allows you to drop-down on registry provided defaults for distribution statistics and to chain multiple filters together, each which configure some part of the distribution statistics (e.g. maybe you want a 100ms SLA for all http requests but only percentile histograms on a few critical endpoints).
+Generally, you should create a new `DistributionStatisticConfig` with just the pieces you wish to configure and then `merge` it with the input configuration. This allows you to drop-down on registry provided defaults for distribution statistics and to chain multiple filters together, each which configures some part of the distribution statistics (e.g. maybe you want a 100ms SLA for all http requests but only percentile histograms on a few critical endpoints).
 
 `MeterFilter` provides convenience builders for:
 
