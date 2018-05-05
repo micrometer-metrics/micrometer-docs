@@ -49,5 +49,5 @@ management.metrics.distribution.percentiles-histogram[http.server.requests]=true
 The escaping looks the same in both `.properties` and `.yml` formats. This escaping is _not_ required in Spring Boot 2.
 
 For more details on concepts behind `percentiles-histogram`, `percentiles` and `sla`
-refer to the http://micrometer.io/docs/concepts#_histograms_and_percentiles["Histograms
+refer to the https://micrometer.io/docs/concepts#_histograms_and_percentiles["Histograms
 and percentiles" section] of the Concepts documentation.

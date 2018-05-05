@@ -4,7 +4,7 @@ Not all measurements are reported or best viewed as a rate. For example, gauge v
 
 == Server-side
 
-Monitoring systems that perform server-side rate math expect absolute values to reported at each publishing interval. For example, the absolute count of all increments to a counter since the beginning of the application are sent on each publishing interval.
+Monitoring systems that perform server-side rate math expect absolute values to be reported at each publishing interval. For example, the absolute count of all increments to a counter since the beginning of the application is sent on each publishing interval.
 
 Suppose we have a slightly-positively biased random walk that chooses to increment a counter once every 10 milliseconds. If we view the raw counter value in a system like Prometheus, we see a step-wise monotonically increasing function (the width of the step is the interval at which Prometheus is polling or scraping for data).
 
@@ -45,4 +45,4 @@ This is a useful measure of _average latency_. When the same idea is applied to 
 Shipping the rate for the publishing interval is sufficient to reason about the rate over any time window greater than or equal to the publishing interval. In our example, if a service continues to receive 20 requests each taking 100ms for every 10 second interval in a given minute, then we could say:
 
 1. Micrometer reported "20 requests" for `count` on every 10 second interval. The monitoring system simply sums these six 10 second intervals and arrives at the conclusion that there are 120 requests / minute. Note that it is the monitoring system doing this summation, not Micrometer.
-2. Micrometer reported "2 seconds" of `totalTime ` on every 10 second interval. The monitoring system can sum all total time statistics over the minute to yield "12 seconds" of total time in the minute interval. Then, the average latency is just as we expect: 12 seconds / 120 requests = 100 ms / request.
+2. Micrometer reported "2 seconds" of `totalTime` on every 10 second interval. The monitoring system can sum all total time statistics over the minute to yield "12 seconds" of total time in the minute interval. Then, the average latency is just as we expect: 12 seconds / 120 requests = 100 ms / request.

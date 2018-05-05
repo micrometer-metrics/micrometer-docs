@@ -6,7 +6,7 @@ When building graphs and alerts off of counters, generally you should be most in
 
 It's tempting at first to conceive of visualizing absolute counts rather than a rate, but the absolute count is usually both a function of the rapidity with which something is used *and* the longevity of the application instance under instrumentation. Building dashboards and alerts of the rate of a counter per some interval of time disregards the longevity of the app, letting you see aberrant behavior long after the app has started.
 
-NOTE: Be sure to read through the timer section before jumping in to using counters, as timers record a count of timed events as part of the suite of metrics that go into timing. For those pieces of code you intend to time, you do NOT need to add a counter separately.
+NOTE: Be sure to read through the timer section before jumping into using counters, as timers record a count of timed events as part of the suite of metrics that go into timing. For those pieces of code you intend to time, you do NOT need to add a counter separately.
 
 The following code simulates a real counter whose rate exhibits some perturbation over a short time window.
 
@@ -19,7 +19,7 @@ Counter counter = registry.counter("counter"); <1>
 
 Flux.interval(Duration.ofMillis(10))
         .doOnEach(d -> {
-            if (dist.nextDouble() + 0.1 > 0) { <2>
+            if (rand.nextDouble() + 0.1 > 0) { <2>
                 counter.increment(); <3>
             }
         })
