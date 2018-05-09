@@ -2,7 +2,7 @@ Timers are useful for measuring short-duration latencies and the frequency of su
 
 As an example, consider a graph showing request latency to a typical web server. The server can be expected to respond to many requests quickly, so the timer will be getting updated many times per second.
 
-The appropriate base unit for timers varies by metrics backend for good reason. Micrometer is decidedly un-opinionated about this, but because of the potential for confusion, requires a `TimeUnit` when interacting with `Timers`. Micrometer is aware of the preferences of each implementation and stores your timing in the appropriate base unit based on the implementation.
+The appropriate base unit for timers varies by metrics backend for good reason. Micrometer is decidedly un-opinionated about this, but because of the potential for confusion, requires a `TimeUnit` when interacting with ``Timer``s. Micrometer is aware of the preferences of each implementation and stores your timing in the appropriate base unit based on the implementation.
 
 [source,java]
 ----
@@ -27,7 +27,7 @@ Timer timer = Timer
 
 == Recording blocks of code
 
-The `Timer` interfaces exposes several convenience overloads for recording timings inline, e.g.:
+The `Timer` interface exposes several convenience overloads for recording timings inline, e.g.:
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ Applying `TimedAspect` makes `@Timed` usable on any arbitrary method.
 
 == Function-tracking timers
 
-Micrometer also provides a more infrequently used timer pattern that tracks two monotonically increasing functions (a function that stays the same or increases over time, but never decreases): a count function and a total time function. Some monitoring systems, like Prometheus, push cumulative values for counters (which applies to both the count and total time functions in this case) to the backend, but others publish the rate at which a counter is incrementing over the push interval. By employing this pattern, you allow the Micrometer implementation for your monitoring system to choose whether to rate normalize the timer or not and your timer remains portable across different types of monitoring systems.
+Micrometer also provides a more infrequently used timer pattern that tracks two monotonically increasing functions (a function that stays the same or increases over time, but never decreases): a count function and a total time function. Some monitoring systems, like Prometheus, push cumulative values for counters (which apply to both the count and total time functions in this case) to the backend, but others publish the rate at which a counter is incrementing over the push interval. By employing this pattern, you allow the Micrometer implementation for your monitoring system to choose whether to rate normalize the timer or not and your timer remains portable across different types of monitoring systems.
 
 [source, java]
 -----
@@ -118,15 +118,15 @@ FunctionTimer.builder("cache.gets.latency", cache,
 
 Micrometer uses the LatencyUtils package to compensate for http://highscalability.com/blog/2015/10/5/your-load-generator-is-probably-lying-to-you-take-the-red-pi.html[coordinated omission] -- extra latency arising from system and VM pauses that skew your latency statistics downward. Distribution statistics like percentiles and SLA counts are influenced by a pause detector implementation that adds additional latency here and there to compensate for pauses.
 
-Micrometer supports two pause detector implementations: a clock-drift based detector and a NOOP detector. By default Micrometer configures a clock-drift detector because in order to report as-accurate-as-possible metrics without further configuration.
+Micrometer supports two pause detector implementations: a clock-drift based detector and a NOOP detector. By default Micrometer configures a clock-drift detector in order to report as-accurate-as-possible metrics without further configuration.
 
-The clock-drift based detector has a configurable sleep interval and pause interval. CPU consumption is inversely proportional to `sleepDuration`, as is pause detection accuracy. Both values will be set to 100ms by default to offer decent detection of long pause events while consuming a negligible amount of CPU time.
+The clock-drift based detector has a configurable sleep interval and pause threshold. CPU consumption is inversely proportional to `sleepInterval`, as is pause detection accuracy. Both values will be set to 100ms by default to offer decent detection of long pause events while consuming a negligible amount of CPU time.
 
 You can customize the pause detector using:
 
 [source,java]
 ----
-registry.config().pauseDetector(new ClockDriftPauseDetector(sleepInt, pauseInt));
+registry.config().pauseDetector(new ClockDriftPauseDetector(sleepInterval, pauseThreshold));
 registry.config().pauseDetector(new NoPauseDetector());
 ----
 

@@ -28,7 +28,7 @@ The following properties allow per-meter customization:
 | Whether to deny meters from emitting any metrics.
 
 | `management.metrics.distribution.percentiles-histogram`
-| Whether to publish a histogram suitable for computing aggregable (across dimension)
+| Whether to publish a histogram suitable for computing aggregable (across dimensions)
 percentile approximations.
 
 | `management.metrics.distribution.percentiles`
