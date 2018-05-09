@@ -25,7 +25,7 @@ void scrapeResources() {
 }
 ----
 
-If we wanted to alert when this process exceeds `threshold`, with a long task timer we will receive that alert at the first reporting interval after we have exceeded the threshold. With a regular timer, we wouldn't receive the alert until the first reporting interval after the process completed, over an hour later!
+If we wanted to alert when this process exceeds threshold, with a long task timer we will receive that alert at the first reporting interval after we have exceeded the threshold. With a regular timer, we wouldn't receive the alert until the first reporting interval after the process completed, over an hour later!
 
 The interface contains a fluent builder for long task timers:
 

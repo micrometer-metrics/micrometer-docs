@@ -4,9 +4,9 @@ TIP: Gauges are useful for monitoring things with natural upper bounds. We don't
 
 TIP: Never gauge something you can count with a `Counter`!
 
-Micrometer takes the stance that gauges should be sampled and not set, so there is no information about what might have occurred between samples. After all, any intermediate values set on a gauge are lost by the time the gauge value is reported to a metrics backend anyway, so there seems to be little value in setting those intermediate values in the first place.
+Micrometer takes the stance that gauges should be sampled and not be set, so there is no information about what might have occurred between samples. After all, any intermediate values set on a gauge are lost by the time the gauge value is reported to a metrics backend anyway, so there seems to be little value in setting those intermediate values in the first place.
 
-If it helps, think of a `Gauge` as a "heisen-gauge" - a meter that only changes when it is observed. Every other meter type provided out-of-the-box accumulate intermediate counts toward the point where the data is sent to the metrics backend.
+If it helps, think of a `Gauge` as a "heisen-gauge" - a meter that only changes when it is observed. Every other meter type provided out-of-the-box accumulates intermediate counts toward the point where the data is sent to the metrics backend.
 
 The `MeterRegistry` interface contains methods for building gauges to observe numeric values, functions, collections, and maps.
 
