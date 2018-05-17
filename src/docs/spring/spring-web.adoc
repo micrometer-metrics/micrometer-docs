@@ -34,9 +34,9 @@ The preferred way to add percentiles, percentile histograms, and SLA boundaries 
 [source,yml]
 ----
 management.metrics.distribution:
-    percentiles.http.server.requests: 0.95, 0.99
-    percentiles-histogram.http.server.requests: true <1>
-    sla.http.server.requests: 10ms, 100ms
+    percentiles[http.server.requests]: 0.95, 0.99
+    percentiles-histogram[http.server.requests]: true <1>
+    sla[http.server.requests]: 10ms, 100ms
 ----
 <1> If percentile approximations based on histograms are supported by your monitoring system, prefer this _instead_ of the `percentiles` option.
 
