@@ -9,8 +9,8 @@ Implementations of `MeterFilter` are added to the registry programmatically:
 [source, java]
 ----
 registry.config()
-    .meterFilter(MeterFilter.ignoreTags("too.much.information")
-    .meterFilter(MeterFilter.denyNameStartsWith("jvm");
+    .meterFilter(MeterFilter.ignoreTags("too.much.information"))
+    .meterFilter(MeterFilter.denyNameStartsWith("jvm"));
 ----
 
 Meter filters are applied in order and the results of transforming or configuring a meter are chained.
