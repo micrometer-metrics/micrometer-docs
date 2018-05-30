@@ -71,3 +71,7 @@ the Spring-managed `MeterRegistry`.
 == Customizing individual metrics
 
 include::spring-meter-filters.adoc[leveloffset=+1]
+
+== Application properties
+
+include::spring-boot-application-properties.adoc[leveloffset=+1]
