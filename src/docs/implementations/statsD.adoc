@@ -34,7 +34,7 @@ MeterRegistry registry = new StatsdMeterRegistry(config, Clock.SYSTEM);
 
 NOTE: Telegraf can be _configured_ to accept dogstatsd format as well. If you are using Telegraf, configuring Micrometer to ship Telegraf-formatted StatsD lines eases the requirements of your Telegraf configuration.
 
-`StatsdConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `management.metrics.export.statsd` directly to the `StatsdConfig`:
+`StatsdConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.statsd` directly to the `StatsdConfig`:
 
 [source,yml]
 ----

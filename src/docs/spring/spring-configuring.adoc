@@ -144,7 +144,7 @@ common configuration properties you will want to change:
 [source,properties]
 ----
 management.metrics.export.statsd.enabled=true # default is true
-management.metrics.export.flavor=etsy # or datadog, telegraf
-management.metrics.export.host=localhost
-management.metrics.export.port=8125
+management.metrics.export.statsd.flavor=etsy # or datadog, telegraf
+management.metrics.export.statsd.host=localhost
+management.metrics.export.statsd.port=8125
 ----

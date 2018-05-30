@@ -26,7 +26,7 @@ AtlasConfig atlasConfig = new AtlasConfig() {
 MeterRegistry registry = new AtlasMeterRegistry(atlasConfig, Clock.SYSTEM);
 ----
 
-Micrometer uses Netflix's https://github.com/netflix/spectator[Spectator] as the underlying instrumentation library when recording metrics destined for Atlas. `AtlasConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `management.metrics.export.atlas` directly to the `AtlasConfig`:
+Micrometer uses Netflix's https://github.com/netflix/spectator[Spectator] as the underlying instrumentation library when recording metrics destined for Atlas. `AtlasConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.atlas` directly to the `AtlasConfig`:
 
 [source,yml]
 ----
