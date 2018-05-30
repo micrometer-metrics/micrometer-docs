@@ -53,18 +53,25 @@ InfluxConfig config = new InfluxConfig() {
 MeterRegistry registry = new InfluxMeterRegistry(config, Clock.SYSTEM);
 ----
 
-`InfluxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `management.metrics.export.influx` directly to the `InfluxConfig`:
+`InfluxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.influx` directly to the `InfluxConfig`:
 
 [source, yaml]
 ----
 management.metrics.export.influx:
-    db: mydb
-
-    # You will probably want disable Influx publishing in a local development profile.
-    enabled: true
-
-    # The interval at which metrics are sent to Influx. The default is 1 minute.
-    step: 1m
+    auto-create-db: true # Whether to create the Influx database if it does not exist before attempting to publish metrics to it. (Default: true)
+    batch-size: 10000 # Number of measurements per request to use for this backend. If more measurements are found, then multiple requests will be made. (Default: 10000)
+    compressed: true # Whether to enable GZIP compression of metrics batches published to Influx. (Default: true)
+    connect-timeout: 1s # Connection timeout for requests to this backend. (Default: 1s)
+    consistency: one # Write consistency for each point. (Default: one)
+    db: mydb # Tag that will be mapped to "host" when shipping metrics to Influx. (Defaut: mydb)
+    enabled: true # Whether exporting of metrics to this backend is enabled. (Default: true)
+    num-threads: 2 # Number of threads to use with the metrics publishing scheduler. (Default: 2)
+    password: mysecret # Login password of the Influx server.
+    read-timeout: 10s # Read timeout for requests to this backend. (Default: 10s)
+    retention-policy: my_rp # Retention policy to use (Influx writes to the DEFAULT retention policy if one is not specified).
+    step: 1m # Step size (i.e. reporting frequency) to use. (Default: 1m)
+    uri: http://localhost:8086 # URI of the Influx server. (Default: http://localhost:8086)
+    user-name: myusername # Login user of the Influx server.
 ----
 
 === Through Telegraf
