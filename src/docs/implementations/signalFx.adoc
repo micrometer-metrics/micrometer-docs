@@ -29,7 +29,7 @@ MeterRegistry registry = new SignalFxMeterRegistry(signalfxConfig, Clock.SYSTEM)
 
 There are two distinct sources of API keys in SignalFx.
 
-`SignalFxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring support binds properties prefixed with `management.metrics.export.signalfx` directly to the `SignalFxConfig`:
+`SignalFxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.signalfx` directly to the `SignalFxConfig`:
 
 [source,yml]
 ----
