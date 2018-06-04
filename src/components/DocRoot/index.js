@@ -98,8 +98,8 @@ export default function DocRoot() {
           instrumentation provided by Micrometer.
           <ul>
             <li><span className="doc-section">Spring Boot</span>. As of Spring Boot 2.0.0.M5, Micrometer is the
-              instrumentation library powering the delivery of application metrics from Spring. The <i>micrometer-spring-legacy</i>
-              module provides drop-down support for Spring Boot 1.5.x.
+              instrumentation library powering the delivery of application metrics from Spring. The <i>micrometer-spring-legacy </i>
+               module provides drop-down support for Spring Boot 1.5.x.
               <ul>
                 <li><NavLink className="doc-section" to="/docs/ref/spring/1.5">Spring Boot 1.5.x</NavLink></li>
                 <li><a className="doc-section"
