@@ -54,7 +54,7 @@ By default, Micrometer publishes StatsD line protocol over UDP, as the vast majo
 
 [source,java]
 ----
-Consumer<String> lineLogger = line -> logger.info(line);
+Consumer<String> lineLogger = line -> logger.info(line); <1>
 
 MeterRegistry registry = StatsdMeterRegistry.builder(StatsdConfig.DEFAULT) <2>
     .clock(clock)
@@ -62,7 +62,7 @@ MeterRegistry registry = StatsdMeterRegistry.builder(StatsdConfig.DEFAULT) <2>
     .build();
 ----
 1. Define what to do with lines.
-2. The flavor configuration option determines the structure of the line for the default line builder. Has no effect if you override the line builder with a customization
+2. The flavor configuration option determines the structure of the line for the default line builder. Has no effect if you override the line builder with a customization.
 
 == Customizing the line format
 
