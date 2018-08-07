@@ -10,7 +10,7 @@ public MeterFilter renameRegionTagMeterFilter() {
 }
 ----
 
-=== Per-meter properties
+== Per-meter properties
 In addition to `MeterFilter` beans, it's also possible to apply a limited set of customization on a per-meter basis using properties. Per-meter customizations apply to any all meter IDs that start with the given name. For example, the following will disable any meters that have an ID starting with `example.remote`
 
 [source,properties]
