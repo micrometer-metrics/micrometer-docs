@@ -12,7 +12,7 @@ include::install.adoc[]
 
 [source,java]
 ----
-SignalFxConfig signalfxConfig = new SignalFxConfig() {
+SignalFxConfig signalFxConfig = new SignalFxConfig() {
     @Override
     public String accessToken() {
         return "MYTOKEN";
@@ -24,7 +24,7 @@ SignalFxConfig signalfxConfig = new SignalFxConfig() {
     }
 };
 
-MeterRegistry registry = new SignalFxMeterRegistry(signalfxConfig, Clock.SYSTEM);
+MeterRegistry registry = new SignalFxMeterRegistry(signalFxConfig, Clock.SYSTEM);
 ----
 
 There are two distinct sources of API keys in SignalFx.
