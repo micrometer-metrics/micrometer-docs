@@ -61,7 +61,9 @@ public MeterRegistryCustomizer<MeterRegistry> commonTags() {
 The reason we do it this way is because generally a tag prefix in Graphite is correlated to a common tag elsewhere. Prefixes tend to be something like app name or host. By applying those values as common tags, you make your metrics more portable (i.e. if you ever switched to a dimensional monitoring system, you're set!).
 
 
-You may have to do this, for example, when the order of the prefix matters. Micrometer always sorts tags, so adding `application`, `host` to `tagsAsPrefix` results in a prefixed metric like `APP.HOST.myCounter`. If you need host first, consider a custom hierarchical name mapper that adds a prefix:
+You can use this when the order of the prefix matters. Micrometer always sorts tags but the order of tag keys in `tagsAsPrefix` is preserved, so adding `host`, `application` to `tagsAsPrefix` results in a prefixed metric like `HOST.APP.myCounter`.
+
+To meet your specific naming needs, you can also provide a custom hierarchical name mapper when creating `GraphiteMeterRegistry` as follows:
 
 [source,java]
 ----
