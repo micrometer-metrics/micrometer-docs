@@ -37,9 +37,9 @@ We can turn on client-side percentiles for both timers via a meter filter:
 registry.config().meterFilter(
     new MeterFilter() {
         @Override
-        public HistogramConfig configure(Meter.Id id, HistogramConfig config) {
+        public DistributionStatisticConfig configure(Meter.Id id, DistributionStatisticConfig config) {
             if(id.getName().startsWith("myservice")) {
-                return HistogramConfig.builder()
+                return DistributionStatisticConfig.builder()
                     .percentiles(0.95)
                     .build()
                     .merge(config);
