@@ -14,7 +14,7 @@ The `MeterRegistry` interface contains methods for building gauges to observe nu
 ----
 List<String> list = registry.gauge("listGauge", Collections.emptyList(), new ArrayList<>(), List::size); <1>
 List<String> list2 = registry.gaugeCollectionSize("listSize2", Tags.empty(), new ArrayList<>()); <2>
-Map<String, Integer> map = registry.gaugeMapSize(new HashMap<>(), "mapGauge");
+Map<String, Integer> map = registry.gaugeMapSize("mapGauge", Tags.empty(), new HashMap<>());
 ----
 <1> A slightly more common form of gauge is one that monitors some non-numeric object. The last argument establishes the function that is used to determine the value of the gauge when the gauge is observed.
 <2> A more convenient form of (1) for when you simply want to monitor collection size.
