@@ -4,7 +4,7 @@ Jon Schneider <jschneider@pivotal.io>
 :sectnums:
 :system: atlas
 
-Datadog is a dimensional time-series SAAS with built-in dashboarding and alerting.
+Datadog is a dimensional time-series SaaS with built-in dashboarding and alerting.
 
 == Installation and Configuration
 

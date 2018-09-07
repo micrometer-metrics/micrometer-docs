@@ -4,7 +4,7 @@ Jon Schneider <jschneider@pivotal.io>
 :sectnums:
 :system: graphite
 
-Graphite is one of the most popular current hierarchical metrics systems backed by a fixed-size database, similar in design and purpose to RRD. It originated at Orbitz in 2006 and was open sourced in 2008.
+Graphite is one of the most popular current hierarchical metrics systems backed by a fixed-size database, similar in design and purpose to RRDtool. It originated at Orbitz in 2006 and was open sourced in 2008.
 
 include::install.adoc[]
 
@@ -24,7 +24,7 @@ GraphiteConfig graphiteConfig = new GraphiteConfig() {
     }
 };
 
-MeterRegistry registry = new GraphiteMeterRegistry(graphiteConfig, HierarchicalNameMapper.DEFAULT, Clock.SYSTEM);
+MeterRegistry registry = new GraphiteMeterRegistry(graphiteConfig, Clock.SYSTEM, HierarchicalNameMapper.DEFAULT);
 ----
 
 Micrometer uses Dropwizard Metrics as the underlying instrumentation library when recording metrics destined for Graphite. `GraphiteConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.graphite` directly to the `GraphiteConfig`:
@@ -46,9 +46,9 @@ include::hierarchical-name-mapping.adoc[]
 
 == Prefixing your metrics
 
-To add a prefix to all metrics going to graphite, use the `GraphiteConfig#tagsAsPrefix` configuration option. This option applies the tag value of a set of common tags as a prefix. For example, if `tagsAsPrefix` contains "application", if a meter is created with a tag "application=APPNAME", it will appear in Graphite as "APPNAME.myTimer".
+To add a prefix to all metrics going to graphite, use the `GraphiteConfig#tagsAsPrefix` configuration option. This option applies the tag value of a set of common tags as a prefix. For example, if `tagsAsPrefix` contains "application", and a meter named "myTimer" is created with a tag "application=APPNAME", it will appear in Graphite as "APPNAME.myTimer".
 
-Generally, when using `tagsAsPrefix` add a common tag to the registry so that the tag is present on all meters belonging to that registry:
+Generally, when using `tagsAsPrefix`, add common tags to the registry so that the tags are present on all meters belonging to that registry:
 
 [source,java]
 ----
@@ -69,8 +69,8 @@ To meet your specific naming needs, you can also provide a custom hierarchical n
 ----
 GraphiteMeterRegistry r = new GraphiteMeterRegistry(
             GraphiteConfig.DEFAULT,
-            (id, convention) -> "prefix." + HierarchicalNameMapper.DEFAULT.toHierarchicalName(id, convention),
-            Clock.SYSTEM);
+            Clock.SYSTEM,
+            (id, convention) -> "prefix." + HierarchicalNameMapper.DEFAULT.toHierarchicalName(id, convention));
 ----
 
 == Further customizing the `GraphiteReporter`
