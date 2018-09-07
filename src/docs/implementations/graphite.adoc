@@ -73,6 +73,8 @@ GraphiteMeterRegistry r = new GraphiteMeterRegistry(
             (id, convention) -> "prefix." + HierarchicalNameMapper.DEFAULT.toHierarchicalName(id, convention));
 ----
 
+NOTE: If you use a custom `HierarchicalNameMapper`, `tagsAsPrefix` will be ignored.
+
 == Further customizing the `GraphiteReporter`
 
 We give you the option to configure `GraphiteReporter` yourself if you need further customization. Just use this constructor and provide your own `GraphiteReporter`:
