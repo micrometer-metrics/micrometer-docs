@@ -92,7 +92,7 @@ registry.more().timer("cache.gets.latency", Tags.of("name", cache.getName()), ca
 );
 -----
 
-1. `getOperationCount()` is a monotonically increasing function incrementing with every cache get from the beginning of its life.
+1. `getGetOperationCount()` is a monotonically increasing function incrementing with every cache get from the beginning of its life.
 2. This represents the unit of time represented by `getTotalGetLatency()`. Each registry implementation specifies what its expected base unit of time is, and the total time reported will be scaled to this value.
 
 The function-tracking timer, in concert with the monitoring system's rate normalizing functionality (whether this is an artifact of the query language or the way data is pushed to the system), adds a layer of richness on top of the cumulative value of the functions themselves. You can reason about the _rate_ of throughput and latency, whether that rate is within an acceptable bound, is increasing or decreasing over time, etc.
