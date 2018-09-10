@@ -72,6 +72,10 @@ the Spring-managed `MeterRegistry`.
 
 include::spring-meter-filters.adoc[leveloffset=+1]
 
+== With Spring Boot Actuator
+
+include::spring-boot-actuator.adoc[leveloffset=+1]
+
 == Application properties
 
 include::spring-boot-application-properties.adoc[leveloffset=+1]
