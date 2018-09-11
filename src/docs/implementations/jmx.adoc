@@ -12,6 +12,23 @@ Micrometer also sometimes scrapes data from JMX beans for use in reporting metri
 
 include::hierarchical-name-mapping.adoc[]
 
+== Configuring
+
+The example below uses a `JmxMeterRegistry` to set values into JMX beans.
+
+[source,java]
+----
+
+meterRegistry = new JmxMeterRegistry(JmxConfig.DEFAULT, Clock.SYSTEM);
+counter = Counter.builder("app.counter.example.tick")
+        .tags("level", "normal")
+        .description("Number of info level events that made it to the logs")
+        .register(meterRegistry);
+
+counter.increment();
+
+----
+
 == Counters
 
 JMX counters measure mean throughput and one-, five-, and fifteen-minute exponentially-weighted moving average throughputs.
