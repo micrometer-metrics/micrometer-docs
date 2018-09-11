@@ -29,17 +29,6 @@ counter.increment();
 
 ----
 
-These values can be exposed to Prometheus using the https://github.com/prometheus/jmx_exporter[JMX Exporter].
-
-An example Prometheus rule to translate the counter above might look like this:
-
-----
-rules:
-  - pattern: metrics<name=appCounterExampleTick.level.normal><>Count
-    name: app_counter_example_tick_normal_totals
-    type: COUNTER
-----
-
 == Counters
 
 JMX counters measure mean throughput and one-, five-, and fifteen-minute exponentially-weighted moving average throughputs.
