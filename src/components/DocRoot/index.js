@@ -113,6 +113,8 @@ export default function DocRoot() {
             <li><NavLink className="doc-section" to="/docs/ref/cache">Cache</NavLink>. Instrumentation for the most
               popular caching frameworks.
             </li>
+            <li><NavLink className="doc-section" to="/docs/ref/okhttpclient">OkHttpClient</NavLink>. Instrumentation for OkHttpClient.
+            </li>
           </ul>
         </li>
         <li><span className="doc-section">Guides</span>.

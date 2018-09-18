@@ -10,6 +10,7 @@ let docsSpring = require('!asciidoc-loader!../../docs/spring/index.adoc');
 let docsConcepts = require('!asciidoc-loader!../../docs/concepts/index.adoc');
 let docsJvm = require('!asciidoc-loader!../../docs/jvm/index.adoc');
 let docsCache = require('!asciidoc-loader!../../docs/cache/index.adoc');
+let docsOkHttpClient = require('!asciidoc-loader!../../docs/okhttpclient/index.adoc');
 let docsConsoleReporter = require('!asciidoc-loader!../../docs/guide/console-reporter.adoc');
 let docsHealthCheck = require('!asciidoc-loader!../../docs/guide/health-check.adoc');
 
@@ -46,6 +47,10 @@ export default function DocRoutes() {
 
       <Route path="/docs/ref/cache" render={() =>
         <DocSection title="Cache Metrics" content={docsCache}/>
+      }/>
+
+      <Route path="/docs/ref/okhttpclient" render={() =>
+        <DocSection title="OkHttpClient Metrics" content={docsOkHttpClient}/>
       }/>
 
       <Route path="/docs/guide/consoleReporter" render={() =>
