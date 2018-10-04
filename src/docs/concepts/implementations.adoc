@@ -1,6 +1,6 @@
 Micrometer contains a core module with an instrumentation https://en.wikipedia.org/wiki/Service_provider_interface[SPI], a set of modules containing implementations for various monitoring systems (each is called a registry), and a test kit. There are three important characteristics of monitoring systems that it is important to understand:
 
-* *Dimensionality*. Whether the system supports metric names to be enriched with tag key/value pairs. If a system is not dimensional, it is _hierarchical_, which means it only supports a flat metric name. When publishing metrics to hierarchical systems, Micrometer flattens the set of tag/key value pairs and adds them to the name.
+* *Dimensionality*. Whether the system supports metric names to be enriched with tag key/value pairs. If a system is not dimensional, it is _hierarchical_, which means it only supports a flat metric name. When publishing metrics to hierarchical systems, Micrometer flattens the set of tag key/value pairs and adds them to the name.
 
 [cols=2*,options="header"]
 |===
