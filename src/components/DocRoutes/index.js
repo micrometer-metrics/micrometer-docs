@@ -13,7 +13,7 @@ let docsCache = require('!asciidoc-loader!../../docs/cache/index.adoc');
 let docsConsoleReporter = require('!asciidoc-loader!../../docs/guide/console-reporter.adoc');
 let docsHealthCheck = require('!asciidoc-loader!../../docs/guide/health-check.adoc');
 
-const systems = ['atlas', 'datadog', 'ganglia', 'graphite', 'influx', 'jmx', 'prometheus', 'statsD', 'wavefront', 'new-relic', 'signalFx'];
+const systems = ['appOptics', 'atlas', 'azure-monitor', 'datadog', 'dynatrace', 'elastic', 'ganglia', 'graphite', 'humio', 'influx', 'jmx', 'kairos', 'new-relic', 'prometheus', 'signalFx', 'statsD', 'wavefront'];
 
 let docsBySystem = {};
 systems.forEach(sys => docsBySystem[sys] = require(`!asciidoc-loader!../../docs/implementations/${sys}.adoc`));

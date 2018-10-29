@@ -1,0 +1,40 @@
+= Micrometer Elastic
+Jon Schneider <jschneider@pivotal.io>
+:toc:
+:sectnums:
+:system: elastic
+
+Elasticsearch is an open source search and analytics platform. Metrics stored in Elasticsearch can be visualized in Kibana.
+
+include::install.adoc[]
+
+NOTE: Elastic support was added in Micrometer 1.1.0.
+
+== Configuring
+
+[source,java]
+----
+ElasticConfig elasticConfig = new ElasticConfig() {
+    @Override
+    @Nullable
+    public String get(String k) {
+        return null;
+    }
+};
+MeterRegistry registry = new ElasticMeterRegistry(elasticConfig, Clock.SYSTEM);
+----
+
+`ElasticConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.elastic` directly to the `ElasticConfig`:
+
+[source,yml]
+----
+management.metrics.export.elastic:
+    # You will probably want disable Elastic publishing in a local development profile.
+    enabled: true
+
+    # The interval at which metrics are sent to Elastic. The default is 1 minute.
+    step: 1m
+
+    # The index to store metrics in, defaults to "metrics"
+    index: metrics
+----

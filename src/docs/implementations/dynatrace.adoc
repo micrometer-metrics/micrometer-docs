@@ -1,0 +1,61 @@
+= Micrometer Dynatrace
+Jon Schneider <jschneider@pivotal.io>
+:toc:
+:sectnums:
+:system: dynatrace
+
+Dynatrace is a dimensional time-series SaaS with built-in dashboarding.
+
+include::install.adoc[]
+
+NOTE: Dynatrace support was added in Micrometer 1.1.0.
+
+== Configuring
+
+[source,java]
+----
+DynatraceConfig dynatraceConfig = new DynatraceConfig() {
+    @Override
+    public String apiToken() {
+        return MY_TOKEN;
+    }
+
+    @Override
+    public String uri() {
+        return MY_DYNATRACE_URI;
+    }
+
+    @Override
+    public String deviceId() {
+        return MY_DEVICE_ID;
+    }
+
+    @Override
+    @Nullable
+    public String get(String k) {
+        return null;
+    }
+};
+MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTEM);
+----
+
+`DynatraceConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.dynatrace` directly to the `DynatraceConfig`:
+
+[source,yml]
+----
+management.metrics.export.dynatrace:
+    # This required
+    api-token: YOURKEY
+
+    # This is required
+    uri: https://XXXXXXX.live.dynatrace.com
+
+    # This is required
+    device-id: sample
+
+    # You will probably want disable Dynatrace publishing in a local development profile.
+    enabled: true
+
+    # The interval at which metrics are sent to Dynatrace. The default is 1 minute.
+    step: 1m
+----

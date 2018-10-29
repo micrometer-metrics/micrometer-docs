@@ -50,7 +50,7 @@ export default function Home() {
               code with Micrometer allows the libraries to be included in applications that ship metrics to different
               backends.</p>
             <p>
-              Contains built-in support for <strong>Prometheus</strong>, Netflix <strong>Atlas</strong>, <strong>CloudWatch</strong>, <strong>Datadog</strong>, <strong>Graphite</strong>, <strong>Ganglia</strong>, <strong>JMX</strong>, <strong>Influx/Telegraf</strong>, <strong>New Relic</strong>, <strong>StatsD</strong>, <strong>SignalFx</strong>, and <strong>Wavefront</strong>.
+              Contains built-in support for <strong>AppOptics</strong>, <strong>Azure Monitor</strong>, Netflix <strong>Atlas</strong>, <strong>CloudWatch</strong>, <strong>Datadog</strong>, <strong>Dynatrace</strong>, <strong>Elastic</strong>, <strong>Ganglia</strong>, <strong>Graphite</strong>, <strong>Humio</strong>, <strong>Influx/Telegraf</strong>, <strong>JMX</strong>, <strong>KairosDB</strong>, <strong>New Relic</strong>, <strong>Prometheus</strong>, <strong>SignalFx</strong>, <strong>StatsD</strong>, and <strong>Wavefront</strong>.
             </p>
           </div>
         </div>

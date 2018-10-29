@@ -7,7 +7,7 @@ Micrometer contains a core module with an instrumentation https://en.wikipedia.o
 |Dimensional
 |Hierarchical
 
-|Atlas, Datadog, Datadog StatsD, Influx, Prometheus, SignalFx, Telegraf StatsD, Wavefront
+|AppOptics, Atlas, Azure Monitor, Cloudwatch, Datadog, Datadog StatsD, Dynatrace, Elastic, Humio, Influx, KairosDB, New Relic, Prometheus, SignalFx, Sysdig StatsD, Telegraf StatsD, Wavefront
 |Graphite, Ganglia, JMX, Etsy StatsD
 |===
 
@@ -19,7 +19,7 @@ Micrometer contains a core module with an instrumentation https://en.wikipedia.o
 |Client-side
 |Server-side
 
-|Atlas, Datadog, Influx, Graphite, Ganglia, JMX, all StatsD flavors, SignalFx, Wavefront
+|AppOptics, Atlas, Azure Monitor, Datadog, Elastic, Graphite, Ganglia, Humio, Influx, JMX, Kairos, New Relic, all StatsD flavors, SignalFx, Wavefront
 |Prometheus
 |===
 
@@ -30,8 +30,8 @@ Micrometer contains a core module with an instrumentation https://en.wikipedia.o
 |Client pushes
 |Server polls
 
-|Atlas, Datadog, Graphite, Ganglia, Influx, JMX, all StatsD flavors, SignalFx, Wavefront
-|Prometheus
+|AppOptics, Atlas, Azure Monitor, Datadog, Elastic, Graphite, Ganglia, Humio, Influx, JMX, Kairos, New Relic, SignalFx, Wavefront
+|Prometheus, all StatsD flavors
 |===
 
 There are other, more minor, variations in expectations from one monitoring system to another, such as their conception of base units of measurement (particularly time) and the canonical naming convention for metrics. Micrometer customizes your metrics to meet these demands as well on a per-registry basis.

@@ -1,0 +1,72 @@
+= Micrometer Humio
+Jon Schneider <jschneider@pivotal.io>
+:toc:
+:sectnums:
+:system: humio
+
+Humio is a dimensional time-series SaaS with built-in dashboarding.
+
+include::install.adoc[]
+
+NOTE: Humio support was added in Micrometer 1.1.0.
+
+== Configuring
+
+[source,java]
+----
+HumioConfig humioConfig = new HumioConfig() {
+    @Override
+    public String apiToken() {
+        return MY_TOKEN;
+    }
+
+    @Override
+    @Nullable
+    public String get(String k) {
+        return null;
+    }
+};
+MeterRegistry registry = new HumioMeterRegistry(humioConfig, Clock.SYSTEM);
+----
+
+`HumioConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.humio` directly to the `HumioConfig`:
+
+[source,yml]
+----
+management.metrics.export.humio:
+    api-token: YOURKEY
+
+    # You will probably want disable Humio publishing in a local development profile.
+    enabled: true
+
+    # The interval at which metrics are sent to Humio. The default is 1 minute.
+    step: 1m
+
+    # The repository Micrometer will send metrics to. "sandbox" is the default, which is always the repository name of the trial/free tier on Humio.
+    repository: sandbox
+----
+
+== Graphing
+
+This section serves as a quickstart to rendering useful representations in Humio for metrics originating in Micrometer.
+
+=== Timers
+
+The Humio implementation of `Timer` produces three fields in Humio:
+
+1. `sum` - Rate of calls per second.
+2. `count` - Rate of total time per second.
+3. `max` - A sliding window maximum amount recorded.
+4. `avg` - A non-aggregable average for only this set of tag values.
+
+The following query constructs a dimensionally aggregable average latency per URI:
+
+[source, text]
+----
+name = http_server_requests
+| eval(aggAvg=sum/count)
+| timechart(uri, function=[max(aggAvg)])
+----
+
+.Timer over a simulated service.
+image::img/humio-timer.png[Humio-rendered timer]

@@ -32,6 +32,11 @@ export default function DocRoot() {
           allow you to instrument your code in the same way and be able to visualize the results in your monitoring
           system of choice.
           <ul>
+            <li><NavLink className="doc-section" to="/docs/registry/appOptics">AppOptics</NavLink>. AppOptics
+              is a dimensional time-series SAAS with built-in dashboarding. Micrometer supports shipping
+              metrics to AppOptics directly via its API.
+            </li>
+
             <li><NavLink className="doc-section" to="/docs/registry/atlas">Atlas</NavLink>. An
               in-memory dimensional time series database with built-in graphing, a custom stack-based query language,
               and advanced math operations. Atlas originated at Netflix, where it remains the operational metrics
@@ -41,6 +46,15 @@ export default function DocRoot() {
             <li><NavLink className="doc-section" to="/docs/registry/datadog">Datadog</NavLink>. Datadog
               is a dimensional time-series SAAS with built-in dashboarding and alerting. Micrometer supports shipping
               metrics to Datadog directly via its API or through Dogstatsd via the StatsD registry.
+            </li>
+
+            <li><NavLink className="doc-section" to="/docs/registry/dynatrace">Dynatrace</NavLink>. Dynatrace
+              is a dimensional time-series SAAS with built-in dashboarding. Micrometer supports shipping
+              metrics to Dynatrace directly via its API.
+            </li>
+
+            <li><NavLink className="doc-section" to="/docs/registry/elastic">Elastic</NavLink>. Elasticsearch is an
+              open source search and analytics platform. Metrics stored in Elasticsearch can be visualized in Kibana.
             </li>
 
             <li><NavLink className="doc-section" to="/docs/registry/ganglia">Ganglia</NavLink>. An
@@ -53,6 +67,11 @@ export default function DocRoot() {
               design and purpose to RRD. It originated at Orbitz in 2006 and was open sourced in 2008.
             </li>
 
+            <li><NavLink className="doc-section" to="/docs/registry/humio">Humio</NavLink>. Humio
+              is a dimensional time-series SAAS with built-in dashboarding. Micrometer supports shipping
+              metrics to Humio directly via its API.
+            </li>
+
             <li><NavLink className="doc-section" to="/docs/registry/influx">Influx</NavLink>.
               The InfluxData suite of tools supports real-time stream processing and storage of time-series data. It
               supports downsampling, automatically expiring and deleting unwanted data, as well as backup and restore.
@@ -63,6 +82,10 @@ export default function DocRoot() {
               provides a hierarchical mapping to JMX, primarily as a cheap and portable way to view metrics locally.
               Where JMX exporting is found in production, the same metrics are generally exported to another, more
               purpose-fit monitoring system.
+            </li>
+
+            <li><NavLink className="doc-section" to="/docs/registry/kairos">KairosDB</NavLink>. KairosDB is a
+              dimensional time-series database built on top of Cassandra. Charting can be accomplished in Grafana.
             </li>
 
             <li><NavLink className="doc-section" to="/docs/registry/new-relic">New Relic</NavLink>.
