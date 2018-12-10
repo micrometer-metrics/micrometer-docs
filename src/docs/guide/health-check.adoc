@@ -50,10 +50,10 @@ A totally different model would be to map statuses to tags, report 1 when the ap
 [source,java]
 ----
 registry.gauge("health", Tags.of("status", "up"), healthIndicator,
-    health -> "UP".equals(health().getStatus().getCode()) ? 1 : 0);
+        h -> "UP".equals(h.health().getStatus().getCode()) ? 1 : 0);
 
 registry.gauge("health", Tags.of("status", "down"), healthIndicator,
-    health -> "DOWN".equals(health().getStatus().getCode()) ? 1 : 0);
+        h -> "DOWN".equals(h.health().getStatus().getCode()) ? 1 : 0);
 
 ...
 ----
