@@ -16,11 +16,6 @@ NOTE: KairosDB support was added in Micrometer 1.1.0.
 ----
 KairosConfig kairosConfig = new KairosConfig() {
     @Override
-    public String apiToken() {
-        return MY_TOKEN;
-    }
-
-    @Override
     @Nullable
     public String get(String k) {
         return null;
@@ -34,8 +29,6 @@ MeterRegistry registry = new KairosMeterRegistry(kairosConfig, Clock.SYSTEM);
 [source,yml]
 ----
 management.metrics.export.kairos:
-    api-token: YOURKEY
-
     # You will probably want disable Kairos publishing in a local development profile.
     enabled: true
 
