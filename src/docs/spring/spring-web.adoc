@@ -26,6 +26,7 @@ The `Timer` contains a set of dimensions for every request, governed by the prim
 2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
 3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
 4. `exception`, the simple name of the exception class thrown (only if an exception is thrown)
+5. `outcome`, Request’s outcome based on the status code of the response. `1xx` is INFORMATIONAL, `2xx` is SUCCESS, `3xx` is REDIRECTION, `4xx` CLIENT_ERROR, and 5xx is `SERVER_ERROR`
 
 === Adding percentiles, histograms, and SLA boundaries
 
@@ -82,5 +83,6 @@ The `Timer` contains a set of dimensions for every request, governed by the prim
 2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
 3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
 4. `clientName`, the host portion of the URI
+5. `outcome`, Request’s outcome based on the status code of the response. `1xx` is INFORMATIONAL, `2xx` is SUCCESS, `3xx` is REDIRECTION, `4xx` CLIENT_ERROR, and 5xx is `SERVER_ERROR`
 
 You can use the convenience static functions in `RestTemplateExchangeTags` to construct your own `RestTemplateExchangeTagsProvider`.
