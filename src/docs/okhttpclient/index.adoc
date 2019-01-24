@@ -27,4 +27,4 @@ OkHttpClient client = new OkHttpClient.Builder()
     .build();
 ----
 
-But note that the sample might trigger tag cardinality explosion as a URI path itself is being used for tag values.
+WARNING: The sample might trigger tag cardinality explosion as a URI path itself is being used for tag values.
