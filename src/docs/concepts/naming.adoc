@@ -1,4 +1,4 @@
-Micrometer employs a naming convention that separates lowercase words with a '.' (dot) character. Different monitoring systems have different recommendations regarding naming convention, and some naming conventions may actually be breaking for one system and not another. Each Micrometer implementation for a monitor system packs with a naming convention that transforms lowercase dot notation names to the recommended naming convention. Additionally, this naming convention implementation sanitizes names and tags of special characters that are disallowed by the monitoring system they are designed for. You can override the default naming convention for a registry if you'd like by implementing `NamingConvention` and setting it on the registry with:
+Micrometer employs a naming convention that separates lowercase words with a '.' (dot) character. Different monitoring systems have different recommendations regarding naming convention, and some naming conventions may be incompatible for one system and not another. Each Micrometer implementation for a monitoring system comes with a naming convention that transforms lowercase dot notation names to the monitoring system's recommended naming convention. Additionally, this naming convention implementation sanitizes metric names and tags of special characters that are disallowed by the monitoring system. You can override the default naming convention for a registry by implementing `NamingConvention` and setting it on the registry with:
 
 [source,java]
 ----
@@ -21,7 +21,7 @@ By adhering to Micrometer's lowercase dot notation convention, you guarantee the
 
 == Tag naming
 
-It is recommended to follow the same lowercase dot notation described for meter names when naming tags. Utilizing this consistent naming convention for tags allows for better translation into the respective monitoring system's idiomatic naming schemes.
+TIP: It is recommended to follow the same lowercase dot notation described for meter names when naming tags. Utilizing this consistent naming convention for tags allows for better translation into the respective monitoring system's idiomatic naming schemes.
 
 Suppose we are trying to measure the number of http requests and the number of database calls.
 
