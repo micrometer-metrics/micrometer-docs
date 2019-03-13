@@ -14,10 +14,5 @@ import './index.css'; // where we wish to override bootstrap defaults
 
 const history = createBrowserHistory();
 
-history.listen((location) => {
-  window.ga('set', 'page', location.pathname + location.search);
-  window.ga('send', 'pageview');
-});
-
 ReactDOM.render(<BrowserRouter history={history}><App/></BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();
