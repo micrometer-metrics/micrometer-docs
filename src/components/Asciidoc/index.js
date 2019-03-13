@@ -12,7 +12,6 @@ import './highlight.github.css';
 let asciidoctor = require('asciidoctor.js')();
 
 asciidoctor.Extensions.register(function () {
-  console.log(this);
   this.treeProcessor(function() {
     let self = this;
     self.process(function (doc) {
