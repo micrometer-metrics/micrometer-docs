@@ -1,4 +1,4 @@
-= Micrometer Influx
+= Micrometer StatsD
 Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
@@ -63,6 +63,26 @@ MeterRegistry registry = StatsdMeterRegistry.builder(StatsdConfig.DEFAULT) <2>
 ----
 1. Define what to do with lines.
 2. The flavor configuration option determines the structure of the line for the default line builder. Has no effect if you override the line builder with a customization.
+
+=== Using Apache Kafka for line sink
+
+You can also use Apache Kafka for line sink as follows:
+
+[source,java]
+----
+Properties properties = new Properties();
+properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+properties.setProperty(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+properties.setProperty(VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+Producer<String, String> producer = new KafkaProducer<>(properties);
+
+StatsdMeterRegistry.builder(statsdConfig)
+        .lineSink((line) -> producer.send(new ProducerRecord<>("my-metrics", line)))
+        .build();
+----
+
+Now Micrometer produces lines for metrics to the `my-metrics` topic and you can consume the lines on the topic.
 
 == Customizing the line format
 
