@@ -64,7 +64,7 @@ MeterRegistry registry = StatsdMeterRegistry.builder(StatsdConfig.DEFAULT) <2>
 1. Define what to do with lines.
 2. The flavor configuration option determines the structure of the line for the default line builder. Has no effect if you override the line builder with a customization.
 
-== Using Apache Kafka for line sink
+=== Using Apache Kafka for line sink
 
 You can also use Apache Kafka for line sink as follows:
 
