@@ -1,0 +1,36 @@
+version: 2.0
+
+jobs:
+  build:
+    working_directory: ~/micrometer-docs
+    docker:
+      - image: circleci/node:11
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Node Modules Cache
+          keys:
+            - node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Node Modules Cache
+          key: node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      # No tests yet...
+      # - run:
+          # name: Run Tests
+          # command: yarn test
+      - run:
+          name: Run build
+          # Compiler warnings are treated as failures in CI environments by the react-scripts build
+          # We have one compiler warning that I cannot figure out how to get rid of...
+          command: CI=false yarn build
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build

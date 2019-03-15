@@ -11,6 +11,7 @@
     "font-awesome": "^4.7.0",
     "history": "^4.6.3",
     "octicons": "^5.0.1",
+    "opal-runtime": "^1.0.13",
     "react": "^15.6.1",
     "react-codemirror": "^1.0.0",
     "react-dom": "^15.6.1",
