@@ -1,0 +1,7 @@
+applications:
+  - name: micrometer-docs
+    buildpacks:
+    - staticfile_buildpack
+    memory: 64MB
+    path: build
+    stack: cflinuxfs3

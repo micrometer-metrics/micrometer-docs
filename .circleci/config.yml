@@ -1,4 +1,7 @@
-version: 2.0
+version: 2.1
+
+orbs:
+  cloudfoundry: circleci/cloudfoundry@0.1.38
 
 jobs:
   build:
@@ -28,9 +31,42 @@ jobs:
           # Compiler warnings are treated as failures in CI environments by the react-scripts build
           # We have one compiler warning that I cannot figure out how to get rid of...
           command: CI=false yarn build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
+            - manifest.yml
 
 workflows:
   version: 2
-  build:
+  build_and_deploy:
     jobs:
       - build
+      - cloudfoundry/dark_deploy:
+          filters:
+            branches:
+              only:
+                # Note that pull requests are checked out using `pull/` like refs/pull/1279/head -> origin/pull/1279
+                - master
+          requires:
+            - build
+          appname: micrometer-docs
+          manifest: manifest.yml
+          org: FrameworksAndRuntimes
+          space: micrometer-production
+          package: build
+          workspace_path: '.'
+          dark_subdomain: micrometer-docs-dark
+          domain: cfapps.io
+      - hold:
+          requires:
+            - cloudfoundry/dark_deploy
+          type: approval
+      - cloudfoundry/live_deploy:
+          requires:
+            - hold
+          appname: micrometer-docs
+          org: FrameworksAndRuntimes
+          space: micrometer-production
+          live_subdomain: ''
+          domain: micrometer.io
