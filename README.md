@@ -1,4 +1,4 @@
-## Micrometer website source
+## Micrometer website source [![CircleCI](https://circleci.com/gh/micrometer-metrics/micrometer-docs.svg?style=svg)](https://circleci.com/gh/micrometer-metrics/micrometer-docs)
 
 This repo is the source code for [micrometer.io](https://micrometer.io).
 
