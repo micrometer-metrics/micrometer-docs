@@ -4,7 +4,7 @@ Jon Schneider <jschneider@pivotal.io>
 :sectnums:
 :system: kairos
 
-KairosDB is a dimensional time-series database built on top of Cassandra. Charting can be accomplished in Grafana via a link:http://docs.grafana.org/v4.0/datasources/kairosdb/[Kairos datasource].
+KairosDB is a dimensional time-series database built on top of Cassandra. Charting can be accomplished in Grafana via a link:https://docs.grafana.org/v4.0/datasources/kairosdb/[Kairos datasource].
 
 include::install.adoc[]
 
