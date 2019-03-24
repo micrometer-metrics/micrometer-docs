@@ -13,6 +13,7 @@ let docsCache = require('!asciidoc-loader!../../docs/cache/index.adoc');
 let docsOkHttpClient = require('!asciidoc-loader!../../docs/okhttpclient/index.adoc');
 let docsConsoleReporter = require('!asciidoc-loader!../../docs/guide/console-reporter.adoc');
 let docsHealthCheck = require('!asciidoc-loader!../../docs/guide/health-check.adoc');
+let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../docs/guide/http-sender-resilience4j-retry.adoc');
 
 const systems = ['appOptics', 'atlas', 'azure-monitor', 'datadog', 'dynatrace', 'elastic', 'ganglia', 'graphite', 'humio', 'influx', 'jmx', 'kairos', 'new-relic', 'prometheus', 'signalFx', 'statsD', 'wavefront'];
 
@@ -59,6 +60,10 @@ export default function DocRoutes() {
 
       <Route path="/docs/guide/healthAsGauge" render={() =>
         <DocSection title="Mapping Spring's health indicators to metrics" content={docsHealthCheck}/>
+      }/>
+
+      <Route path="/docs/guide/httpSenderResilience4jRetry" render={() =>
+        <DocSection title="HttpSender with Resilience4j retry" content={docsHttpSenderResilience4jRetry}/>
       }/>
     </div>
   )
