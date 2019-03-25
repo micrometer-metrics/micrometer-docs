@@ -147,6 +147,9 @@ export default function DocRoot() {
           <ul>
             <li><NavLink className="doc-section" to="/docs/guide/healthAsGauge">Mapping Spring's health indicators to metrics</NavLink></li>
           </ul>
+          <ul>
+            <li><NavLink className="doc-section" to="/docs/guide/httpSenderResilience4jRetry">HttpSender with Resilience4j retry</NavLink></li>
+          </ul>
         </li>
       </ol>
     </div>
