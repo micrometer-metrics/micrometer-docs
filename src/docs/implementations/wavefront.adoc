@@ -44,7 +44,7 @@ to a dedicated host.
 MeterRegistry registry = new WavefrontMeterRegistry(WavefrontConfig.DEFAULT_PROXY, Clock.SYSTEM);
 ----
 
-The default proxy configuration will push metrics to a Wavefront proxy sitting on localhost:2878.
+The default proxy configuration will push metrics to a Wavefront proxy sitting on localhost:2878 and histogram distributions to localhost:40000.
 
 NOTE: If publishing metrics to a Wavefront proxy, the URI must be expressed in the form proxy://HOST:PORT.
 
@@ -91,3 +91,11 @@ image::img/wavefront-timer-sla.png[Wavefront-rendered SLA boundaries]
 Lastly, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries. In this example, we set SLA boundaries at 275 (blue), 300 (orange), and 500 (green) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
 
 Where the lines converge at 4:55.30 and 4:57.30 it is evident that no sample exceeded the 275 ms SLA boundary.
+
+=== Wavefront Histograms
+
+When `publishPercentileHistogram` is enabled for a Wavefront `Timer` or `DistributionSummary`, histogram distributions are published to Wavefront. These histogram distributions are aggregated by the minute (the default), hour, and/or day, depending on your `WavefrontConfig`.
+
+To query histograms, use `hs()` queries. For instance, `percentile(98, hs(${name}.m))` returns the 98th percentile for a particular metric over each minute.
+
+See the https://docs.wavefront.com/proxies_histograms.html[Wavefront Histograms documentation] for further reference.
