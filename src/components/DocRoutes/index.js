@@ -14,6 +14,7 @@ let docsOkHttpClient = require('!asciidoc-loader!../../docs/okhttpclient/index.a
 let docsConsoleReporter = require('!asciidoc-loader!../../docs/guide/console-reporter.adoc');
 let docsHealthCheck = require('!asciidoc-loader!../../docs/guide/health-check.adoc');
 let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../docs/guide/http-sender-resilience4j-retry.adoc');
+let docsSupport = require('!asciidoc-loader!../../docs/support/index.adoc');
 
 const systems = ['appOptics', 'atlas', 'azure-monitor', 'datadog', 'dynatrace', 'elastic', 'ganglia', 'graphite', 'humio', 'influx', 'jmx', 'kairos', 'new-relic', 'prometheus', 'signalFx', 'statsD', 'wavefront'];
 
@@ -64,6 +65,10 @@ export default function DocRoutes() {
 
       <Route path="/docs/guide/httpSenderResilience4jRetry" render={() =>
         <DocSection title="HttpSender with Resilience4j retry" content={docsHttpSenderResilience4jRetry}/>
+      }/>
+
+      <Route path="/docs/support" render={() =>
+        <DocSection title="Micrometer Support Policy" content={docsSupport}/>
       }/>
     </div>
   )
