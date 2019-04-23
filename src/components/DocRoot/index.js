@@ -78,6 +78,10 @@ export default function DocRoot() {
               Analysis of data is done via a SQL-like query language.
             </li>
 
+            <li><NavLink className="doc-section" to="/docs/registry/instana">Instana</NavLink>.
+              Instana is an automatic application performance management and infrastructure monitoring system.
+            </li>
+
             <li><NavLink className="doc-section" to="/docs/registry/jmx">JMX</NavLink>. Micrometer
               provides a hierarchical mapping to JMX, primarily as a cheap and portable way to view metrics locally.
               Where JMX exporting is found in production, the same metrics are generally exported to another, more
