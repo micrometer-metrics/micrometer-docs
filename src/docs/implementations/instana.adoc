@@ -1,0 +1,27 @@
+= Micrometer Instana
+Fabian Lange <fabian.lange@instana.com>
+:toc:
+:sectnums:
+:system: instana
+
+Instana is an automatic application performance management and infrastructure monitoring system.
+
+== Installation and Configuration
+
+Instana will automatically detect and report all metrics without the need of any additional dependency or configuration!
+It does so by detecting all instances of `io.micrometer.core.instrument.MeterRegistry` and collecting all registered `io.micrometer.core.instrument.Meter` instances from them.
+
+Just run the Instana agent alongside of your application using Micrometer and the Instana agent will monitor it automatically.
+
+== Supported Metrics
+
+* **Timer**: the total time of recorded events scaled to milliseconds.
+* **Counter**: the cumulative count since this counter was created.
+* **Gauge**: the current value.
+* **DistributionSummary**: the total amount of all recorded events.
+* **LongTaskTimer**: the current number of tasks being executed.
+* **FunctionCounter**: the cumulative count since this counter was created.
+* **FunctionTimer**: the total time of all occurrences of the timed event.
+* **TimeGauge**: the current value, scaled to the appropriate base unit.
+
+The metrics will show up on the Java Virtual Machine dashboard in Instana. It is possible to configure alerting based on these metrics.
