@@ -20,7 +20,7 @@ export default function Navbar() {
             <Link to="/docs" className="nav-link"><i className="fa fa-lg fa-book"/> Documentation</Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://github.com/micrometer-metrics/micrometer"><i className="fa fa-lg fa-github-alt" /> Github</a>
+            <a className="nav-link" href="https://github.com/micrometer-metrics/micrometer"><i className="fa fa-lg fa-github-alt" /> GitHub</a>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="https://twitter.com/micrometerio"><i className="fa fa-lg fa-twitter" /> Twitter</a>
