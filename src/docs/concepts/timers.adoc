@@ -1,8 +1,8 @@
-Timers are useful for measuring short-duration latencies and the frequency of such events. All implementations of `Timer` report at least the total time and count of events as separate time series.
+Timers are intended for measuring short-duration latencies, and the frequency of such events. All implementations of `Timer` report at least the total time and count of events as separate time series. While Timers can be used for other use cases, note negative values are not supported, and recording many longer durations could cause overflow of the total time at `Long.MAX_VALUE` nanoseconds (292.3 years).
 
 As an example, consider a graph showing request latency to a typical web server. The server can be expected to respond to many requests quickly, so the timer will be getting updated many times per second.
 
-The appropriate base unit for timers varies by metrics backend for good reason. Micrometer is decidedly un-opinionated about this, but because of the potential for confusion, requires a `TimeUnit` when interacting with ``Timer``s. Micrometer is aware of the preferences of each implementation and stores your timing in the appropriate base unit based on the implementation.
+The appropriate base unit for timers varies by metrics backend for good reason. Micrometer is decidedly un-opinionated about this, but because of the potential for confusion, requires a `TimeUnit` when interacting with ``Timer``s. Micrometer is aware of the preferences of each implementation and publishes your timing in the appropriate base unit based on the implementation.
 
 [source,java]
 ----
