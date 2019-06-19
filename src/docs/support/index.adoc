@@ -1,14 +1,19 @@
 Micrometer's support policy is defined as follows for different types of releases. Release versions follow a MAJOR.MINOR.PATCH convention as defined in https://semver.org/[semantic versioning].
 
-* *Major Releases* will be supported for a minimum of 3 years from the date the release was made available for download.
-* *Minor Releases*:
-  ** Long Term Support (LTS) Minor Releases will be supported a minimum of 12 months from the date the release was made available for download by users.
-  ** Non-LTS Minor releases will be supported until a more recent minor release (LTS or non-LTS) is published, at which time maintenance releases shift to the latest minor release.
-  ** Designation of LTS and non-LTS releases:
-    *** LTS and non-LTS minor releases are not differentiated by their version number alone, i.e. Micrometer will follow standard semantic versioning in its version numbers.
-    *** LTS releases are marked as such on https://github.com/micrometer-metrics/micrometer/releases[the Github releases].
-    *** All supported versions are maintained in the following table indicating LTS/non-LTS status and https://github.com/micrometer-metrics/micrometer[on Github].
-* Any confirmed security vulnerabilities on supported software should result in a maintenance release to Maven Central and JCenter.
+* *Major release lines* (e.g. 1.x, 2.x) will be supported with patch releases for a minimum of 3 years from the date the major release (e.g. `1.0.0`, `2.0.0`) was made available for download.
+* *Minor release lines* (e.g. 1.1.x, 1.2.x)
+  ** Long Term Support (LTS) Minor release lines will be supported with patch releases for a minimum of 12 months from the date the minor release (e.g. `1.1.0`, `1.2.0`) was made available for download.
+  ** Non-LTS Minor release lines will be supported until a more recent minor release line (LTS or non-LTS) is published.
+* Any confirmed security vulnerabilities on supported software should result in a patch release to Maven Central and JCenter.
+
+[NOTE]
+====
+Designation of LTS and non-LTS releases
+
+  * LTS and non-LTS minor releases are not differentiated by their version number alone, i.e. Micrometer will follow standard semantic versioning in its version numbers.
+  * LTS releases are marked as such on https://github.com/micrometer-metrics/micrometer/releases[the GitHub releases].
+  * All supported versions are maintained in the following table indicating LTS/non-LTS status and https://github.com/micrometer-metrics/micrometer[on GitHub].
+====
 
 .Supported minor version matrix
 [width="35%",options="header"]
