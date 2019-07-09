@@ -44,7 +44,7 @@ to a dedicated host.
 MeterRegistry registry = new WavefrontMeterRegistry(WavefrontConfig.DEFAULT_PROXY, Clock.SYSTEM);
 ----
 
-The default proxy configuration will push metrics to a Wavefront proxy sitting on localhost:2878 and histogram distributions to localhost:40000.
+The default proxy configuration will push metrics and histogram distributions to a Wavefront proxy sitting on localhost:2878.
 
 NOTE: If publishing metrics to a Wavefront proxy, the URI must be expressed in the form proxy://HOST:PORT.
 
@@ -94,8 +94,18 @@ Where the lines converge at 4:55.30 and 4:57.30 it is evident that no sample exc
 
 === Wavefront Histograms
 
-When `publishPercentileHistogram` is enabled for a Wavefront `Timer` or `DistributionSummary`, histogram distributions are published to Wavefront. These histogram distributions are aggregated by the minute (the default), hour, and/or day, depending on your `WavefrontConfig`.
+Wavefront's histogram implementation stores an actual distribution of metrics as opposed to single metrics. This allows you to apply any percentile and aggregation function on the distribution at query time without having to specify specific percentiles and metrics to keep during metric collection.
 
-To query histograms, use `hs()` queries. For instance, `percentile(98, hs(${name}.m))` returns the 98th percentile for a particular metric over each minute.
+Wavefront histogram distributions are collected and reported for any `Timer` or `DistributionSummary` that has `publishPercentileHistogram` enabled.
+
+By default, distributions that are reported to Wavefront get aggregated by the minute, providing you with a histogram distribution for each minute. You also have the option of aggregating by hour and/or day. This can be customized via the following configuration options:
+
+* `reportMinuteDistribution` - Boolean specifying whether to aggregate by minute. Enabled by default. Metric name in Wavefront has `.m` suffix.
+* `reportHourDistribution` - Boolean specifying whether to aggregate by hour. Disabled by default. Metric name in Wavefront has `.h` suffix.
+* `reportDayDistribution` - Boolean specifying whether to aggregate by day. Disabled by default. Metric name in Wavefront has `.d` suffix.
+
+If you are sending to a Wavefront proxy, by default both metrics and histogram distributions will be published to the same port -- 2878 in the default proxy configuration. If your proxy is configured to listen for histogram distributions on a different port, you can specify the port to publish to via the `distributionPort` configuration option.
+
+Histogram distributions can be queried in Wavefront using `hs()` queries. For example, `percentile(98, hs(${name}.m))` returns the 98th percentile for a particular histogram aggregated over each minute. Each histogram metric name has a suffix (`.m`, `.h`, or `.d`) depending on the histogram's aggregation interval.
 
 See the https://docs.wavefront.com/proxies_histograms.html[Wavefront Histograms documentation] for further reference.
