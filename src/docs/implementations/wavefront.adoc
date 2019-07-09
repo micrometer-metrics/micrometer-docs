@@ -8,6 +8,9 @@ Wavefront is a dimensional monitoring system offered as a SaaS with a full UI, c
 
 include::install.adoc[]
 
+NOTE: Wavefront support was updated in Micrometer 1.2.0, so the following assumes that you are
+using at least that version.
+
 == Configuring
 
 === Direct to Wavefront
@@ -54,44 +57,56 @@ This section serves as a quickstart to rendering useful representations in Wavef
 
 === Counters
 
-The query that generates a graph for a random-walk counter is
-`ts(counter)`.
+The query that generates a graph for a random-walk counter is `rate(ts(counter))`.
 
 .A Wavefront rendered graph of the random walk counter.
-image::img/wavefront-counter.png[Wavefront-rendered counter]
+image::img/wavefront-counter-rate.png[Wavefront-rendered counter]
 
-Micrometer pre-computes rates for counters destined for Wavefront.
+Representing a counter without rate normalization over some time window is rarely useful, as the
+representation is a function of both the rapidity with which the counter is incremented and the
+longevity of the service. It is generally most useful to rate normalize these time series to
+reason about them.
+
+Because Wavefront keeps track of cumulative counts across all time, it has the
+advantage of allowing for the selection of a particular time function at query time (for example,
+`rate(ts(counter))` to compute the per-second rate of change).
 
 === Timers
 
-The Wavefront `Timer` produces several time series:
+The Wavefront `Timer` produces different time series depending on whether or not
+`publishPercentileHistogram` is enabled.
 
-1. `${name}.avg` - A mean latency for the publishing interval.
-2. `${name}.count` - Throughput per second over the publishing interval.
-3. `${name}.sum` - Total time per second over the publishing interval (used with `${name}.count`) to create aggregable means.
-4. `${name}.percentiles` - Micrometer calculated percentiles for the publishing interval. These cannot be aggregated across dimensions!
-5. `${name}.histogram` - Cumulative counts of events less than or equal to SLA boundaries over the publishing interval.
+If `publishPercentileHistogram` is enabled, the Wavefront `Timer` produces histogram distributions
+that allow you to query for the latency at any percentile using `hs()` queries. For example, you can
+visualize latency at the 95th percentile (`percentile(95, hs(timer.m))`) or the 99.9th percentile
+(`percentile(99.9, hs(timer.m))`). For more information on histogram distributions, see
+<<wavefront-histograms>> below.
 
-To generate a quick view of latency in Wavefront:
+If `publishPercentileHistogram` is disabled, the Wavefront `Timer` produces several
+time series:
+
+1. `${name}.avg` - Mean latency across all calls.
+2. `${name}.count` - Total number of all calls.
+3. `${name}.sum` - Total time of all calls.
+3. `${name}.max` - Max latency over the publishing interval.
+4. `${name}.percentiles` - Micrometer calculated percentiles for the publishing interval. These
+cannot be aggregated across dimensions!
+
+These time series can be used to generate a quick view of latency in Wavefront:
 
 .Timer latency.
 image::img/wavefront-timer-latency.png[Wavefront-rendered timer]
 
-This chart demonstrates the average (`ts(timer.avg)` in green), 95th percentile (`ts(timer.percentile, phi="0.95")` in orange), and
-max (`ts(timer.max)` in blue).
+The chart above demonstrates the average latency (`rate(ts(timer.sum))/rate(ts(timer.count))` in
+green), 95th percentile (`ts(timer.percentile, phi="0.95")` in orange), and max (`ts(timer.max)`
+in blue).
+
+Additionally, `rate(ts(timer.count))` represents a rate/second throughput of events being timed:
 
 .Timer throughput.
 image::img/wavefront-timer-throughput.png[Wavefront-rendered timer throughput]
 
-Additionally, `ts(timer.count)` represents a rate/second throughput of events being timed.
-
-.Timer SLA boundaries.
-image::img/wavefront-timer-sla.png[Wavefront-rendered SLA boundaries]
-
-Lastly, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries. In this example, we set SLA boundaries at 275 (blue), 300 (orange), and 500 (green) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
-
-Where the lines converge at 4:55.30 and 4:57.30 it is evident that no sample exceeded the 275 ms SLA boundary.
-
+[[wavefront-histograms]]
 === Wavefront Histograms
 
 Wavefront's histogram implementation stores an actual distribution of metrics as opposed to single metrics. This allows you to apply any percentile and aggregation function on the distribution at query time without having to specify specific percentiles and metrics to keep during metric collection.
