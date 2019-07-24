@@ -134,7 +134,7 @@ management.metrics.export.datadog.step=PT10S
 ----
 
 For a full list of configuration properties that can influence Datadog publishing, see
-`io.micrometer.core.instrument.datadog.DatadogConfig`.
+[`io.micrometer.core.instrument.datadog.DatadogConfig`](https://github.com/micrometer-metrics/micrometer/blob/master/implementations/micrometer-registry-datadog/src/main/java/io/micrometer/datadog/DatadogConfig.java).
 
 == StatsD
 
