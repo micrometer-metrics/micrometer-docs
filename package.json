@@ -5,7 +5,7 @@
   "dependencies": {
     "asciidoc-loader": "^0.2.0",
     "asciidoctor.js": "^1.5.9",
-    "bootstrap": "4.2.1",
+    "bootstrap": "^4.3.1",
     "codemirror": "^5.27.4",
     "express": "^4.15.3",
     "font-awesome": "^4.7.0",
