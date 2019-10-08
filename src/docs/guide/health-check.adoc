@@ -3,7 +3,7 @@ Jon Schneider <jschneider@pivotal.io>
 
 Spring Boot contains an health abstraction whose status contains four states: up, down, out of service, and unknown. It is possible to convert these states to some set of numbers so you can monitor or alert on levels of health for a particular app.
 
-Below is one such mapping:
+Below is one such mapping before Spring Boot 2.2:
 
 [source,java]
 ----
@@ -38,6 +38,59 @@ class HealthMetricsConfiguration {
             }
         });
     }
+}
+----
+
+Below is one such mapping since Spring Boot 2.2:
+
+[source,java]
+----
+@Configuration
+public class HealthMetricsConfig {
+
+	public HealthMetricsConfig(
+			StatusAggregator statusAggregator, HealthContributorRegistry healthContributorRegistry,
+			MeterRegistry meterRegistry) {
+		HealthMetricsProvider healthMetricsProvider = new HealthMetricsProvider(
+				healthContributorRegistry, statusAggregator);
+		Gauge.builder("health", healthMetricsProvider, HealthMetricsProvider::getValue)
+				.strongReference(true)
+				.register(meterRegistry);
+	}
+
+	private static class HealthMetricsProvider {
+
+		private final HealthContributorRegistry healthContributorRegistry;
+		private final StatusAggregator statusAggregator;
+
+		HealthMetricsProvider(HealthContributorRegistry healthContributorRegistry, StatusAggregator statusAggregator) {
+			this.healthContributorRegistry = healthContributorRegistry;
+			this.statusAggregator = statusAggregator;
+		}
+
+		private double getValue() {
+			Set<Status> statuses = this.healthContributorRegistry.stream()
+					.map(NamedContributor::getContributor)
+					.filter(HealthIndicator.class::isInstance)
+					.map(HealthIndicator.class::cast)
+					.map((healthIndicator) -> healthIndicator.getHealth(false).getStatus())
+					.collect(Collectors.toSet());
+			Status aggregatedStatus = this.statusAggregator.getAggregateStatus(statuses);
+			switch (aggregatedStatus.getCode()) {
+				case "UP":
+					return 3;
+				case "OUT_OF_SERVICE":
+					return 2;
+				case "DOWN":
+					return 1;
+				case "UNKNOWN":
+				default:
+					return 0;
+			}
+		}
+
+	}
+
 }
 ----
 
