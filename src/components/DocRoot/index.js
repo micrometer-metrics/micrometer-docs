@@ -108,6 +108,12 @@ export default function DocRoot() {
               set of alert "detectors".
             </li>
 
+            <li><NavLink className="doc-section" to="/docs/registry/stackdriver">Stackdriver</NavLink>.
+              Stackdriver Monitoring is a dimensional time-series SAAS with built-in dashboarding and alerting. Micrometer
+              supports shipping metrics to Stackdriver directly via its API using a push model. Alternatively, you can
+              export Micrometer metrics via Prometheus and use a Prometheus to Stackdriver sidecar.
+            </li>
+
             <li><NavLink className="doc-section" to="/docs/registry/statsD">StatsD</NavLink>.
               Micrometer supports three flavors of StatsD: the original Etsy format plus the Datadog and Telegraf
               (Influx) extensions of StatsD that add dimensional support. Use this registry if you prefer to publish

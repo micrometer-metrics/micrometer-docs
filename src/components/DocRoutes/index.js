@@ -16,7 +16,7 @@ let docsHealthCheck = require('!asciidoc-loader!../../docs/guide/health-check.ad
 let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../docs/guide/http-sender-resilience4j-retry.adoc');
 let docsSupport = require('!asciidoc-loader!../../docs/support/index.adoc');
 
-const systems = ['appOptics', 'atlas', 'azure-monitor', 'datadog', 'dynatrace', 'elastic', 'ganglia', 'graphite', 'humio', 'influx', 'instana', 'jmx', 'kairos', 'new-relic', 'prometheus', 'signalFx', 'statsD', 'wavefront'];
+const systems = ['appOptics', 'atlas', 'azure-monitor', 'datadog', 'dynatrace', 'elastic', 'ganglia', 'graphite', 'humio', 'influx', 'instana', 'jmx', 'kairos', 'new-relic', 'prometheus', 'signalFx', 'stackdriver', 'statsD', 'wavefront'];
 
 let docsBySystem = {};
 systems.forEach(sys => docsBySystem[sys] = require(`!asciidoc-loader!../../docs/implementations/${sys}.adoc`));
