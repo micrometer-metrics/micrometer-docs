@@ -76,7 +76,7 @@ public class TimedConfiguration {
 }
 ```
 
-Applying `TimedAspect` makes `@Timed` usable on any arbitrary method.
+Applying `TimedAspect` makes `@Timed` usable on any arbitrary method in an AspectJ proxied instance.
 
 == Function-tracking timers
 
