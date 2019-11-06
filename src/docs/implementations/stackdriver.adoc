@@ -1,0 +1,76 @@
+= Micrometer Stackdriver Monitoring
+Ray Tsang <saturnism@gmail.com>
+:toc:
+:sectnums:
+:system: stackdriver
+
+Stackdriver Monitoring is a dimensional time-series SaaS with built-in dashboarding.
+
+include::install.adoc[]
+
+NOTE: Stackdriver Monitoring support was added in Micrometer 1.1.0.
+
+== Configuring
+
+[source,java]
+----
+StackdriverConfig stackdriverConfig = new StackdriverConfig() {
+    @Override
+    public String projectId() {
+        return MY_PROJECT_ID;
+    }
+
+    @Override
+    public String get(String key) {
+        return null;
+    }
+}
+
+MeterRegistry registry = StackdriverMeterRegistry registry = StackdriverMeterRegistry.builder(stackdriverConfig).build();
+----
+
+`StackdriverConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.stackdriver` directly to the `StackdriverConfig`:
+
+[source,yml]
+----
+management.metrics.export.stackdriver:
+    project-id: MY_PROJECT_ID
+
+    # You will probably want disable Stackdriver Monitoring publishing in a local development profile.
+    enabled: true
+
+    # The interval at which metrics are sent to Stackdriver Monitoring. The default is 1 minute.
+    step: 1m
+----
+
+For most environments, you need to create and configure credentials to push metrics to Stackdriver Monitoring.
+In most cases,you should create a service account with Stackdriver Monitoring permissions, and configure
+`GOOGLE_APPLICATION_CREDENTIALS` environmental variable to the path of the service account key file.
+
+For example:
+[source]
+----
+export PROJECT_ID=MY_PROJECT_ID
+export APP_NAME=MY_APP
+
+# Create a service account
+gcloud iam service-accounts create $APP_NAME
+
+# Grant the service account Stackdriver Monitoring writer permission
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member serviceAccount:$APP_NAME@$PROJECT_ID.iam.gserviceaccount.com \
+  --role roles/monitoring.metricWriter
+
+# Create a key JSON file
+gcloud iam service-accounts keys create $HOME/$APP_NAME-key.json \
+  --iam-account $APP_NAME@$PROJECT_ID.iam.gserviceaccount.com
+
+# Configure GOOGLE_APPLICATION_CREDENTIALS env var
+export GOOGLE_APPLICATION_CREDENTIALS=$HOME/$APP_NAME-key.json
+----
+
+When running in managed environments such as Google App Engine, Google Cloud Run, Google Cloud Function,
+you don't need to configure this environmental variable. In those environments, a service account is
+automatically associated with the application instance. The underlying Stackdriver Monitoring client
+library can automatically detect and use those credentials.
+
