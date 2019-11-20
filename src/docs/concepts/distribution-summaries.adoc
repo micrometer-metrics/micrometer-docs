@@ -23,6 +23,11 @@ DistributionSummary summary = DistributionSummary
 1. Add base units for maximum portability -- base units are part of the naming convention for some monitoring systems. Leaving it off and violating the naming convention will have no adverse effect if you forget.
 2. Optionally, you may provide a scaling factor that each recorded sample will be multipled by as it is recorded.
 
+NOTE: Max for basic `DistributionSummary` implementations such as `CumulativeDistributionSummary`, `StepDistributionSummary` is a time window max (`TimeWindowMax`).
+It means that its value is the maximum value during a time window.
+If no new values are recorded for the time window length, the max will be reset to 0 as a new time window starts.
+Time window size will be the step size of the meter registry unless expiry in `DistributionStatisticConfig` is set to other value explicitly.
+
 == Scaling and histograms
 
 Micrometer's preselected percentile histogram buckets are all integers from 1 to maximum long. Currently `minimumExpectedValue` and `maximumExpectedValue` serve to control the cardinality of the bucket set. If we attempt to detect that your min/max yields a small range and scale the preselected bucket domain to your summary's range, then we don't have another lever to control bucket cardinality.
