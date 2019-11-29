@@ -26,7 +26,7 @@ StackdriverConfig stackdriverConfig = new StackdriverConfig() {
     }
 }
 
-MeterRegistry registry = StackdriverMeterRegistry registry = StackdriverMeterRegistry.builder(stackdriverConfig).build();
+MeterRegistry registry = StackdriverMeterRegistry.builder(stackdriverConfig).build();
 ----
 
 `StackdriverConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.stackdriver` directly to the `StackdriverConfig`:
@@ -36,7 +36,7 @@ MeterRegistry registry = StackdriverMeterRegistry registry = StackdriverMeterReg
 management.metrics.export.stackdriver:
     project-id: MY_PROJECT_ID
 
-    # You will probably want disable Stackdriver Monitoring publishing in a local development profile.
+    # You will probably want to disable Stackdriver Monitoring publishing in a local development profile.
     enabled: true
 
     # The interval at which metrics are sent to Stackdriver Monitoring. The default is 1 minute.
@@ -44,7 +44,7 @@ management.metrics.export.stackdriver:
 ----
 
 For most environments, you need to create and configure credentials to push metrics to Stackdriver Monitoring.
-In most cases,you should create a service account with Stackdriver Monitoring permissions, and configure
+In most cases, you should create a service account with Stackdriver Monitoring permissions, and configure
 `GOOGLE_APPLICATION_CREDENTIALS` environmental variable to the path of the service account key file.
 
 For example:
