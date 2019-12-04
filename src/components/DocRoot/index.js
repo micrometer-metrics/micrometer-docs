@@ -160,6 +160,9 @@ export default function DocRoot() {
           <ul>
             <li><NavLink className="doc-section" to="/docs/guide/httpSenderResilience4jRetry">HttpSender with Resilience4j retry</NavLink></li>
           </ul>
+          <ul>
+            <li><NavLink className="doc-section" to="/docs/guide/customMeterRegistry">Custom metery registry</NavLink></li>
+          </ul>
         </li>
         <li>
           <NavLink className="doc-section" to="/docs/support">Support policy</NavLink>. Micrometer's support policy for releases.
