@@ -1,6 +1,10 @@
 = Custom meter registry
 
-You can create your own custom meter registry by extending one of base classes for meter registries: `MeterRegistry`, `PushMeterRegistry`, and `StepMeterRegistry`.
+Micrometer supports popular meter registries out of the box, so please check them first.
+For an existing meter registry, if you think that your requirements are generally useful, please consider creating an issue or PR against the Micrometer issue tracker.
+For a non-existing meter registry, if it's widely-used, please consider creating an issue or PR for it.
+
+For some reasons such as unusual requirements, if you want to create your own custom meter registry, you can create it by extending one of base classes for meter registries: `MeterRegistry`, `PushMeterRegistry`, and `StepMeterRegistry`.
 
 Most common way is to extend `StepMeterRegistry`.
 You can create your own custom `StepMeterRegistry` as follows.
