@@ -27,9 +27,12 @@ A gauge can be made to track any `java.lang.Number` subtype that is settable, su
 
 [source,java]
 ----
-AtomicInteger n = registry.gauge("numberGauge", new AtomicInteger(0));
-n.set(1);
-n.set(2);
+// maintain a reference to myGauge
+AtomicInteger myGauge = registry.gauge("numberGauge", new AtomicInteger(0));
+
+// ... elsewhere you can update the value it holds using the object reference
+myGauge.set(27);
+myGauge.set(11);
 ----
 
 Note that in this form unlike other meter types you don't get a reference to the `Gauge` when creating one, but rather the thing being observed. This is because of the heisen-gauge principal; the gauge is self sufficient once created, so you should never need to interact with it. This allows us to give you back only the instrumented object, which allows for quick one liners that both create the object to be observed and set up metrics around it.
