@@ -161,7 +161,7 @@ export default function DocRoot() {
             <li><NavLink className="doc-section" to="/docs/guide/httpSenderResilience4jRetry">HttpSender with Resilience4j retry</NavLink></li>
           </ul>
           <ul>
-            <li><NavLink className="doc-section" to="/docs/guide/customMeterRegistry">Custom metery registry</NavLink></li>
+            <li><NavLink className="doc-section" to="/docs/guide/customMeterRegistry">Custom meter registry</NavLink></li>
           </ul>
         </li>
         <li>
