@@ -41,7 +41,7 @@ class HealthMetricsConfiguration {
 }
 ----
 
-The range of numbers you map the statuses to are of course arbitrary, as are the ordering of the statuses to some extent. For example, in this case you could set an alert on "health < 2" to capture unknown and down states. Whether unknown is consider "better" or "worse" than down is a matter of preference.
+The range of numbers you map the statuses to are of course arbitrary, as are the ordering of the statuses to some extent. For example, in this case you could set an alert on "health < 2" to capture unknown and down states. Whether unknown is considered "better" or "worse" than down is a matter of preference.
 
 NOTE: Custom states can also be created and used throughout the Spring Boot Health subsystem.
 
