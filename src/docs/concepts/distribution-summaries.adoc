@@ -21,7 +21,7 @@ DistributionSummary summary = DistributionSummary
 ----
 
 1. Add base units for maximum portability -- base units are part of the naming convention for some monitoring systems. Leaving it off and violating the naming convention will have no adverse effect if you forget.
-2. Optionally, you may provide a scaling factor that each recorded sample will be multipled by as it is recorded.
+2. Optionally, you may provide a scaling factor that each recorded sample will be multiplied by as it is recorded.
 
 NOTE: Max for basic `DistributionSummary` implementations such as `CumulativeDistributionSummary`, `StepDistributionSummary` is a time window max (`TimeWindowMax`).
 It means that its value is the maximum value during a time window.
