@@ -74,3 +74,49 @@ you don't need to configure this environmental variable. In those environments, 
 automatically associated with the application instance. The underlying Stackdriver Monitoring client
 library can automatically detect and use those credentials.
 
+== Stackdriver Metrics Labels
+
+Micrometer metrics tags are mapped to https://cloud.google.com/monitoring/api/v3/metrics-details#intro-time-series[Stackdriver metrics labels]. With tags/labels, you can further filter or group
+by the tag/label. See link:/docs/concepts#_tag_naming[Micrometer Concepts] for more information on tags.
+
+[source,java]
+----
+MeterRegistry registry = StackdriverMeterRegistry.builder(stackdriverConfig).build();
+registry.config().commonTags("application", "my-application");
+----
+
+== Spring Boot
+
+Spring Boot Actuator does not automatically configure/register the Stackdriver Metrics Registry.
+In addition to using Spring Boot Actuator, make sure you create the `StackdriverMeterRegistry` bean:
+
+[source,java]
+----
+@Bean
+StackdriverConfig stackdriverConfig() {
+    return new StackdriverConfig() {
+        @Override
+        public String projectId() {
+            return MY_PROJECT_ID;
+        }
+
+        @Override
+        public String get(String key) {
+            return null;
+        }
+    }
+}
+
+@Bean
+StackdriverMeterRegistry meterRegistry(StackdriverConfig stackdriverConfig) {
+    return StackdriverMeterRegistry.builder(stackdriverConfig).build();
+}
+----
+
+You can also use https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics-common-tags[Spring Boot Actuator Common Tags configuration] to configure common tags.
+
+[source]
+----
+spring.application.name=my-application
+management.metrics.tags.application=${spring.application.name}
+----
