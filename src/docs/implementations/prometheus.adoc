@@ -7,7 +7,6 @@ Jon Schneider <jschneider@pivotal.io>
 Prometheus is an in-memory dimensional time series database with a simple built-in UI, a custom query language, and math operations. Prometheus is designed to operate on a pull model, scraping metrics from application instances periodically based on service discovery.
 
 include::install.adoc[]
-
 == Configuring
 
 Prometheus expects to scrape or poll individual app instances for metrics. In addition to creating a Prometheus registry, you also need to expose an HTTP endpoint to Prometheus' scraper. In a Spring environment, a Prometheus actuator endpoint is autoconfigured in the presence of Spring Boot Actuator. Otherwise, you can use any JVM-based HTTP server implementation to expose scrape data to Prometheus.
@@ -64,7 +63,7 @@ The dashboard features:
 * Classloading
 * Direct/Mapped buffer sizes
 
-Instead of using the `job` tag to distinct different applications, this dashboard makes use of a common tag called `application` applied to every metric. You can apply the common tag with:
+Instead of using the `job` tag to distinguish different applications, this dashboard makes use of a common tag called `application` applied to every metric. You can apply the common tag with:
 
 [source,java]
 ----
