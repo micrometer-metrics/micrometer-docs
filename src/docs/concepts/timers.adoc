@@ -29,6 +29,7 @@ NOTE: Max for basic `Timer` implementations such as `CumulativeTimer`, `StepTime
 It means that its value is the maximum value during a time window.
 If no new values are recorded for the time window length, the max will be reset to 0 as a new time window starts.
 Time window size will be the step size of the meter registry unless expiry in `DistributionStatisticConfig` is set to other value explicitly.
+The reason why a time window max is used is to capture max latency in a subsequent interval after heavy resource pressure triggers the latency and prevents metrics from being published.
 
 == Recording blocks of code
 
