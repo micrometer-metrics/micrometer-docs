@@ -44,7 +44,7 @@ management.metrics.export.graphite:
 
 == Graphite Tag Support
 
-As of Micrometer version 1.4.0, Micrometer supports exporting Graphite metrics using tags instead of the traditional hierarchical format, and exports metrics using the tag format by default.
+As of Micrometer version 1.4.0, Micrometer supports exporting Graphite metrics using tags instead of the traditional hierarchical format.  Metrics are exported using the tag format by default unless any `tagsAsPrefix` values are configured.
 https://graphite.readthedocs.io/en/latest/tags.html[Tag support] was added to Graphite in the 1.1.0 Graphite release.
 If you wish to revert to the traditional hierarchical format, ensure that the `graphiteTagsEnabled` config value is set to `false`.
 The following documentation sections on hierarchical name mapping and metrics prefixing are only applicable if tag support is disabled.
