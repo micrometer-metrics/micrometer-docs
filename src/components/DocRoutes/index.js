@@ -12,7 +12,6 @@ let docsJvm = require('!asciidoc-loader!../../docs/jvm/index.adoc');
 let docsCache = require('!asciidoc-loader!../../docs/cache/index.adoc');
 let docsOkHttpClient = require('!asciidoc-loader!../../docs/okhttpclient/index.adoc');
 let docsConsoleReporter = require('!asciidoc-loader!../../docs/guide/console-reporter.adoc');
-let docsHealthCheck = require('!asciidoc-loader!../../docs/guide/health-check.adoc');
 let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../docs/guide/http-sender-resilience4j-retry.adoc');
 let docsCustomMeterRegistry = require('!asciidoc-loader!../../docs/guide/custom-meter-registry.adoc');
 let docsSupport = require('!asciidoc-loader!../../docs/support/index.adoc');
@@ -58,10 +57,6 @@ export default function DocRoutes() {
 
       <Route path="/docs/guide/consoleReporter" render={() =>
         <DocSection title="Passing through to Dropwizard's console reporter" content={docsConsoleReporter}/>
-      }/>
-
-      <Route path="/docs/guide/healthAsGauge" render={() =>
-        <DocSection title="Mapping Spring's health indicators to metrics" content={docsHealthCheck}/>
       }/>
 
       <Route path="/docs/guide/httpSenderResilience4jRetry" render={() =>
