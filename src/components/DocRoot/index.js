@@ -155,9 +155,6 @@ export default function DocRoot() {
             <li><NavLink className="doc-section" to="/docs/guide/consoleReporter">Passing through to Dropwizard's console reporter</NavLink></li>
           </ul>
           <ul>
-            <li><NavLink className="doc-section" to="/docs/guide/healthAsGauge">Mapping Spring's health indicators to metrics</NavLink></li>
-          </ul>
-          <ul>
             <li><NavLink className="doc-section" to="/docs/guide/httpSenderResilience4jRetry">HttpSender with Resilience4j retry</NavLink></li>
           </ul>
           <ul>
