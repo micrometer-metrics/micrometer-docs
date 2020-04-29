@@ -82,7 +82,30 @@ public class TimedConfiguration {
 }
 ```
 
-Applying `TimedAspect` makes `@Timed` usable on any arbitrary method in an AspectJ proxied instance.
+Applying `TimedAspect` makes `@Timed` usable on any arbitrary method in an AspectJ proxied instance, e.g.:
+```java
+@Service
+public class ExampleService {
+
+  @Timed
+  public void sync() {
+    // @Timed will record the execution time of this method,
+    // from the start and until it exists normally or exceptionally.
+    ...
+  }
+
+  @Async
+  @Timed
+  public CompletableFuture<?> async() {
+    // @Timed will record the execution time of this method,
+    // from the start and until the returned CompletableFuture
+    // completes normally or exceptionally.
+    return CompletableFuture.supplyAsync(...);
+  }
+
+}
+
+```
 
 == Function-tracking timers
 
