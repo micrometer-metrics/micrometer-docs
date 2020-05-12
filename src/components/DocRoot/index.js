@@ -43,6 +43,10 @@ export default function DocRoot() {
               solution.
             </li>
 
+            <li><NavLink className="doc-section" to="/docs/registry/cloudwatch">CloudWatch</NavLink>. CloudWatch 
+              is a dimensional time-series SaaS on Amazon's cloud.
+            </li>
+
             <li><NavLink className="doc-section" to="/docs/registry/datadog">Datadog</NavLink>. Datadog
               is a dimensional time-series SAAS with built-in dashboarding and alerting. Micrometer supports shipping
               metrics to Datadog directly via its API or through Dogstatsd via the StatsD registry.
