@@ -26,7 +26,7 @@ export default function Navbar() {
             <a className="nav-link" href="https://twitter.com/micrometerio"><i className="fa fa-lg fa-twitter" /> Twitter</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="http://slack.micrometer.io"><i className="fa fa-lg fa-slack" /> Slack</a>
+            <a className="nav-link" href="https://join.slack.com/t/micrometer-metrics/shared_invite/zt-ewo3kcs0-Ji3aOAqTxnjYPEFBBI5HqQ"><i className="fa fa-lg fa-slack" /> Slack</a>
           </li>
         </ul>
       </div>
