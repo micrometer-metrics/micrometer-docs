@@ -120,3 +120,5 @@ You can also use https://docs.spring.io/spring-boot/docs/current/reference/html/
 spring.application.name=my-application
 management.metrics.tags.application=${spring.application.name}
 ----
+
+NOTE: Spring Boot 2.3 provides support out-of-the-box. For more information review the https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics-export-stackdriver[docs].
