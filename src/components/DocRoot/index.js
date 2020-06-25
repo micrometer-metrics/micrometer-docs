@@ -117,7 +117,7 @@ export default function DocRoot() {
             <li><NavLink className="doc-section" to="/docs/registry/statsD">StatsD</NavLink>.
               Micrometer supports three flavors of StatsD: the original Etsy format plus the Datadog and Telegraf
               (Influx) extensions of StatsD that add dimensional support. Use this registry if you prefer to publish
-              metrics to a StatsD agent.
+              metrics to a StatsD agent. Also use this registry with Datadog flavor to publish metrics to Splunk.
             </li>
 
             <li><NavLink className="doc-section" to="/docs/registry/wavefront">Wavefront</NavLink>.
