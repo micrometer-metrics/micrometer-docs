@@ -15,9 +15,21 @@ are for the current https://github.com/newrelic/micrometer-registry-newrelic[New
 
 == Installing
 
-First, set your project to depend on the New Relic Micrometer registry:
+You can first find the latest version published https://mvnrepository.com/artifact/com.newrelic.telemetry/micrometer-registry-new-relic[to Maven Central].
+Next, set your project to depend on the New Relic Micrometer registry (inserting the version number as appropriate):
+
+=== Gradle
+
+Add the following dependency to your `build.gradle.kts`
+
+[source,kotlin]
+----
+implementation("com.newrelic.telemetry:micrometer-registry-new-relic:${newrelic-registry.version}")
+----
 
 === Maven
+
+Add the following dependency to your `pom.xml`:
 
 [source,xml,subs=+attributes]
 ----
