@@ -85,12 +85,11 @@ newRelicRegistry.start(new NamedThreadFactory("newrelic.micrometer.registry"));
 [source,yml]
 ----
 management.metrics.export.newrelic:
-    account-id: MYACCOUNT
     api-key: MY_INSIGHTS_API_KEY
 
     # The interval at which metrics are sent to New Relic. See Duration.parse for the expected format.
-    # The default is 1 minute.
-    step: 1m
+    # The default is 5 seconds.
+    step: 10s
 ----
 
 == Graphing
