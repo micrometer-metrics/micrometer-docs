@@ -1,5 +1,5 @@
 = Micrometer New Relic
-Jon Schneider <jschneider@pivotal.io>
+New Relic Open Source <open-source@newrelic.com.>
 :toc:
 :sectnums:
 :system: new-relic
@@ -11,6 +11,10 @@ It intends to supersede Micrometer's `NewRelicMeterRegistry` (which uses custom 
 You can find more details in https://github.com/newrelic/micrometer-registry-newrelic[its GitHub repository].
 
 include::install.adoc[]
+
+== Installing
+
+First, set your project to depend on the new relic 
 
 == Configuring
 
