@@ -43,26 +43,41 @@ Add the following dependency to your `pom.xml`:
 
 == Configuring
 
+In order ot send data to New Relic, you will need an https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#event-insert-key(insert api key).  Once you have obtained an insert api key, you can put it into your environment (like the example below) or otherwise 
+get it into your application's configuration.
+
 [source,java]
 ----
-NewRelicConfig newRelicConfig = new NewRelicConfig() {
+
+NewRelicRegistryConfig newRelicConfig() = new NewRelicRegistryConfig() {
     @Override
-    public String accountId() {
-        return "MYACCOUNT";
+    public String get(String key) {
+      return null; // accept the rest of the defaults
     }
 
     @Override
     public String apiKey() {
-        return "MY_INSIGHTS_API_KEY";
+      return System.getenv("INSERT_API_KEY");
     }
 
     @Override
-    public String get(String k) {
-        return null; // accept the rest of the defaults
+    public Duration step() {
+      return Duration.ofSeconds(5);
+    }
+
+    @Override
+    public String serviceName() {
+      return "My Service Name";
     }
 };
 
-MeterRegistry registry = new NewRelicMeterRegistry(newRelicConfig, Clock.SYSTEM);
+MeterRegistry newRelicRegistry =
+        NewRelicRegistry.builder(config)
+            .commonAttributes(
+                new Attributes()
+                    .put("host", InetAddress.getLocalHost().getHostName()))
+            .build();
+newRelicRegistry.start(new NamedThreadFactory("newrelic.micrometer.registry"));
 ----
 
 There are two distinct sources of API keys in New Relic.
