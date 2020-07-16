@@ -43,7 +43,7 @@ Add the following dependency to your `pom.xml`:
 
 == Configuring
 
-In order ot send data to New Relic, you will need an https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#event-insert-key[insert api key].  Once you have obtained an insert api key, you can put it into your environment (like the example below) or otherwise 
+In order ot send data to New Relic, you will need an https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#event-insert-key[insert api key].  Once you have obtained an insert api key, you can put it into your environment (like the example below) or otherwise
 get it into your application's configuration.
 
 [source,java]
@@ -92,7 +92,21 @@ management.metrics.export.newrelic:
     step: 10s
 ----
 
-== Graphing
+== Observing Metrics
+
+Navigate to https://one.newrelic.com[New Relic NR1] and use the entity explorer to find
+your service by its name.  After choosing the service from the search results, you should
+be met with some familiar metrics:
+
+image::img/new-relic-metrics1.png[NR1 default metrics]
+
+Please note that other graphs exist but are not shown for brevity (such as
+"Heap memory" and "CPU utilization").
+
+
+
+
+
 
 This section serves as a quickstart to rendering useful representations in New Relic for metrics originating in Micrometer. See the https://docs.newrelic.com/docs/insights/nrql-new-relic-query-language/using-nrql/introduction-nrql[New Relic NRQL docs] for a far more complete reference of what is possible in New Relic.
 
