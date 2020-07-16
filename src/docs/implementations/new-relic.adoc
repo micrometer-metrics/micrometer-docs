@@ -43,7 +43,7 @@ Add the following dependency to your `pom.xml`:
 
 == Configuring
 
-In order ot send data to New Relic, you will need an https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#event-insert-key(insert api key).  Once you have obtained an insert api key, you can put it into your environment (like the example below) or otherwise 
+In order ot send data to New Relic, you will need an https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#event-insert-key[insert api key].  Once you have obtained an insert api key, you can put it into your environment (like the example below) or otherwise 
 get it into your application's configuration.
 
 [source,java]
@@ -79,8 +79,6 @@ MeterRegistry newRelicRegistry =
             .build();
 newRelicRegistry.start(new NamedThreadFactory("newrelic.micrometer.registry"));
 ----
-
-There are two distinct sources of API keys in New Relic.
 
 `NewRelicConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.newrelic` directly to the `NewRelicConfig`:
 
