@@ -95,7 +95,7 @@ management.metrics.export.newrelic:
 == Observing Metrics
 
 The quickest way to start using your data is to
-navigate to https://one.newrelic.com[New Relic NR1] and use the entity explorer to find
+navigate to https://one.newrelic.com[New Relic One] and use the entity explorer to find
 your service by its name.
 
 image::img/new-relic-entity-explorer.png[NR1 entity explorer]
