@@ -120,6 +120,14 @@ Micrometer metric data is also available for querying with NRQL.
 Please see the https://docs.newrelic.com/docs/data-ingest-apis/get-data-new-relic/metric-api/query-metric-data-type[official documentation]
 for detailed information about querying your metric data.
 
+To see what metric names are available, try starting with a query like
+[source,nrql]]
+----
+FROM Metric SELECT count(*) WHERE service.name = '<YourServiceName>' facet metricName limit 1000
+----
+image::img/new-relic-metric-types.png[NR1 metric types]
+
+
 === Timers
 
 At each publishing interval, the New Relic `Timer` produces a single event with the timer's name and several attributes:
