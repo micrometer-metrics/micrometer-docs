@@ -127,60 +127,17 @@ FROM Metric SELECT uniques(metricName) WHERE service.name = '<YourServiceName>' 
 ----
 image::img/new-relic-query-metric-names.png[NR1 metric types]
 
+Once you have identified a metric of interest, you leverage NRQL to perform interesting queries:
 
-=== Timers
+image::img/new-relic-example-query.png[NR1 example query]
 
-At each publishing interval, the New Relic `Timer` produces a single event with the timer's name and several attributes:
+https://docs.newrelic.com/docs/data-ingest-apis/get-data-new-relic/metric-api/query-metric-data-type[See the official documentation] for many
+more useful examples.
 
-1. `avg` - A mean latency for the publishing interval.
-2. `count` - Throughput per second over the publishing interval.
-3. `totalTime` - Total time per second over the publishing interval (used with `count`) to create aggregable means.
+== Types
 
-Additionally, if any percentiles or SLA buckets are defined on the timer, additional events are produced:
+New Relic maintains a document that describes https://github.com/newrelic/newrelic-exporter-specs/tree/master/micrometer[how Micrometer metric types are mapped 
+into the New Relic metric types].  Please feel free to open an issue if you have questions.
 
-4. `${name}.percentiles` - Micrometer calculated percentiles for the publishing interval. One event is produced for each percentile, with a tag of `phi` in the range [0,1].
-5. `${name}.histogram` - One event is produced for each SLA boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLA boundaries over the publishing interval.
+Changes and feedback are welcome and appreciated.
 
-To generate an aggregable view of latency in New Relic, divide `totalTime` by `count`:
-
-[source,sql]
-----
-SELECT sum(totalTime)/sum(count) as 'Average Latency', max(max) as 'Max' FROM timer since 30 minutes ago TIMESERIES auto
-----
-
-.Timer latency.
-image::img/new-relic-timer-latency.png[New Relic-rendered timer]
-
-To generate a throughput chart:
-
-[source,sql]
-----
-SELECT average(count) as 'Average Throughput' FROM timer since 30 minutes ago TIMESERIES auto
-----
-
-.Timer throughput.
-image::img/new-relic-timer-throughput.png[New Relic-rendered timer throughput]
-
-To generate a plot of client-side percentiles:
-
-[source,sql]
-----
-SELECT latest(value) from timerPercentile FACET phi since 30 minutes ago TIMESERIES auto
-----
-
-.Timer Percentiles.
-image::img/new-relic-timer-percentiles.png[New Relic-rendered percentiles]
-
-Note how these percentiles are _not aggregable_. We've selected the `latest(value)` function to display this chart (i.e. it isn't correct to `average(value)` on a percentile value). The more dimensions you add to a timer, the less useful these values become.
-
-Lastly, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries. In this example, we set SLA boundaries at 275 (yellow), 300 (red), and 500 (blue) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
-
-[source,sql]
-----
-SELECT sum(value) from timerHistogram FACET le since 30 minutes ago TIMESERIES auto
-----
-
-.Timer SLA boundaries.
-image::img/new-relic-timer-sla.png[New Relic-rendered SLA boundaries]
-
-Where the lines converge at various points it is evident that no sample exceeded the 275 ms SLA boundary.
