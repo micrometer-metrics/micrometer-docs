@@ -123,7 +123,7 @@ for detailed information about querying your metric data.
 To see what metric names are available, try starting with a query like
 [source,nrql]]
 ----
-FROM Metric SELECT count(*) WHERE service.name = '<YourServiceName>' facet metricName limit 1000
+FROM Metric SELECT uniques(metricName) WHERE service.name = '<YourServiceName>' limit 1000
 ----
 image::img/new-relic-metric-names.png[NR1 metric types]
 
