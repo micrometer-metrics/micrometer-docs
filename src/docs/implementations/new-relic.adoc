@@ -127,7 +127,7 @@ FROM Metric SELECT uniques(metricName) WHERE service.name = '<YourServiceName>' 
 ----
 image::img/new-relic-query-metric-names.png[NR1 metric types]
 
-Once you have identified a metric of interest, you leverage NRQL to perform interesting queries:
+Once you have identified a metric of interest, you can leverage NRQL to perform interesting queries:
 
 image::img/new-relic-example-query.png[NR1 example query]
 
