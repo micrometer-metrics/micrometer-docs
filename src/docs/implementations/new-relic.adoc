@@ -49,7 +49,7 @@ get it into your application's configuration.
 [source,java]
 ----
 
-NewRelicRegistryConfig newRelicConfig = new NewRelicRegistryConfig() {
+NewRelicRegistryConfig config = new NewRelicRegistryConfig() {
     @Override
     public String get(String key) {
       return null; // accept the rest of the defaults
