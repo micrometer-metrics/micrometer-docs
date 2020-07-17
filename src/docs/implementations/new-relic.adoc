@@ -125,7 +125,7 @@ To see what metric names are available, try starting with a query like
 ----
 FROM Metric SELECT count(*) WHERE service.name = '<YourServiceName>' facet metricName limit 1000
 ----
-image::img/new-relic-metric-types.png[NR1 metric types]
+image::img/new-relic-metric-names.png[NR1 metric types]
 
 
 === Timers
