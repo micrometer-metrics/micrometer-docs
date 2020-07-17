@@ -1,5 +1,5 @@
 = Micrometer New Relic
-New Relic Open Source <open-source@newrelic.com.>
+New Relic Open Source <opensource@newrelic.com.>
 :toc:
 :sectnums:
 :system: new-relic
