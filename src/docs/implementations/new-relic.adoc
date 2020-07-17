@@ -94,8 +94,13 @@ management.metrics.export.newrelic:
 
 == Observing Metrics
 
-Navigate to https://one.newrelic.com[New Relic NR1] and use the entity explorer to find
-your service by its name.  After choosing the service from the search results, you should
+The quickest way to start using your data is to
+navigate to https://one.newrelic.com[New Relic NR1] and use the entity explorer to find
+your service by its name.
+
+image::img/new-relic-entity-expolorer.png[NR1 entity explorer]
+
+After choosing the service from the search results, you should
 be met with some familiar metrics:
 
 image::img/new-relic-metrics1.png[NR1 default metrics]
@@ -103,12 +108,17 @@ image::img/new-relic-metrics1.png[NR1 default metrics]
 Please note that other graphs exist but are not shown for brevity (such as
 "Heap memory" and "CPU utilization").
 
+You can use this simple interface to easily filter or group your metrics by
+many common facets, such as hostname or status.  If you wish to see the
+NRQL query that generated a given graph, choose "View query" from the
+graph's overflow menu.
 
+== Querying Metric Data
 
+Micrometer metric data is also available for querying with NRQL.
 
-
-
-This section serves as a quickstart to rendering useful representations in New Relic for metrics originating in Micrometer. See the https://docs.newrelic.com/docs/insights/nrql-new-relic-query-language/using-nrql/introduction-nrql[New Relic NRQL docs] for a far more complete reference of what is possible in New Relic.
+Please see the https://docs.newrelic.com/docs/data-ingest-apis/get-data-new-relic/metric-api/query-metric-data-type[official documentation]
+for detailed information about querying your metric data.
 
 === Timers
 
