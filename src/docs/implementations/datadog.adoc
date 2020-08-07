@@ -63,6 +63,14 @@ management.metrics.export.datadog:
     step: 1m
 ----
 
+`DatadogConfig.hostTag()` specifies a tag key that will be mapped to https://docs.datadoghq.com/api/v1/metrics/#submit-metrics[the `host` field] when shipping metrics to Datadog.
+For example, if `DatadogConfig.hostTag()` returns "host", the tag having "host" as its key will be used.
+You can set the tag via common tags as follows:
+
+```java
+registry.config().commonTags("host", "my-host");
+```
+
 === Through Dogstatsd approach
 
 In Gradle:
