@@ -8,8 +8,6 @@ Stackdriver Monitoring is a dimensional time-series SaaS with built-in dashboard
 
 include::install.adoc[]
 
-NOTE: Stackdriver Monitoring support was added in Micrometer 1.1.0.
-
 == Configuring
 
 [source,java]

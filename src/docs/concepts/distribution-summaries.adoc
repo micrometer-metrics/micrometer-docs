@@ -77,6 +77,4 @@ The total memory footprint of a distribution summary can vary dramatically depen
 |Yes |Yes |M + Hdr(Pp)|For the addition of a 0.95 percentile with defaults otherwise, ~12.6kb
 |=========================================================
 
-NOTE: These estimations are based on improvements made in Micrometer 1.0.3, and assume at least that version.
-
 NOTE: For Prometheus specifically, R is _always_ equal to 1, regardless of how you attempt to configure it through `DistributionSummary.Builder`. This is special-cased for Prometheus because it expects cumulative histogram data that never rolls over.
