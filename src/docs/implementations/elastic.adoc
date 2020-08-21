@@ -8,8 +8,6 @@ Elasticsearch is an open source search and analytics platform. Metrics stored in
 
 include::install.adoc[]
 
-NOTE: Elastic support was added in Micrometer 1.1.0.
-
 == Configuring
 
 [source,java]

@@ -8,8 +8,6 @@ Azure Monitor is a dimensional time-series SaaS with built-in dashboarding.
 
 include::install.adoc[]
 
-NOTE: Azure Monitor support was added in Micrometer 1.1.0.
-
 == Configuring
 
 [source,java]

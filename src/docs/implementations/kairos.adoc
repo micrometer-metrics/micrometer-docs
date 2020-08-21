@@ -8,8 +8,6 @@ KairosDB is a dimensional time-series database built on top of Cassandra. Charti
 
 include::install.adoc[]
 
-NOTE: KairosDB support was added in Micrometer 1.1.0.
-
 == Configuring
 
 [source,java]
