@@ -61,3 +61,25 @@ Generally the returned `Gauge` instance is not useful except in testing, as the 
 It is your responsibility to hold a strong reference to the state object that you are measuring with a `Gauge`. Micrometer is careful to not create strong references to objects that would otherwise be garbage collected. Once the object being gauged is de-referenced and is garbage collected, Micrometer will start reporting a NaN or nothing for a gauge, depending on the registry implementation.
 
 If you see your gauge reporting for a few minutes and then disappearing or reporting NaN, it almost certainly suggests that the underlying object being gauged has been garbage collected.
+
+== Multi-gauge
+
+Micrometer supports one last special type of `Gauge` called a `MultiGauge` to help manage gauging a growing or shrinking list of criteria.
+Often this feature is used when we want to select a set of well-bounded but slightly changing set of criteria from something like an SQL query and report some metric for each row as a `Gauge`. The following example shows how a `MultiGauge` is created:
+
+[source, java]
+----
+// SELECT count(*) from job group by status WHERE job = 'dirty'
+MultiGauge statuses = MultiGauge.builder("statuses")
+    .tag("job", "dirty")
+    .description("The number of widgets in various statuses")
+    .baseUnit("widgets")
+    .register(registry);
+
+...
+
+// run this periodically whenever you re-run your query
+statuses.register(
+    resultSet.stream()
+        .map(result -> Row.of(Tags.of("status", result.getAsString("status")), result.getAsInt("count"))));
+----
