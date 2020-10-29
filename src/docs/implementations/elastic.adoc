@@ -33,6 +33,6 @@ management.metrics.export.elastic:
     # The interval at which metrics are sent to Elastic. The default is 1 minute.
     step: 1m
 
-    # The index to store metrics in, defaults to "metrics"
-    index: metrics
+    # The index to store metrics in, defaults to "micrometer-metrics"
+    index: micrometer-metrics
 ----
