@@ -7,7 +7,7 @@ jobs:
   build:
     working_directory: ~/micrometer-docs
     docker:
-      - image: circleci/node:11
+      - image: cimg/node:14.15
     steps:
       - checkout
       - restore_cache:
