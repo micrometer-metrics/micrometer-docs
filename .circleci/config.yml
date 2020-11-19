@@ -42,7 +42,7 @@ workflows:
   build_and_deploy:
     jobs:
       - build
-      - cloudfoundry/dark_deploy:
+      - cloudfoundry/blue_green:
           filters:
             branches:
               only:
@@ -51,22 +51,11 @@ workflows:
           requires:
             - build
           appname: micrometer-docs
-          manifest: manifest.yml
-          org: FrameworksAndRuntimes
-          space: micrometer-production
-          package: build
-          workspace_path: '.'
-          dark_subdomain: micrometer-docs-dark
-          domain: cfapps.io
-      - hold:
-          requires:
-            - cloudfoundry/dark_deploy
-          type: approval
-      - cloudfoundry/live_deploy:
-          requires:
-            - hold
-          appname: micrometer-docs
-          org: FrameworksAndRuntimes
-          space: micrometer-production
-          live_subdomain: ''
           domain: micrometer.io
+          endpoint: https://api.run.pcfone.io
+          live_subdomain: ''
+          manifest: manifest.yml
+          org: group-spring
+          package: build
+          space: micrometer.io
+          workspace_path: '.'
