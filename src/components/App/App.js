@@ -13,6 +13,12 @@ export default function App() {
       <Switch>
         <Route exact path="/" component={Home} />
 
+        <Route path="/security-policy" component={() => { 
+          window.location.href='https://tanzu.vmware.com/security';
+          return null; 
+        }
+        } />
+
         <DocRoutes/>
 
         <Route path="**" render={() => <Redirect to="/" />} />
