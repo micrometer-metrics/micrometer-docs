@@ -91,7 +91,7 @@ public class ExampleService {
   @Timed
   public void sync() {
     // @Timed will record the execution time of this method,
-    // from the start and until it exists normally or exceptionally.
+    // from the start and until it exits normally or exceptionally.
     ...
   }
 
