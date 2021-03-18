@@ -4,7 +4,9 @@ Jon Schneider <jschneider@pivotal.io>
 :sectnums:
 :system: influx
 
-The InfluxData suite of tools supports real-time stream processing and storage of time-series data. It supports downsampling, automatically expiring and deleting unwanted data, as well as backup and restore. Analysis of data is done via a SQL-like query language.
+The InfluxData suite of tools supports real-time stream processing and storage of time-series data. It supports downsampling, automatically expiring and deleting unwanted data, as well as backup and restore.
+
+Since Micrometer 1.7, the InfluxMeterRegistry supports the 1.x InfluxDB API as well as the v2 API.
 
 == Configuring
 
@@ -52,6 +54,8 @@ InfluxConfig config = new InfluxConfig() {
 };
 MeterRegistry registry = new InfluxMeterRegistry(config, Clock.SYSTEM);
 ----
+
+To ship metrics to InfluxDB 2.x, make sure to configure the `org` and `bucket` to write the metrics to, as well as the authentication `token`.
 
 `InfluxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.influx` directly to the `InfluxConfig`:
 
