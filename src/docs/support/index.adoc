@@ -4,7 +4,7 @@ Micrometer's support policy is defined as follows for different types of release
 * *Minor release lines* (e.g. 1.1.x, 1.2.x)
   ** Long Term Support (LTS) Minor release lines will be supported with patch releases for a minimum of 12 months from the date the minor release (e.g. `1.1.0`, `1.2.0`) was made available for download.
   ** Non-LTS Minor release lines will be supported until a more recent minor release line (LTS or non-LTS) is published.
-* Any confirmed security vulnerabilities on supported software should result in a patch release to Maven Central and JCenter.
+* Any confirmed security vulnerabilities on supported software should result in a patch release to Maven Central.
 
 [NOTE]
 ====
