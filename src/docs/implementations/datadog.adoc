@@ -8,7 +8,7 @@ Datadog is a dimensional time-series SaaS with built-in dashboarding and alertin
 
 == Installation and Configuration
 
-Micrometer supports shipping metrics to Datadog directly via its API or through Dogstatsd via the StatsD registry.
+Micrometer supports shipping metrics to Datadog directly via its API or through DogStatsD via the StatsD registry.
 The API approach is far more efficient if you need to choose between the two.
 
 === Direct to Datadog API approach
@@ -71,7 +71,7 @@ You can set the tag via common tags as follows:
 registry.config().commonTags("host", "my-host");
 ```
 
-=== Through Dogstatsd approach
+=== Through DogStatsD approach
 
 In Gradle:
 
@@ -91,7 +91,7 @@ Or in Maven:
 </dependency>
 ----
 
-Metrics are shipped immediately over UDP to Dogstatsd using Datadog's flavor of the StatsD line protocol. `java-dogstatsd-client` is _not_ needed on the classpath for this to work. Micrometer uses an alternative, non-blocking UDP implementation.
+Metrics are shipped immediately over UDP to DogStatsD using Datadog's flavor of the StatsD line protocol. `java-dogstatsd-client` is _not_ needed on the classpath for this to work as Micrometer uses its own implementation.
 
 [source,java]
 ----
@@ -109,3 +109,5 @@ StatsdConfig config = new StatsdConfig() {
 
 MeterRegistry registry = new StatsdMeterRegistry(config, Clock.SYSTEM);
 ----
+
+Micrometer supports UDP origin detection since 1.7.0.
