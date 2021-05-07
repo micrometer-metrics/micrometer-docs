@@ -47,7 +47,7 @@ workflows:
             branches:
               only:
                 # Note that pull requests are checked out using `pull/` like refs/pull/1279/head -> origin/pull/1279
-                - master
+                - main
           requires:
             - build
           appname: micrometer-docs
