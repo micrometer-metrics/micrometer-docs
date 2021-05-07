@@ -4,6 +4,10 @@ Jon Schneider <jschneider@pivotal.io>
 :sectnums:
 :dimensional: true
 
+WARNING: Spring Boot 1.5.x and Micrometer releases (up to Micrometer 1.3.x) that include the `micrometer-spring-legacy` module are now out of support.
+Please upgrade to supported releases of Spring Boot and Micrometer.
+Refer to the latest https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics[Spring Boot reference documentation on metrics] for built-in Spring Boot support post Spring Boot 1.5.
+
 == Installing
 Micrometer provides a legacy bridge to Spring Boot 1.5. To install the required dependency in Gradle:
 

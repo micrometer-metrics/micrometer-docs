@@ -27,8 +27,11 @@ If you haven't decided on a monitoring system yet and just want to try out the i
 
 == Snapshots
 
-Every successful https://circleci.com/gh/micrometer-metrics/micrometer[build] of Micrometer's master branch results in the publication of a new snapshot version. You can use the latest snapshot by adding the Maven repository `https://repo.spring.io/libs-snapshot` to your build and using the version `1.2.0-SNAPSHOT`.
+Every successful https://app.circleci.com/pipelines/github/micrometer-metrics/micrometer[build] of Micrometer's master branch results in the publication of a new snapshot version. You can use the latest snapshot by adding the Maven repository `https://repo.spring.io/libs-snapshot` to your build and using the corresponding snapshot version, e.g. `1.2.0-SNAPSHOT`.
 
 == Spring Boot 1.5.x
 
-Micrometer support has been ported back to Spring Boot 1.5.x via an additional module `micrometer-spring-legacy`. Add this dependency to Boot 1.5.x apps along with your choice of registry implementation(s) to autoconfigure Micrometer metrics. See the Micrometer Spring Boot 1.5.x link:/docs/ref/spring/1.5[reference documentation] for more on configuration options.
+WARNING: Spring Boot 1.5.x and Micrometer releases (up to Micrometer 1.3.x) that include the `micrometer-spring-legacy` module are now out of support.
+Please upgrade to supported releases of Spring Boot and Micrometer, and refer to the latest Spring Boot documentation instead.
+
+Micrometer support was back-ported to Spring Boot 1.5.x via an additional module `micrometer-spring-legacy`. Add this dependency to Boot 1.5.x apps along with your choice of registry implementation(s) to autoconfigure Micrometer metrics. See the Micrometer Spring Boot 1.5.x link:/docs/ref/spring/1.5[reference documentation] for more on configuration options.
