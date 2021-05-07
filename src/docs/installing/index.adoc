@@ -19,7 +19,6 @@ Or in Maven:
   <version>${micrometer.version}</version>
 </dependency>
 ----
-endif::[]
 
 Through Micrometer's composite meter repository (described in greater detail in link:/docs/concepts#_composite_registries["Concepts"]), you may configure more than one registry implementation if you intend to publish metrics to more than one monitoring system.
 
