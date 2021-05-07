@@ -8,7 +8,7 @@ Datadog is a dimensional time-series SaaS with built-in dashboarding and alertin
 
 == Installation and Configuration
 
-Micrometer supports shipping metrics to Datadog directly via its API or through DogStatsD via the StatsD registry.
+Micrometer supports shipping metrics to Datadog directly via its HTTP API or through DogStatsD via the link:/docs/registry/statsD[StatsD registry].
 The API approach is far more efficient if you need to choose between the two.
 
 === Direct to Datadog API approach
@@ -110,4 +110,4 @@ StatsdConfig config = new StatsdConfig() {
 MeterRegistry registry = new StatsdMeterRegistry(config, Clock.SYSTEM);
 ----
 
-Micrometer supports UDP origin detection since 1.7.0.
+Micrometer since 1.7.0 supports DogStatsD's https://docs.datadoghq.com/developers/dogstatsd/?tab=kubernetes#origin-detection-over-udp[origin detection over UDP] feature on Kubernetes if the `DD_ENTITY_ID` environment variable is properly set.
