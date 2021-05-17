@@ -26,7 +26,7 @@ If you haven't decided on a monitoring system yet and just want to try out the i
 
 == Snapshots
 
-Every successful https://app.circleci.com/pipelines/github/micrometer-metrics/micrometer[build] of Micrometer's master branch results in the publication of a new snapshot version. You can use the latest snapshot by adding the Maven repository `https://repo.spring.io/libs-snapshot` to your build and using the corresponding snapshot version, e.g. `1.2.0-SNAPSHOT`.
+Every successful https://app.circleci.com/pipelines/github/micrometer-metrics/micrometer[build] of Micrometer's main branch results in the publication of a new snapshot version. You can use the latest snapshot by adding the Maven repository `https://repo.spring.io/libs-snapshot` to your build and using the corresponding snapshot version, e.g. `1.2.0-SNAPSHOT`.
 
 == Spring Boot 1.5.x
 
