@@ -4,12 +4,16 @@ Jon Schneider <jschneider@pivotal.io>
 :sectnums:
 :system: prometheus
 
-Prometheus is an in-memory dimensional time series database with a simple built-in UI, a custom query language, and math operations. Prometheus is designed to operate on a pull model, scraping metrics from application instances periodically based on service discovery.
+Prometheus is a dimensional time series database with a built-in UI, a custom query language, and math operations.
+Prometheus is designed to operate on a pull model, scraping metrics from application instances periodically based on service discovery.
 
 include::install.adoc[]
 == Configuring
 
-Prometheus expects to scrape or poll individual app instances for metrics. In addition to creating a Prometheus registry, you also need to expose an HTTP endpoint to Prometheus' scraper. In a Spring environment, a Prometheus actuator endpoint is autoconfigured in the presence of Spring Boot Actuator. Otherwise, you can use any JVM-based HTTP server implementation to expose scrape data to Prometheus.
+Prometheus expects to scrape or poll individual app instances for metrics.
+In addition to creating a Prometheus registry, you also need to expose an HTTP endpoint to Prometheus' scraper.
+In a Spring Boot application, a Prometheus actuator endpoint is autoconfigured in the presence of Spring Boot Actuator.
+Otherwise, you can use any JVM-based HTTP server implementation to expose scrape data to Prometheus.
 
 The example below uses the JDK's `com.sun.net.httpserver.HttpServer` to expose a scrape endpoint:
 
@@ -32,11 +36,12 @@ try {
     throw new RuntimeException(e);
 }
 ----
-<1> The `PrometheusMeterRegistry` contains a `scrape()` function that knows how to supply the String data necessary for the scrape. All you have to do is wire it to an endpoint.
+<1> The `PrometheusMeterRegistry` has a `scrape()` function that knows how to supply the String data necessary for the scrape. All you have to do is wire it to an endpoint.
 
 === The Prometheus rename filter
 
-In some cases, Micrometer provides out-of-the-box instrumentation that overlaps with commonly used Prometheus simpleclient modules, but has chosen a different naming scheme for consistency/portability. If you wish to use the Prometheus "standard" names, add the filter:
+In some cases, Micrometer provides out-of-the-box instrumentation that overlaps with commonly used Prometheus simpleclient modules, but has chosen a different naming scheme for consistency/portability.
+If you wish to use the Prometheus "standard" names, add the filter:
 
 [source,java]
 ----
@@ -45,7 +50,8 @@ prometheusRegistry.config().meterFilter(new PrometheusRenameFilter());
 
 == Graphing
 
-This section serves as a quickstart to rendering useful representations in Prometheus for metrics originating in Micrometer. See the https://prometheus.io/docs/querying/basics[Prometheus docs] for a far more complete reference of what is possible in Prometheus.
+This section serves as a quickstart to rendering useful representations in Prometheus for metrics originating in Micrometer.
+See the https://prometheus.io/docs/querying/basics[Prometheus docs] for a far more complete reference of what is possible in Prometheus.
 
 === Grafana Dashboard
 
@@ -63,21 +69,19 @@ The dashboard features:
 * Classloading
 * Direct/Mapped buffer sizes
 
-Instead of using the `job` tag to distinguish different applications, this dashboard makes use of a common tag called `application` applied to every metric. You can apply the common tag with:
+Instead of using the `job` tag to distinguish different applications, this dashboard makes use of a common tag called `application` applied to every metric.
+You can apply the common tag with:
 
 [source,java]
 ----
 registry.config().commonTags("application", "MYAPPNAME");
 ----
 
-In Spring Boot applications, you can use `MeterRegistryCustomizer` to apply common tags to auto-configured registries:
+In Spring Boot applications, you can use the https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.metrics.customizing.common-tags[property support for common tags].
 
-[source,java]
+[source,properties]
 ----
-@Bean
-MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
-  return registry -> registry.config().commonTags("application", "MYAPPNAME");
-}
+management.metrics.tags.application=MYAPPNAME
 ----
 
 === Counters
