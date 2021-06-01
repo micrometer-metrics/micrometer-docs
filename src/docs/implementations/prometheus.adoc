@@ -12,7 +12,7 @@ include::install.adoc[]
 
 Prometheus expects to scrape or poll individual app instances for metrics.
 In addition to creating a Prometheus registry, you also need to expose an HTTP endpoint to Prometheus' scraper.
-In a Spring Boot application, a Prometheus actuator endpoint is autoconfigured in the presence of Spring Boot Actuator.
+In a Spring Boot application, a https://docs.spring.io/spring-boot/docs/current/actuator-api/htmlsingle/#prometheus[Prometheus actuator endpoint] is autoconfigured in the presence of Spring Boot Actuator.
 Otherwise, you can use any JVM-based HTTP server implementation to expose scrape data to Prometheus.
 
 The example below uses the JDK's `com.sun.net.httpserver.HttpServer` to expose a scrape endpoint:
@@ -37,6 +37,21 @@ try {
 }
 ----
 <1> The `PrometheusMeterRegistry` has a `scrape()` function that knows how to supply the String data necessary for the scrape. All you have to do is wire it to an endpoint.
+
+=== Scrape format
+
+By default, the https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format[Prometheus text format] is returned from the `PrometheusMeterRegistry` `scrape()` method.
+
+https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md[OpenMetrics] format can also be produced since Micrometer 1.8.0.
+A content type can be passed to the `scrape` method specifying the format to be returned.
+For example, to get the OpenMetrics 1.0.0 format scrape, you could use the Prometheus Java client constant for it as follows:
+
+[source,java]
+----
+String openMetricsScrape = registry.scrape(TextFormat.CONTENT_TYPE_OPENMETRICS_100);
+----
+
+In Spring Boot applications, the https://docs.spring.io/spring-boot/docs/current/actuator-api/htmlsingle/#prometheus[Prometheus Actuator endpoint] supports scraping in either format, defaulting to Promtheus text format in absence of a specific `Accept` header.
 
 === The Prometheus rename filter
 
