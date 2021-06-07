@@ -71,9 +71,7 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 
     @Override
     public String apiToken() {
-        // Read from the environment or a config file.
-        // It is *not* recommended to place secrets in config files
-        // but rather to read them from env vars, for example.
+        // It is *not* recommended to place secrets in config files but rather to read them from env vars, for example.
         return MY_TOKEN;
     }
 
@@ -142,10 +140,10 @@ management.metrics.export.dynatrace:
     # It is *not* recommended to put the token into the YAML file directly.
     # It should be read from environment variables or System properties instead,
     # e. g., using `api-token: ${ENV_VAR_DT_INGEST_TOKEN}`
-    api-token: YOUR_TOKEN
+    api-token: MY_TOKEN
 
     # Sets a prefix that is prepended to each exported metric key.
-    metric-key-prefix: your.key.prefix
+    metric-key-prefix: my.metric.key.prefix
 
     # If set to true and a local OneAgent is running, retrieves process and host metadata
     # and adds it as additional dimensions to all data points (default: true)
