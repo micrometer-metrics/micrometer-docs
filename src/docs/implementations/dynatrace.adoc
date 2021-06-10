@@ -11,8 +11,7 @@ include::install.adoc[]
 == Configuring
 
 For setting up new integrations with Dynatrace, it is recommended to use the latest version of the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/[Dynatrace Metrics API] (`api-version: v2`).
-More details on how to use the v2 API are provided further <<bookmark-apiv2, below>>.
-
+Dynatrace provides different ways of setting up integrations:
 
 === Using a Dynatrace OneAgent installed on the host (preferred) [[bookmark-oneagent-example]]
 
@@ -37,12 +36,14 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTEM);
 ----
 
-If you are working with Spring Boot, you can instead put the following properties in your `application-dynatrace.yml` in the `resources` folder.
+`DynatraceConfig` is an interface with a set of default methods.
+Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.dynatrace` directly to the `DynatraceConfig`.
+This allows configuring the Dynatrace exporter by using the <<bookmark-available-properties, the available properties>>.
+To enable the export to the local OneAgent, use:
 
 [source,yml]
 ----
 management.metrics.export.dynatrace:
-    enabled: true
     api-version: v2
 ----
 
@@ -63,15 +64,15 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 
     @Override
     public String uri() {
-        // The endpoint of the Dynatrace Metrics API v2 including path, e. g.
+        // The endpoint of the Dynatrace Metrics API v2 including path, e.g.:
         // "https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest".
-        // To be read from environment variables or a config file.
+        // Should be read from a secure source and not hard-coded.
         return MY_DYNATRACE_URI;
     }
 
     @Override
     public String apiToken() {
-        // It is *not* recommended to place secrets in config files but rather to read them from env vars, for example.
+        // It is *not* recommended to place secrets in config files but to read them from a secure source.
         return MY_TOKEN;
     }
 
@@ -86,15 +87,14 @@ MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTE
 ----
 
 These properties can also be set via the Spring Boot properties file.
-It is possible to reference environment variables using the Spring property placeholder notation here.
+It is possible to reference environment variables using the Spring property placeholder notation here (`${VAR_NAME}`).
 
 [source,yml]
 ----
 management.metrics.export.dynatrace:
-    enabled: true
     api-version: v2
 
-    # e. g. https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest
+    # e.g.: https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest
     uri: ${ENV_VAR_DT_INGEST_URI}
     api-token: ${ENV_VAR_DT_INGEST_TOKEN}
 ----
@@ -116,20 +116,19 @@ If the ingestion port was changed to a custom one, the full endpoint URI has to 
 
 *Configuration with URI and API token*
 
-If no local OneAgent is running on the host or the metrics should be sent to a different endpoint (e.g., a different tenant), the Dynatrace v2 exporter can be configured with an explicit endpoint URI and an https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication/[API token].
+If no local OneAgent is running on the host or the metrics should be sent to a different endpoint (e.g. a different tenant), the Dynatrace v2 exporter can be configured with an explicit endpoint URI and an https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication/[API token].
 The https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication/[API token] must have the https://www.dynatrace.com/support/help/shortlink/api-authentication#token-permissions["Ingest metrics"] (`metrics.ingest`) permission set.
 It is recommended to limit scope to only this permission.
 
 The entire Metrics v2 API endpoint URI has to be specified including its path, i.e., with the path `/api/v2/metrics/ingest` on SaaS and managed deployments, or `/metrics/ingest` for OneAgent endpoints as mentioned in the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/post-ingest-metrics/[documentation].
 
-*Properties available in the v2 exporter*
+*Properties available in the v2 exporter* [[bookmark-available-properties]]
 
-When using the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/[Dynatrace metrics API v2], additional optional properties can be set:
+When using the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/[Dynatrace metrics API v2], the following properties can be set:
 
 [source,yml]
 ----
 management.metrics.export.dynatrace:
-    enabled: true
     # required to use the properties below
     api-version: v2
 
@@ -137,9 +136,9 @@ management.metrics.export.dynatrace:
     uri: https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest
     # or https://{your-domain}/e/{your-environment-id}/api/v2/metrics/ingest on Managed
 
-    # It is *not* recommended to put the token into the YAML file directly.
-    # It should be read from environment variables or System properties instead,
-    # e. g., using `api-token: ${ENV_VAR_DT_INGEST_TOKEN}`
+    # It is *not* recommended to put the token into the YAML or properties file directly.
+    # It should be read from a secure source instead.
+    # E.g. using `api-token: ${ENV_VAR_DT_INGEST_TOKEN}` to read from the environment.
     api-token: MY_TOKEN
 
     # Sets a prefix that is prepended to each exported metric key.
@@ -156,11 +155,11 @@ management.metrics.export.dynatrace:
         key1: "value1"
         key2: "value2"
 
-    # The export interval in which metrics are sent to Dynatrace. (default: 60s)
+    # The export interval in which metrics are sent to Dynatrace (default: 60s).
     step: 60s
 ----
 
-These properties can also be set in code by overwriting the respective methods.
+These properties can also be set in code by overwriting the respective methods of the `DynatraceConfig` class.
 
 === API v1 (Legacy)
 
@@ -168,22 +167,21 @@ When the apiVersion is configured to "v1", the registry will send data using the
 The reported metrics will be assigned to https://www.dynatrace.com/support/help/dynatrace-api/environment-api/topology-and-smartscape/custom-device-api/report-custom-device-metric-via-rest-api/[custom devices] in Dynatrace.
 If no apiVersion is specified, it will default to "v1" for backwards-compatibility with earlier setups.
 
-For the v1 API, do not specify the ingest path, but only the base URL of your environment, e. g. `uri: https://{your-environment-id}.live.dynatrace.com`
+For the v1 API, do not specify the ingest path, but only the base URL of your environment, e.g.: `uri: https://{your-environment-id}.live.dynatrace.com`
 
 [source,java]
 ----
 DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     @Override
     public String uri() {
-        // The Dynatrace environment URI without any path, e. g.:
+        // The Dynatrace environment URI without any path, e.g.:
         // https://{your-environment-id}.live.dynatrace.com
         return MY_DYNATRACE_URI;
     }
 
     @Override
     public String apiToken() {
-        // It is *not* recommended to place secrets in config files 
-        // but rather to read them from env vars, for example.
+        // It is *not* recommended to place secrets in config files, but to read them from a secure source.
         return MY_TOKEN;
     }
 
@@ -201,12 +199,9 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTEM);
 ----
 
-`DynatraceConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null` you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.dynatrace` directly to the `DynatraceConfig`:
-
 [source,yml]
 ----
 management.metrics.export.dynatrace:
-    enabled: true
     # This is required
     uri: https://your-environment-id.live.dynatrace.com
 
@@ -216,8 +211,8 @@ management.metrics.export.dynatrace:
     # This is required
     device-id: sample
 
-    # You will probably want disable Dynatrace publishing in a local development profile.
-    enabled: true
+    # To disable Dynatrace publishing, e.g. in a local development profile, use:
+    # enabled: false
 
     # The interval at which metrics are sent to Dynatrace. The default is 1 minute.
     step: 1m
