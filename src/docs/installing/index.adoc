@@ -20,17 +20,10 @@ Or in Maven:
 </dependency>
 ----
 
-Through Micrometer's composite meter repository (described in greater detail in link:/docs/concepts#_composite_registries["Concepts"]), you may configure more than one registry implementation if you intend to publish metrics to more than one monitoring system.
+Through Micrometer's composite meter registry (described in greater detail in link:/docs/concepts#_composite_registries["Concepts"]), you may configure more than one registry implementation if you intend to publish metrics to more than one monitoring system.
 
 If you haven't decided on a monitoring system yet and just want to try out the instrumentation SPI, you can add a dependency on `micrometer-core` instead and configure the `SimpleMeterRegistry`.
 
 == Snapshots
 
-Every successful https://app.circleci.com/pipelines/github/micrometer-metrics/micrometer[build] of Micrometer's main branch results in the publication of a new snapshot version. You can use the latest snapshot by adding the Maven repository `https://repo.spring.io/libs-snapshot` to your build and using the corresponding snapshot version, e.g. `1.2.0-SNAPSHOT`.
-
-== Spring Boot 1.5.x
-
-WARNING: Spring Boot 1.5.x and Micrometer releases (up to Micrometer 1.3.x) that include the `micrometer-spring-legacy` module are now out of support.
-Please upgrade to supported releases of Spring Boot and Micrometer, and refer to the latest Spring Boot documentation instead.
-
-Micrometer support was back-ported to Spring Boot 1.5.x via an additional module `micrometer-spring-legacy`. Add this dependency to Boot 1.5.x apps along with your choice of registry implementation(s) to autoconfigure Micrometer metrics. See the Micrometer Spring Boot 1.5.x link:/docs/ref/spring/1.5[reference documentation] for more on configuration options.
+Every successful https://app.circleci.com/pipelines/github/micrometer-metrics/micrometer[build] of Micrometer's `main` and maintenance branches (i.e. `1.7.x`) results in the publication of a new snapshot version. You can use the latest snapshot by adding the Maven repository `https://repo.spring.io/libs-snapshot` to your build and using the corresponding snapshot version, e.g. `1.8.0-SNAPSHOT`.
