@@ -26,11 +26,11 @@ If you haven't decided on a monitoring system yet and just want to try out the i
 
 == Snapshots
 
-Every successful https://app.circleci.com/pipelines/github/micrometer-metrics/micrometer[build] of Micrometer's `main` and maintenance branches (i.e. `1.7.x`) results in the publication of a new snapshot version. You can use the latest snapshot by adding the Maven repository `https://repo.spring.io/libs-snapshot` to your build and using the corresponding snapshot version, e.g. `1.8.0-SNAPSHOT`.
+Every successful https://app.circleci.com/pipelines/github/micrometer-metrics/micrometer[build] of Micrometer's `main` and maintenance branches (e.g. `1.7.x`) results in the publication of a new snapshot version. You can use the latest snapshot by adding the Maven repository `https://repo.spring.io/libs-snapshot` to your build and using the corresponding snapshot version, e.g. `1.8.0-SNAPSHOT`.
 
 == Milestones
 
 Milestone releases are made available for early testing purposes and are not intended for production use.
 Milestone releases are published to https://repo.spring.io/milestone.
-Include that as a maven repository in your build configuration to use milestone releases.
-Milestones will be marked as "pre-releases" on GitHub and the version will have a suffix such as `-M1` or `RC1` (milestone 1, release candidate 1).
+Include that as a Maven repository in your build configuration to use milestone releases.
+Milestones will be marked as "pre-releases" on GitHub and the version will have a suffix such as `-M1` or `-RC1` (milestone 1, release candidate 1).
