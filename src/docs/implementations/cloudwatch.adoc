@@ -4,7 +4,7 @@ Tommy Ludwig <tludwig@vmware.com>
 :sectnums:
 :system: cloudwatch2
 
-https://aws.amazon.com/cloudwatch/:[Amazon CloudWatch] is a dimensional time-series SaaS on Amazon's cloud.
+https://aws.amazon.com/cloudwatch/[Amazon CloudWatch] is a dimensional time-series SaaS on Amazon's cloud.
 
 include::install.adoc[]
 
@@ -37,7 +37,7 @@ You can provide your own `CloudWatchAsyncClient` to the constructor of the regis
 management.metrics.export.cloudwatch:
     namespace: YOURNAMESPACE
 
-    # You will probably want disable publishing in a local development profile.
+    # You will probably want to disable publishing in a local development profile.
     enabled: true
 
     # The interval at which metrics are sent to CloudWatch. The default is 1 minute.
