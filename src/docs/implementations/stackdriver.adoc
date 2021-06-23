@@ -8,6 +8,8 @@ Stackdriver Monitoring is a dimensional time-series SaaS with built-in dashboard
 
 include::install.adoc[]
 
+NOTE: `micrometer-registry-stackdriver` works with the latest 1.x or 2.x versions of the `google-cloud-monitoring` library.
+
 == Configuring
 
 [source,java]
