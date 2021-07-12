@@ -1,113 +1,143 @@
 = Micrometer New Relic
-Jon Schneider <jschneider@pivotal.io>
+New Relic Open Source <opensource@newrelic.com.>
 :toc:
 :sectnums:
 :system: new-relic
 
-New Relic offers a dimensional monitoring system product called Insights with a full UI and a query language called NRQL. New Relic Insights operates on a push model. Some features of NRQL assume that Insights receives a distinct event payload for every timing, count, etc. Micrometer instead ships aggregates at a prescribed interval, allowing your app's throughput to scale without concern for event propagation to Insights becoming a bottleneck.
+New Relic is a powerful observability platform with Micrometer
+https://github.com/newrelic/micrometer-registry-newrelic[support through its NewRelicRegistry implementation].
+Micrometer metrics are converted into New Relic dimensional metrics, which can be
+displayed in dashboards and used to create alerts.  The New Relic platform supports
+full programmability in addition to custom queries with the NRQL language.
 
-NOTE: New Relic provides its own Micrometer `MeterRegistry` implementation based on dimensional metrics.
-It intends to supersede Micrometer's `NewRelicMeterRegistry` (which uses custom events in New Relic) because New Relic's dimensional metrics are a better fit for metrics than custom events.
-You can find more details in https://github.com/newrelic/micrometer-registry-newrelic[its GitHub repository].
+NOTE: Please use the New Relic provided `NewRelicRegistry` instead of Micrometer's `NewRelicMeterRegistry`. The instructions here
+are for the current https://github.com/newrelic/micrometer-registry-newrelic[New Relic registry].
 
-include::install.adoc[]
+== Installing
+
+You can first find the latest version published https://mvnrepository.com/artifact/com.newrelic.telemetry/micrometer-registry-new-relic[to Maven Central].
+Next, set your project to depend on the New Relic Micrometer registry (inserting the version number as appropriate):
+
+=== Gradle
+
+Add the following dependency to your `build.gradle.kts`
+
+[source,kotlin]
+----
+implementation("com.newrelic.telemetry:micrometer-registry-new-relic:${newrelic-registry.version}")
+----
+
+=== Maven
+
+Add the following dependency to your `pom.xml`:
+
+[source,xml,subs=+attributes]
+----
+<dependency>
+  <groupId>com.newrelic.telemetry</groupId>
+  <artifactId>micrometer-registry-new-relic</artifactId>
+  <version>${newrelic-registry.version}</version>
+</dependency>
+----
+
 
 == Configuring
 
+In order to send data to New Relic, you will need an https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#event-insert-key[insert api key].  Once you have obtained an insert api key, you can put it into your environment (like the example below) or otherwise
+get it into your application's configuration.
+
 [source,java]
 ----
-NewRelicConfig newRelicConfig = new NewRelicConfig() {
+
+NewRelicRegistryConfig config = new NewRelicRegistryConfig() {
     @Override
-    public String accountId() {
-        return "MYACCOUNT";
+    public String get(String key) {
+      return null; // accept the rest of the defaults
     }
 
     @Override
     public String apiKey() {
-        return "MY_INSIGHTS_API_KEY";
+      return System.getenv("INSERT_API_KEY");
     }
 
     @Override
-    public String get(String k) {
-        return null; // accept the rest of the defaults
+    public Duration step() {
+      return Duration.ofSeconds(5);
+    }
+
+    @Override
+    public String serviceName() {
+      return "My Service Name";
     }
 };
 
-MeterRegistry registry = new NewRelicMeterRegistry(newRelicConfig, Clock.SYSTEM);
+MeterRegistry newRelicRegistry =
+        NewRelicRegistry.builder(config)
+            .commonAttributes(
+                new Attributes()
+                    .put("host", InetAddress.getLocalHost().getHostName()))
+            .build();
+newRelicRegistry.start(new NamedThreadFactory("newrelic.micrometer.registry"));
 ----
-
-There are two distinct sources of API keys in New Relic.
 
 `NewRelicConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.newrelic` directly to the `NewRelicConfig`:
 
 [source,yml]
 ----
 management.metrics.export.newrelic:
-    account-id: MYACCOUNT
     api-key: MY_INSIGHTS_API_KEY
 
     # The interval at which metrics are sent to New Relic. See Duration.parse for the expected format.
-    # The default is 1 minute.
-    step: 1m
+    # The default is 5 seconds.
+    step: 10s
 ----
 
-== Graphing
+== Observing Metrics
 
-This section serves as a quickstart to rendering useful representations in New Relic for metrics originating in Micrometer. See the https://docs.newrelic.com/docs/insights/nrql-new-relic-query-language/using-nrql/introduction-nrql[New Relic NRQL docs] for a far more complete reference of what is possible in New Relic.
+The quickest way to start using your data is to
+navigate to https://one.newrelic.com[New Relic One] and use the entity explorer to find
+your service by its name.
 
-=== Timers
+image::img/new-relic-entity-explorer.png[NR1 entity explorer]
 
-At each publishing interval, the New Relic `Timer` produces a single event with the timer's name and several attributes:
+After choosing the service from the search results, you should
+be met with some familiar metrics:
 
-1. `avg` - A mean latency for the publishing interval.
-2. `count` - Throughput per second over the publishing interval.
-3. `totalTime` - Total time per second over the publishing interval (used with `count`) to create aggregable means.
+image::img/new-relic-metrics1.png[NR1 default metrics]
 
-Additionally, if any percentiles or SLA buckets are defined on the timer, additional events are produced:
+Please note that other graphs exist but are not shown for brevity (such as
+"Heap memory" and "CPU utilization").
 
-4. `${name}.percentiles` - Micrometer calculated percentiles for the publishing interval. One event is produced for each percentile, with a tag of `phi` in the range [0,1].
-5. `${name}.histogram` - One event is produced for each SLA boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLA boundaries over the publishing interval.
+You can use this simple interface to easily filter or group your metrics by
+many common facets, such as hostname or status.  If you wish to see the
+NRQL query that generated a given graph, choose "View query" from the
+graph's overflow menu.
 
-To generate an aggregable view of latency in New Relic, divide `totalTime` by `count`:
+== Querying Metric Data
 
-[source,sql]
+Micrometer metric data is also available for querying with NRQL.
+
+Please see the https://docs.newrelic.com/docs/data-ingest-apis/get-data-new-relic/metric-api/query-metric-data-type[official documentation]
+for detailed information about querying your metric data.
+
+To see what metric names are available, try starting with a query like
+[source,nrql]]
 ----
-SELECT sum(totalTime)/sum(count) as 'Average Latency', max(max) as 'Max' FROM timer since 30 minutes ago TIMESERIES auto
+FROM Metric SELECT uniques(metricName) WHERE service.name = '<YourServiceName>' limit 1000
 ----
+image::img/new-relic-query-metric-names.png[NR1 metric types]
 
-.Timer latency.
-image::img/new-relic-timer-latency.png[New Relic-rendered timer]
+Once you have identified a metric of interest, you can leverage NRQL to perform interesting queries:
 
-To generate a throughput chart:
+image::img/new-relic-example-query.png[NR1 example query]
 
-[source,sql]
-----
-SELECT average(count) as 'Average Throughput' FROM timer since 30 minutes ago TIMESERIES auto
-----
+https://docs.newrelic.com/docs/data-ingest-apis/get-data-new-relic/metric-api/query-metric-data-type[See the official documentation] for many
+more useful examples.
 
-.Timer throughput.
-image::img/new-relic-timer-throughput.png[New Relic-rendered timer throughput]
+== Types
 
-To generate a plot of client-side percentiles:
+New Relic maintains a document that describes https://github.com/newrelic/newrelic-exporter-specs/tree/master/micrometer[how Micrometer metric types are mapped 
+into the New Relic metric types].  Please feel free to open an issue if you have questions.
 
-[source,sql]
-----
-SELECT latest(value) from timerPercentile FACET phi since 30 minutes ago TIMESERIES auto
-----
+Changes and feedback are welcome and appreciated.
 
-.Timer Percentiles.
-image::img/new-relic-timer-percentiles.png[New Relic-rendered percentiles]
-
-Note how these percentiles are _not aggregable_. We've selected the `latest(value)` function to display this chart (i.e. it isn't correct to `average(value)` on a percentile value). The more dimensions you add to a timer, the less useful these values become.
-
-Lastly, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries. In this example, we set SLA boundaries at 275 (yellow), 300 (red), and 500 (blue) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
-
-[source,sql]
-----
-SELECT sum(value) from timerHistogram FACET le since 30 minutes ago TIMESERIES auto
-----
-
-.Timer SLA boundaries.
-image::img/new-relic-timer-sla.png[New Relic-rendered SLA boundaries]
-
-Where the lines converge at various points it is evident that no sample exceeded the 275 ms SLA boundary.
