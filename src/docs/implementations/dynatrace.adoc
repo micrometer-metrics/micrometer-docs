@@ -144,9 +144,9 @@ management.metrics.export.dynatrace:
     # Sets a prefix that is prepended to each exported metric key.
     metric-key-prefix: my.metric.key.prefix
 
-    # If set to true and a local OneAgent is running, retrieves process and host metadata
+    # If set to true and a local OneAgent or operator is running, retrieves metadata
     # and adds it as additional dimensions to all data points (default: true)
-    enrich-with-one-agent-metadata: true
+    enrich-with-dynatrace-metadata: true
 
     # Sets an arbitrary number of key-value pairs as default dimensions.
     # Micrometer tags will overwrite these dimensions, if the same key appears twice.
@@ -160,6 +160,8 @@ management.metrics.export.dynatrace:
 ----
 
 These properties can also be set in code by overwriting the respective methods of the `DynatraceConfig` class.
+
+For more information about the metadata picked up by the enrichment, see https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/enrich-metrics/[the Dynatrace documentation].
 
 === API v1 (Legacy)
 
