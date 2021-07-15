@@ -28,9 +28,7 @@ jobs:
           # command: yarn test
       - run:
           name: Run build
-          # Compiler warnings are treated as failures in CI environments by the react-scripts build
-          # We have one compiler warning that I cannot figure out how to get rid of...
-          command: CI=false yarn build
+          command: yarn build
       - persist_to_workspace:
           root: .
           paths:

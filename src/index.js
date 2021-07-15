@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom'
+import { Router } from 'react-router-dom'
 import App from './components/App/App';
 import registerServiceWorker from './registerServiceWorker';
 import { createBrowserHistory } from 'history';
@@ -14,5 +14,5 @@ import './index.css'; // where we wish to override bootstrap defaults
 
 const history = createBrowserHistory();
 
-ReactDOM.render(<BrowserRouter history={history}><App/></BrowserRouter>, document.getElementById('root'));
+ReactDOM.render(<Router history={history}><App/></Router>, document.getElementById('root'));
 registerServiceWorker();

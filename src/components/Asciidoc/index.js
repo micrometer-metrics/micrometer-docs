@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import 'asciidoctor.js/dist/css/asciidoctor.css';
+import '@asciidoctor/core/dist/css/asciidoctor.css';
 
 // To rebuild this with a small set of languages, clone highlight.js, run:
 // `node tools/build.js java groovy http xml gradle yaml json -t node`
@@ -9,7 +9,7 @@ import 'asciidoctor.js/dist/css/asciidoctor.css';
 import hljs from './highlight';
 import './highlight.github.css';
 
-let asciidoctor = require('asciidoctor.js')();
+let asciidoctor = require('asciidoctor')();
 
 asciidoctor.Extensions.register(function () {
   this.treeProcessor(function() {
