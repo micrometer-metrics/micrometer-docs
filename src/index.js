@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom'
 import App from './components/App/App';
-import registerServiceWorker from './registerServiceWorker';
+import * as serviceWorkerRegistration from './registerServiceWorker';
 import { createBrowserHistory } from 'history';
 
 // We have to import the CSS here. By placing it in index.html like the Bootstrap getting started guide suggests,
@@ -15,4 +15,4 @@ import './index.css'; // where we wish to override bootstrap defaults
 const history = createBrowserHistory();
 
 ReactDOM.render(<Router history={history}><App/></Router>, document.getElementById('root'));
-registerServiceWorker();
+serviceWorkerRegistration.unregister();
