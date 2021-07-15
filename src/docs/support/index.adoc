@@ -17,21 +17,33 @@ Designation of LTS and non-LTS releases
   * All supported versions are maintained in the following table indicating LTS/non-LTS status and in the project https://github.com/micrometer-metrics/micrometer[README on GitHub].
 ====
 
-.Supported minor version matrix
+## Released versions
+
+The following releases are actively maintained:
+
+.Supported minor releases
+[width="35%",options="header"]
+|===========
+| Minor release | LTS | OSS Support Until
+| 1.7.x         | Yes | May 2022
+| 1.6.x         | Yes | November 2021
+| 1.5.x         | Yes | May 2021
+|===========
+
+The following releases are end of life:
+
+.End of life minor releases
 [width="35%",options="header"]
 |===========
 | Minor release | LTS | Final patch
-| 1.0.x         | Yes | `1.0.11`
-| 1.1.x         | Yes | `1.1.19`
-| 1.2.x         | No  | `1.2.2`
-| 1.3.x         | Yes | `1.3.20`
 | 1.4.x         | No  | `1.4.2`
-| 1.5.x         | Yes |
-| 1.6.x         | Yes | 
-| 1.7.x         | Yes | 
+| 1.3.x         | Yes | `1.3.20`
+| 1.2.x         | No  | `1.2.2`
+| 1.1.x         | Yes | `1.1.19`
+| 1.0.x         | Yes | `1.0.11`
 |===========
 
-* Examples: 
+## Examples
   ** Micrometer 1.0.0 was released in February 2018. At a minimum, support for the 1.x line extends through February 2021 (Major Releases statement). Practically, the Micrometer 1.x line is supported for at least as long as Spring Boot 2.x and major versions of other dependant web frameworks are supported.
   ** Micrometer 1.1.0 was released in October 2018, minimally extending support through October 2019 (Minor Releases statement). Practically, the Micrometer 1.1.x line is supported for at least as long as the Spring Boot 2.1.x line, etc. are supported.
   ** If a hypothetical Micrometer 1.2.x was released, support for the 1.x line would be extended another 12 months from its release date.
