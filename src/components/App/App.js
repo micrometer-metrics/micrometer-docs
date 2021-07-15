@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
-import Navbar from '../Navbar';
+import MyNavbar from '../MyNavbar';
 import Footer from '../Footer';
 import Home from '../Home';
 import DocRoutes from '../DocRoutes';
@@ -8,7 +8,7 @@ import DocRoutes from '../DocRoutes';
 export default function App() {
   return (
     <div>
-      <Navbar />
+      <MyNavbar />
 
       <Switch>
         <Route exact path="/" component={Home} />
