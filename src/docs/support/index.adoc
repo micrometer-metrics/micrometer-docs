@@ -14,7 +14,7 @@ Designation of LTS and non-LTS releases
 
   * LTS and non-LTS minor releases are not differentiated by their version number alone, i.e. Micrometer will follow standard semantic versioning in its version numbers.
   * LTS releases are marked as such on https://github.com/micrometer-metrics/micrometer/releases[the GitHub releases].
-  * All supported versions are maintained in the following table indicating LTS/non-LTS status and in the project https://github.com/micrometer-metrics/micrometer[README on GitHub].
+  * All supported versions are maintained in the following table indicating LTS/non-LTS status.
 ====
 
 ## Released versions
