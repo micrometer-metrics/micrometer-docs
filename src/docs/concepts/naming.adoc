@@ -66,7 +66,10 @@ Calls to `commonTags` append additional common tags.
 ====
 Common tags generally have to be added to the registry _before_ any (possibly autoconfigured) meter binders. Depending on your environment there are different ways to achieve this.
 
-If you are using Spring Boot you can register a `MeterRegistryCustomizer` callback interface as a bean to add your common tags. Please consult the
+If you are using Spring Boot you have two options:
+
+* Add your common tags with https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#actuator.metrics.customizing.common-tags[configuration properties]
+* If you need more flexibility (e.g., you have to add common tags to a registry defined in a shared library) register a `MeterRegistryCustomizer` callback interface as a bean to add your common tags. Please consult the
 https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#actuator.metrics.getting-started[Spring Boot Reference Documentation] for more information.
 ====
 
