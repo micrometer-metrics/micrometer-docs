@@ -6,7 +6,7 @@ In Gradle:
 
 [source,groovy]
 ----
-compile 'io.micrometer:micrometer-registry-prometheus:latest.release'
+implementation 'io.micrometer:micrometer-registry-prometheus:latest.release'
 ----
 
 Or in Maven:

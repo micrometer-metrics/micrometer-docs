@@ -79,7 +79,7 @@ To add actuator if it isn't already present on your classpath in Gradle:
 
 [source,groovy]
 ----
-compile 'org.springframework.boot:spring-boot-starter-actuator'
+implementation 'org.springframework.boot:spring-boot-starter-actuator'
 ----
 
 Or in Maven:

@@ -4,7 +4,7 @@ In Gradle:
 
 [source,groovy,subs=+attributes]
 ----
-compile 'io.micrometer:micrometer-registry-{system}:latest.release'
+implementation 'io.micrometer:micrometer-registry-{system}:latest.release'
 ----
 
 Or in Maven:
