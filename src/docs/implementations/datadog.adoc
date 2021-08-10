@@ -17,7 +17,7 @@ In Gradle:
 
 [source,groovy]
 ----
-compile 'io.micrometer:micrometer-registry-datadog:latest.release'
+implementation 'io.micrometer:micrometer-registry-datadog:latest.release'
 ----
 
 Or in Maven:
@@ -77,7 +77,7 @@ In Gradle:
 
 [source,groovy,subs=+attributes]
 ----
-compile 'io.micrometer:micrometer-registry-statsd:latest.release'
+implementation 'io.micrometer:micrometer-registry-statsd:latest.release'
 ----
 
 Or in Maven:

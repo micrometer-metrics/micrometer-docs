@@ -15,7 +15,7 @@ In Gradle:
 
 [source,groovy,subs=+attributes]
 ----
-compile 'io.micrometer:micrometer-spring-legacy:latest.release'
+implementation 'io.micrometer:micrometer-spring-legacy:latest.release'
 ----
 
 Or in Maven:
