@@ -31,7 +31,7 @@ The following releases are actively maintained:
 
 The following releases are out of OSS support:
 
-.End of life minor releases
+.Out of OSS support minor releases
 [width="35%",options="header"]
 |===========
 | Minor release | LTS | Final patch
