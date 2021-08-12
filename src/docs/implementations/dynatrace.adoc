@@ -22,11 +22,6 @@ Use the following code in your project to export Micrometer metrics to the https
 ----
 DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     @Override
-    public DynatraceApiVersion apiVersion() {
-        return DynatraceApiVersion.V2;
-    }
-
-    @Override
     @Nullable
     public String get(String k) {
         // This method for retrieving arbitrary config items introduced by the interface is currently not used in DynatraceConfig.
@@ -34,21 +29,10 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     }
 };
 MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTEM);
+Metrics.addRegistry(registry);
 ----
 
-`DynatraceConfig` is an interface with a set of default methods.
-Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.dynatrace` directly to the `DynatraceConfig`.
-This allows configuring the Dynatrace exporter by using the <<bookmark-available-properties, the available properties>>.
-
-To use the Dynatrace metrics exporter for Micrometer in your Spring Boot project, it is enough to include the `runtimeOnly 'io.micrometer:micrometer-registry-dynatrace'` dependency.
-In this default configuration, metrics will be exported to the v2 endpoint.
-
-=== Using a custom endpoint
-
-If no Dynatrace OneAgent is available, both the Dynatrace Metrics API v2 endpoint and an API token have to be specified.
-The https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication/[Dynatrace API token documentation] contains more information on how to create an API token.
-The 'Ingest metrics' (`metrics.ingest`) permission is required on the token in order to ingest metrics.
-It is recommended to limit scope to only this permission.
+It is also possible to specify the exporter version explicitly, which defaults to `v2` unless a deviceId is set:
 
 [source,java]
 ----
@@ -59,10 +43,41 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     }
 
     @Override
+    @Nullable
+    public String get(String k) { return null; }
+};
+----
+
+
+`DynatraceConfig` is an interface with a set of default methods.
+Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.dynatrace` directly to the `DynatraceConfig`.
+This allows configuring the Dynatrace exporter by using the <<bookmark-available-properties, the available properties>>.
+
+To use the Dynatrace metrics exporter for Micrometer in your Spring Boot project, it is enough to include the `runtimeOnly 'io.micrometer:micrometer-registry-dynatrace'` dependency.
+In this default configuration, metrics will be exported to the v2 endpoint.
+
+=== Using a custom endpoint
+
+If no Dynatrace OneAgent is available on the host, both the Dynatrace Metrics API v2 endpoint and an API token have to be specified.
+The https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication/[Dynatrace API token documentation] contains more information on how to create an API token.
+The 'Ingest metrics' (`metrics.ingest`) permission is required on the token in order to ingest metrics.
+It is recommended to limit scope to only this permission.
+
+[source,java]
+----
+DynatraceConfig dynatraceConfig = new DynatraceConfig() {
+    @Override
+    public DynatraceApiVersion apiVersion() {
+        // not strictly required, but makes the code more clear.
+        return DynatraceApiVersion.V2;
+    }
+
+    @Override
     public String uri() {
         // The endpoint of the Dynatrace Metrics API v2 including path, e.g.:
         // "https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest".
         // Should be read from a secure source and not hard-coded.
+        // This example shows how it could be read from an environment variable:
         String endpoint = System.getenv("DT_METRICS_INGEST_URL");
         return endpoint != null ? endpoint : DynatraceConfig.super.uri();
     }
@@ -86,9 +101,9 @@ MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTE
 Metrics.addRegistry(registry);
 ----
 
-These properties can also be set via the Spring Boot properties file.
+These properties can also be set via Spring Boot, using the properties file.
 It is possible to reference environment variables using the Spring property placeholder notation here (`${VAR_NAME}`).
-When running the Micrometer exporter for Spring Boot, `v2` is used as the default API version.
+`v2` is used as the default API version unless a deviceId is set (<<bookmark-apiv1, see below>>).
 
 [source,yml]
 ----
@@ -105,10 +120,9 @@ management.metrics.export.dynatrace:
 
 === API v2 [[bookmark-apiv2]]
 
-When the API version is configured to "v2", the registry will send data using the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/[Metrics API v2].
-The v2 exporter does not require any properties to be set except for the version.
-When running Micrometer without Spring Boot, the default version is `v1` in order to maintain backwards compatibility.
-The version is assumed to be `v2` automatically when using Spring Boot, and does not have to be set explicitly in that case.
+When the API version is configured to `v2`, the registry will send data using the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/[Metrics API v2].
+In order to maintain backwards compatibility, when a `deviceId` is set (which is required for `v1` and not used in `v2`), `v1` is used as the default.
+Otherwise, the version defaults to `v2`, and does not have to be set explicitly.
 With no endpoint URL and token set, metrics will be exported to the local OneAgent endpoint.
 If no OneAgent is running on the target host, it is possible to specify endpoint and token explicitly, in order to export metrics to that specific endpoint.
 
@@ -219,12 +233,11 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 
 For more information about the metadata picked up by the Dynatrace metadata enrichment feature, see https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/enrich-metrics/[the Dynatrace documentation].
 
-=== API v1 (Legacy)
+=== API v1 (Legacy) [[bookmark-apiv1]]
 
 When the apiVersion is configured to `v1`, the registry will send data using the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v1/custom-metrics/[Dynatrace Timeseries API v1 for custom metrics].
-If no `apiVersion` is specified, it will default to `v1` for backwards compatibility with earlier setups.
-When using Spring Boot, `v1` can be turned on by specifying the `device-id` property, which is required for `v1` and not used in `v2`.
-Therefore, when running Spring Boot with the `v1` exporter and a configuration with the required `device-id` property, metrics will be exported to the v1 API.
+If a `deviceId` is specified, it will default to `v1` for backwards compatibility with earlier setups.
+The `device-id` property is required for `v1` and not used in `v2`.
 Existing setups will continue to work when updating to newer versions of Micrometer.
 The reported metrics will be assigned to https://www.dynatrace.com/support/help/dynatrace-api/environment-api/topology-and-smartscape/custom-device-api/report-custom-device-metric-via-rest-api/[custom devices] in Dynatrace.
 
