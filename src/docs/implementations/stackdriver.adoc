@@ -85,6 +85,8 @@ MeterRegistry registry = StackdriverMeterRegistry.builder(stackdriverConfig).bui
 registry.config().commonTags("application", "my-application");
 ----
 
+IMPORTANT: If using Micrometer across multiple applications/instances, it is important to configure a common tag so metrics will be unique per application/instance. Otherwise, you will see errors like `One or more TimeSeries could not be written: One or more points were written more frequently than the maximum sampling period configured`. Using the hostname or platform-provided instance ID may be a good candidate for achieving this.
+
 == Spring Boot
 
 NOTE: Since Spring Boot 2.3, Micrometer Stackdriver auto-configuration is supported. For more information review the https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics-export-stackdriver[Spring Boot docs].
