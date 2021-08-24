@@ -17,6 +17,8 @@ Designation of LTS and non-LTS releases
   * All supported versions are maintained in the following table indicating LTS/non-LTS status.
 ====
 
+Going forward, a new LTS version (major or minor) will be released every 6 months (in May and November).
+
 ## Released versions
 
 The following releases are actively maintained:
