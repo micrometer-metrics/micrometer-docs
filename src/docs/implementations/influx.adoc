@@ -1,5 +1,4 @@
 = Micrometer Influx
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :system: influx
@@ -10,18 +9,18 @@ Since Micrometer 1.7, the InfluxMeterRegistry supports the 1.x InfluxDB API as w
 
 == Configuring
 
-Micrometer supports shipping metrics to Influx directly or through Telegraf via the StatsD registry.
+Micrometer supports shipping metrics to Influx directly or through Telegraf through the StatsD registry.
 
 === Direct to Influx
 
-In Gradle:
+The following example adds the required library in Gradle:
 
 [source,groovy]
 ----
 implementation 'io.micrometer:micrometer-registry-influx:latest.release'
 ----
 
-Or in Maven:
+The following example adds the required library in Maven:
 
 [source,xml]
 ----
@@ -32,7 +31,7 @@ Or in Maven:
 </dependency>
 ----
 
-Metrics are rate-aggregated and pushed to Influx on a periodic interval. Rate aggregation performed by the registry yields datasets that are quite similar to those produced by Telegraf.
+Metrics are rate-aggregated and pushed to Influx on a periodic interval. Rate aggregation performed by the registry yields datasets that are quite similar to those produced by Telegraf. The following example configures Influx:
 
 .InfluxDB 1.x configuration example
 [source, java]
@@ -56,7 +55,7 @@ InfluxConfig config = new InfluxConfig() {
 MeterRegistry registry = new InfluxMeterRegistry(config, Clock.SYSTEM);
 ----
 
-To ship metrics to InfluxDB 2.x, make sure to configure the `org` and `bucket` to write the metrics to, as well as the authentication `token`.
+To ship metrics to InfluxDB 2.x, make sure to configure the `org` and `bucket` to which to write the metrics, as well as the authentication `token`.
 
 .InfluxDB v2 configuration example
 [source, java]
@@ -86,7 +85,7 @@ InfluxConfig config = new InfluxConfig() {
 MeterRegistry registry = new InfluxMeterRegistry(config, Clock.SYSTEM);
 ----
 
-`InfluxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.influx` directly to the `InfluxConfig`:
+`InfluxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties that are prefixed with `management.metrics.export.influx` directly to the `InfluxConfig`:
 
 [source, yaml]
 ----
@@ -113,16 +112,16 @@ management.metrics.export.influx:
 
 === Through Telegraf
 
-Telegraf is a StatsD agent expecting a modified flavor of the StatsD line protocol.
+Telegraf is a StatsD agent that expects a modified flavor of the StatsD line protocol.
 
-In Gradle:
+The following listing adds the relevant library in Gradle:
 
 [source,groovy]
 ----
 implementation 'io.micrometer:micrometer-registry-statsd:latest.release'
 ----
 
-Or in Maven:
+The following listing adds the relevant library in Maven:
 
 [source,xml]
 ----
@@ -133,7 +132,7 @@ Or in Maven:
 </dependency>
 ----
 
-Metrics are shipped immediately over UDP to Telegraf using Telegraf's flavor of the StatsD line protocol.
+Metrics are shipped immediately over UDP to Telegraf by using Telegraf's flavor of the StatsD line protocol.
 
 [source,java]
 ----

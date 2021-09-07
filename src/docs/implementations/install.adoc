@@ -1,13 +1,13 @@
 == Installing
 
-In Gradle:
+For Gradle, add the following implementation:
 
 [source,groovy,subs=+attributes]
 ----
 implementation 'io.micrometer:micrometer-registry-{system}:latest.release'
 ----
 
-Or in Maven:
+For Maven, add the following dependency:
 
 [source,xml,subs=+attributes]
 ----

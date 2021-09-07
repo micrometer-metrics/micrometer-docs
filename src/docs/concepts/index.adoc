@@ -6,12 +6,12 @@ Jon Schneider <jschneider@pivotal.io>
 
 == Purpose
 
-Micrometer is a metrics instrumentation library for JVM-based applications. It provides a simple facade over the instrumentation clients for the most popular monitoring systems, allowing you to instrument your JVM-based application code without vendor lock-in. It is designed to add little to no overhead to your metrics collection activity while maximizing the portability of your metrics effort.
+Micrometer is a metrics instrumentation library for JVM-based applications. It provides a simple facade over the instrumentation clients for the most popular monitoring systems, letting you instrument your JVM-based application code without vendor lock-in. It is designed to add little to no overhead to your metrics collection activity while maximizing the portability of your metrics effort.
 
-Micrometer is _not_ a distributed tracing system or an event logger. Adrian Cole's talk on https://www.dotconferences.com/2017/04/adrian-cole-observability-3-ways-logging-metrics-tracing[Observability
-3 Ways] does a great job of highlighting the differences between these different types of systems.
+Micrometer is _not_ a distributed tracing system or an event logger. Adrian Cole's talk, titled https://www.dotconferences.com/2017/04/adrian-cole-observability-3-ways-logging-metrics-tracing[Observability
+3 Ways], does a great job of highlighting the differences between these different types of systems.
 
-== Supported monitoring systems
+== Supported Monitoring Systems
 
 include::implementations.adoc[leveloffset=+1]
 
@@ -23,16 +23,16 @@ include::registry.adoc[leveloffset=+1]
 
 include::meters.adoc[leveloffset=+1]
 
-== Naming meters
+== Naming Meters
 
 include::naming.adoc[leveloffset=+1]
 
-== Meter filters
+== Meter Filters
 
 include::meter-filters.adoc[leveloffset=+1]
 
 [[rate-aggregation]]
-== Rate aggregation
+== Rate Aggregation
 
 include::rate-aggregation.adoc[leveloffset=+1]
 
@@ -48,14 +48,14 @@ include::gauges.adoc[leveloffset=+1]
 
 include::timers.adoc[leveloffset=+1]
 
-== Distribution summaries
+== Distribution Summaries
 
 include::distribution-summaries.adoc[leveloffset=+1]
 
-== Long task timers
+== Long Task Timers
 
 include::long-task-timers.adoc[leveloffset=+1]
 
-== Histograms and percentiles
+== Histograms and Percentiles
 
 include::histogram-quantiles.adoc[leveloffset=+1]

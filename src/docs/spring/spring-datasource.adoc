@@ -1,5 +1,5 @@
-Data sources can be instrumented with the registry. This requires the `DataSourcePoolMetadataProvider` automatically configured by Spring Boot, so it only works in a Spring Boot context where these providers are configured. Data source instrumentation is auto-configured by Spring Boot otherwise, so there is nothing for you to do.
+You can instrument data sources with the registry. Doing so requires the `DataSourcePoolMetadataProvider` automatically configured by Spring Boot, so it only works in a Spring Boot context where these providers are configured. Data source instrumentation is auto-configured by Spring Boot otherwise, so there is nothing for you to do.
 
-Data source instrumentation results in gauges representing the currently active, maximum allowed, and minimum allowed connections in the pool. Each of these gauges has a name which is prefixed by the provided name ("data.source" in this example).
+Data source instrumentation results in gauges representing the currently active, maximum allowed, and minimum allowed connections in the pool. Each of these gauges has a name that is prefixed by the provided name (`data.source` in this example).
 
 The original data source instance is unchanged by instrumentation.

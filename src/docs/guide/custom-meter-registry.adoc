@@ -1,15 +1,15 @@
-= Custom meter registry
+= Custom Meter Registry
 
-Micrometer supports popular meter registries out of the box, so please check them first.
-For an existing meter registry, if you think that your requirements are generally useful, please consider creating an issue or PR against the Micrometer issue tracker.
-For a non-existing meter registry, if it's widely-used, please consider creating an issue or PR for it.
+Micrometer supports popular meter registries out of the box, so you should check those first.
+For an existing meter registry, if you think that your requirements are generally useful, consider creating an issue or PR against the Micrometer issue tracker.
+For a non-existent meter registry, if it is widely-used, consider creating an issue or PR for it.
 
-For some reasons such as unusual requirements, if you want to create your own custom meter registry, you can create it by extending one of base classes for meter registries: `MeterRegistry`, `PushMeterRegistry`, and `StepMeterRegistry`.
+If you need to create your own custom meter registry, you can create it by extending one of the base classes for meter registries: `MeterRegistry`, `PushMeterRegistry`, or `StepMeterRegistry`.
 
-Most common way is to extend `StepMeterRegistry`.
-You can create your own custom `StepMeterRegistry` as follows.
+The most common way is to extend `StepMeterRegistry`.
+You can create your own custom `StepMeterRegistry`.
 
-First, define your own meter registry configuration by extending `StepRegistryConfig` as follows:
+First, define your own meter registry configuration by extending `StepRegistryConfig`, as follows:
 
 [source,java]
 ----
@@ -25,7 +25,7 @@ public interface CustomRegistryConfig extends StepRegistryConfig {
 }
 ----
 
-Second, define your own meter registry by extending `StepMeterRegistry` as follows:
+Second, define your own meter registry by extending `StepMeterRegistry`, as follows:
 
 [source,java]
 ----
@@ -51,7 +51,7 @@ public class CustomMeterRegistry extends StepMeterRegistry {
 ----
 
 Finally, create the meter registry configuration and the meter registry.
-If you are using Spring Boot, you can do as follows:
+If you use Spring Boot, you can do so as follows:
 
 [source,java]
 ----

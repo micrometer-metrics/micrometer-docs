@@ -1,4 +1,4 @@
-Spring Boot auto-configures a composite meter registry and adds a registry to the composite for each of the supported implementations that it finds on the classpath. Having a dependency on `micrometer-registry-{system}` in your runtime classpath is enough for Spring Boot to configure the registry. Spring Boot will also add any autoconfigured registries to the global static composite registry on the `Metrics` class unless you explicitly tell it not to by setting:
+Spring Boot auto-configures a composite meter registry and adds a registry to the composite for each of the supported implementations that it finds on the classpath. Having a dependency on `micrometer-registry-{system}` in your runtime classpath is enough for Spring Boot to configure the registry. Spring Boot also adds any auto-configured registries to the global static composite registry on the `Metrics` class unless you explicitly tell it not to by setting:
 
 [source,properties]
 ----
@@ -6,9 +6,9 @@ Spring Boot auto-configures a composite meter registry and adds a registry to th
 management.metrics.use-global-registry=false
 ----
 
-Leaving configuration of the global registry on enables you to collect metrics from libraries that use the static global registry to wire their metrics without doing anything further.
+Leaving configuration of the global registry on lets you collect metrics from libraries that use the static global registry to wire their metrics without doing anything further.
 
-You can control whether a registry implementation is autoconfigured via a property, even if it is otherwise present on the classpath:
+You can control whether a registry implementation is auto-configured through a property, even if it is otherwise present on the classpath:
 
 [source,properties,subs=+attributes]
 ----
@@ -16,7 +16,7 @@ You can control whether a registry implementation is autoconfigured via a proper
 management.metrics.export.{system}.enabled=false
 ----
 
-*Optionally* register any number of `MeterRegistryCustomizer`s to further configure the registry (such as applying common tags) before any meters are registered with the registry.
+*Optionally*, you can register any number of `MeterRegistryCustomizer` instances to further configure the registry (such as applying common tags) before any meters are registered with the registry:
 
 [source,java]
 ----
@@ -46,14 +46,14 @@ public class MyApplication {
 
 Spring auto-configures the most commonly used binders.
 
-The `JvmMemoryMetrics` binder will be automatically configured to record memory and buffer pool utilization. In the presence of Logback, the `LogbackMetrics` binder will also be configured to record the number of events logged to Logback at each level. Lastly, `UptimeMetrics` reports a gauge for uptime and a fixed gauge representing the application's absolute start time.
+The `JvmMemoryMetrics` binder is automatically configured to record memory and buffer pool utilization. In the presence of Logback, the `LogbackMetrics` binder is also configured to record the number of events logged to Logback at each level. Finally, `UptimeMetrics` reports a gauge for uptime and a fixed gauge representing the application's absolute start time.
 
-To register other binders with the registry, add them as `@Bean`s to your application context.
+To register other binders with the registry, add them as beans to your application context.
 
 == Atlas
 
-Below is a list of the most common configuration properties you will want to change and their default values
-(from any property source, e.g. application.yml):
+The following listing describes the most common configuration properties you may want to change and their default values
+(from any property source, such as `application.yml`):
 
 [source,properties]
 ----
@@ -69,20 +69,20 @@ management.metrics.export.atlas.step=PT1M
 ----
 
 For a full list of configuration properties that can influence Atlas publishing, see
-`com.netflix.spectator.atlas.AtlasConfig`.
+[`com.netflix.spectator.atlas.AtlasConfig`](https://github.com/Netflix/spectator/blob/master/spectator-reg-atlas/src/main/java/com/netflix/spectator/atlas/AtlasConfig.java) in Netflix's API documentation.
 
 == Prometheus
 
-If Spring Boot Actuator is on the classpath, an actuator endpoint will be wired to `/prometheus` by default that presents a Prometheus scrape with the appropriate format.
+By default, if Spring Boot Actuator is on the classpath, an actuator endpoint is wired to `/prometheus` to present a Prometheus scrape with the appropriate format.
 
-To add actuator if it isn't already present on your classpath in Gradle:
+To add actuator if it is not already present on your classpath in Gradle:
 
 [source,groovy]
 ----
 implementation 'org.springframework.boot:spring-boot-starter-actuator'
 ----
 
-Or in Maven:
+To add actuator if it is not already present on your classpath in Maven:
 
 [source,xml]
 ----
@@ -92,7 +92,7 @@ Or in Maven:
 </dependency>
 ----
 
-Here is an example `scrape_config` to add to prometheus.yml:
+The following example adds `scrape_config` to `prometheus.yml`:
 
 [source,yml]
 ----
@@ -103,20 +103,20 @@ scrape_configs:
       - targets: ['HOST:PORT']
 ----
 
-If you'd like the endpoint to use a different path, add the property:
+If you want the endpoint to use a different path, add the following property:
 
 [source,properties]
 ----
 endpoints.prometheus.path=micrometheus
 ----
 
-NOTE: The endpoint is secured by default, so either include authentication in your Prometheus scrape endpoint or unsecure the prometheus endpoint with a property like `management.security.enabled=false`
+NOTE: By default, the endpoint is secured, so either include authentication in your Prometheus scrape endpoint or unsecure the prometheus endpoint by setting a property, such as `management.security.enabled=false`
 
 == Datadog
 
-The Datadog registry pushes metrics to datadoghq periodically. Below is a list of
-the most common configuration properties you will want to change and their default values
-(from any property source, e.g. `application.yml`):
+The Datadog registry pushes metrics to datadoghq periodically. The following listing shows
+the most common configuration properties you may want to change and their default values
+(from any property source, such as `application.yml`):
 
 [source,properties]
 ----
@@ -138,8 +138,8 @@ For a full list of configuration properties that can influence Datadog publishin
 
 == StatsD
 
-The StatsD registry pushes metrics over UDP to a StatsD agent eagerly. Below is a list of the most
-common configuration properties you will want to change:
+The StatsD registry eagerly pushes metrics over UDP to a StatsD agent. The following listing shwos the most
+common configuration properties you may want to change:
 
 [source,properties]
 ----

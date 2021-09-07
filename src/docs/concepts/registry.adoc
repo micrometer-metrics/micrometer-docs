@@ -1,18 +1,21 @@
 A `Meter` is the interface for collecting a set of measurements (which we individually call metrics) about your application. Meters in Micrometer are created from and held in a `MeterRegistry`. Each supported monitoring system has an implementation of `MeterRegistry`. How a registry is created varies for each implementation.
 
-Micrometer packs with a `SimpleMeterRegistry` that holds the latest value of each meter in memory and doesn't export the data anywhere. If you don't yet have a preferred monitoring system, you can get started playing with metrics by using the simple registry:
+Micrometer includes a `SimpleMeterRegistry` that holds the latest value of each meter in memory and does not export the data anywhere. If you do not yet have a preferred monitoring system, you can get started playing with metrics by using the simple registry:
 
+====
 [source,java]
 ----
 MeterRegistry registry = new SimpleMeterRegistry();
 ----
+====
 
-NOTE: A `SimpleMeterRegistry` is autowired for you in Spring-based apps.
+NOTE: A `SimpleMeterRegistry` is autowired for you in Spring-based applications.
 
-== Composite registries
+== Composite Registries
 
-Micrometer provides a `CompositeMeterRegistry` to which multiple registries can be added, allowing you to publish metrics to more than one monitoring system simultaneously.
+Micrometer provides a `CompositeMeterRegistry` to which you can add multiple registries, letting you publish metrics to more than one monitoring system simultaneously:
 
+====
 [source,java]
 ----
 CompositeMeterRegistry composite = new CompositeMeterRegistry();
@@ -26,14 +29,16 @@ composite.add(simple); <2>
 compositeCounter.increment(); <3>
 ----
 
-1. Increments are NOOPd until there is a registry in the composite. The counter's count will still yield 0 at this point.
-2. A counter named "counter" is registered to the simple registry.
+1. Increments are NOOP'd until there is a registry in the composite. The counter's count still yields 0 at this point.
+2. A counter named `counter` is registered to the simple registry.
 3. The simple registry counter is incremented, along with counters for any other registries in the composite.
+====
 
-== Global registry
+== Global Registry
 
-Micrometer provides a static global registry `Metrics.globalRegistry` and a set of static builders for generating meters based on this registry. `globalRegistry` is a composite registry.
+Micrometer provides a static global registry `Metrics.globalRegistry` and a set of static builders for generating meters based on this registry (note that `globalRegistry` is a composite registry):
 
+====
 [source,java]
 ----
 class MyComponent {
@@ -56,6 +61,7 @@ class MyApplication {
 }
 ----
 
-1. Wherever possible (and especially where instrumentation performance is critical), store `Meter` instances in fields to avoid a lookup on their name/tags on each use.
-2. When tags need to be determined from local context, you have no choice but to construct/lookup the Meter inside your method body. The lookup cost is just a single hash lookup, so it will be acceptable for most uses.
-3. It is OK to add registries _after_ meters have been created like `Metrics.counter(...)`. These meters will be added to each registry as it is bound to the global composite.
+1. Wherever possible (and especially where instrumentation performance is critical), store `Meter` instances in fields to avoid a lookup on their name or tags on each use.
+2. When tags need to be determined from local context, you have no choice but to construct or lookup the Meter inside your method body. The lookup cost is just a single hash lookup, so it is acceptable for most use cases.
+3. It is OK to add registries _after_ meters have been created with code like `Metrics.counter(...)`. These meters are added to each registry, as it is bound to the global composite.
+====

@@ -1,5 +1,4 @@
 = Micrometer Elastic
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :system: elastic
@@ -9,6 +8,8 @@ Elasticsearch is an open source search and analytics platform. Metrics stored in
 include::install.adoc[]
 
 == Configuring
+
+The following example configures an ElasticSearch instance:
 
 [source,java]
 ----
@@ -22,7 +23,7 @@ ElasticConfig elasticConfig = new ElasticConfig() {
 MeterRegistry registry = new ElasticMeterRegistry(elasticConfig, Clock.SYSTEM);
 ----
 
-`ElasticConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.elastic` directly to the `ElasticConfig`:
+`ElasticConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties that are prefixed with `management.metrics.export.elastic` directly to the `ElasticConfig`:
 
 [source,yml]
 ----
