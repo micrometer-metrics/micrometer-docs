@@ -25,7 +25,7 @@ Timer timer = Timer
     .register(registry);
 ----
 
-NOTE: The maximum value for basic `Timer` implementations, such as `CumulativeTimer` and `StepTimer`, is a time window maximum (`TimeWindowMax`).
+NOTE: The maximum statistical value for basic `Timer` implementations, such as `CumulativeTimer` and `StepTimer`, is a time window maximum (`TimeWindowMax`).
 It means that its value is the maximum value during a time window.
 If no new values are recorded for the time window length, the max is reset to 0 as a new time window starts.
 Time window size is the step size of the meter registry, unless expiry in `DistributionStatisticConfig` is explicitly set to other value.

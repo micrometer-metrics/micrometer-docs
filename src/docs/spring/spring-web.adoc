@@ -41,7 +41,7 @@ management.metrics.distribution:
 ----
 <1> If percentile approximations based on histograms are supported by your monitoring system, prefer this approach _instead_ of the `percentiles` option.
 
-=== Only Timing Endpoints You Mark with @Timed
+=== Only Timing Endpoints That You Mark with @Timed
 
 You can turn this setting off by setting:
 

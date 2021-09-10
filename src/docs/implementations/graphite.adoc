@@ -94,7 +94,7 @@ GraphiteMeterRegistry(GraphiteConfig config, Clock clock, HierarchicalNameMapper
 
 == Graphing
 
-This section serves as a quickmstart to rendering useful representations in Graphite for metrics originating in Micrometer.
+This section serves as a quick start to rendering useful representations in Graphite for metrics originating in Micrometer.
 
 === Counters
 
