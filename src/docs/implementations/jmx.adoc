@@ -1,5 +1,4 @@
 = Micrometer JMX
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :system: jmx

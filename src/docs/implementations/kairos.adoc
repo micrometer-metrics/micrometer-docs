@@ -1,14 +1,15 @@
 = Micrometer KairosDB
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :system: kairos
 
-KairosDB is a dimensional time-series database built on top of Cassandra. Charting can be accomplished in Grafana via a link:https://docs.grafana.org/v4.0/datasources/kairosdb/[Kairos datasource].
+KairosDB is a dimensional time-series database built on top of Cassandra. Charting can be accomplished in Grafana by using a link:https://docs.grafana.org/v4.0/datasources/kairosdb/[Kairos datasource].
 
 include::install.adoc[]
 
 == Configuring
+
+The following example configures KairosDB:
 
 [source,java]
 ----
@@ -22,7 +23,7 @@ KairosConfig kairosConfig = new KairosConfig() {
 MeterRegistry registry = new KairosMeterRegistry(kairosConfig, Clock.SYSTEM);
 ----
 
-`KairosConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.kairos` directly to the `KairosConfig`:
+`KairosConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties that are prefixed with `management.metrics.export.kairos` directly to the `KairosConfig`:
 
 [source,yml]
 ----

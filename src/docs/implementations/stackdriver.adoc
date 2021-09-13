@@ -12,6 +12,8 @@ NOTE: `micrometer-registry-stackdriver` works with the latest 1.x or 2.x version
 
 == Configuring
 
+The following example configures Stackdriver:
+
 [source,java]
 ----
 StackdriverConfig stackdriverConfig = new StackdriverConfig() {
@@ -29,7 +31,7 @@ StackdriverConfig stackdriverConfig = new StackdriverConfig() {
 MeterRegistry registry = StackdriverMeterRegistry.builder(stackdriverConfig).build();
 ----
 
-`StackdriverConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.stackdriver` directly to the `StackdriverConfig`:
+`StackdriverConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties that are prefixed with `management.metrics.export.stackdriver` directly to the `StackdriverConfig`:
 
 [source,yml]
 ----
@@ -45,10 +47,10 @@ management.metrics.export.stackdriver:
 ----
 
 For most environments, you need to create and configure credentials to push metrics to Stackdriver Monitoring.
-In most cases, you should create a service account with Stackdriver Monitoring permissions, and configure
+In most cases, you should create a service account with Stackdriver Monitoring permissions and configure a
 `GOOGLE_APPLICATION_CREDENTIALS` environmental variable to the path of the service account key file.
+The following example shows how to do so:
 
-For example:
 [source]
 ----
 export PROJECT_ID=MY_PROJECT_ID
@@ -70,15 +72,16 @@ gcloud iam service-accounts keys create $HOME/$APP_NAME-key.json \
 export GOOGLE_APPLICATION_CREDENTIALS=$HOME/$APP_NAME-key.json
 ----
 
-When running in managed environments such as Google App Engine, Google Cloud Run, Google Cloud Function,
-you don't need to configure this environmental variable. In those environments, a service account is
+When running in managed environments (such as Google App Engine, Google Cloud Run, Google Cloud Function)
+you need not configure this environmental variable. In those environments, a service account is
 automatically associated with the application instance. The underlying Stackdriver Monitoring client
 library can automatically detect and use those credentials.
 
 == Stackdriver Labels
 
-Micrometer metrics tags are mapped to https://cloud.google.com/monitoring/api/v3/metrics-details#intro-time-series[Stackdriver metrics labels]. With tags/labels, you can further filter or group
-by the tag/label. See link:/docs/concepts#_tag_naming[Micrometer Concepts] for more information on tags.
+Micrometer metrics tags are mapped to https://cloud.google.com/monitoring/api/v3/metrics-details#intro-time-series[Stackdriver metrics labels]. With tags and labels, you can further filter or group
+by the tag or label. See link:/docs/concepts#_tag_naming[Micrometer Concepts] for more information on tags.
+The following example filters by tags:
 
 [source,java]
 ----
@@ -92,9 +95,9 @@ IMPORTANT: When using Micrometer across multiple applications/instances, it is n
 
 == Spring Boot
 
-Spring Boot provides auto-configuration for Micrometer's StackdriverMeterRegistry. For more information review the https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics-export-stackdriver[Spring Boot docs].
+Spring Boot provides auto-configuration for Micrometer's StackdriverMeterRegistry. For more information, see the https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics-export-stackdriver[Spring Boot documentation].
 
-You can manually configure/register the `StackdriverMeterRegistry`.
+You can manually configure or register the `StackdriverMeterRegistry`.
 In addition to using Spring Boot Actuator, make sure you create the `StackdriverMeterRegistry` bean:
 
 [source,java]
@@ -120,7 +123,7 @@ StackdriverMeterRegistry meterRegistry(StackdriverConfig stackdriverConfig) {
 }
 ----
 
-You can also use https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics-common-tags[Spring Boot Actuator Common Tags configuration] to configure common tags.
+You can also use https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics-common-tags[Spring Boot Actuator Common Tags configuration] to configure common tags:
 
 [source]
 ----

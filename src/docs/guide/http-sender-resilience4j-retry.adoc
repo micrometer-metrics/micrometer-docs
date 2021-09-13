@@ -1,13 +1,13 @@
-= HttpSender with Resilience4j retry
+= HttpSender with Resilience4j Retry
 
-`HttpSender` is an interface for HTTP client which is used in meter registries for HTTP-based metrics publication. There
-are three implementations as follows:
+`HttpSender` is an interface for HTTP clients that are used in meter registries for HTTP-based metrics publication. There
+are three implementations:
 
 * `HttpUrlConnectionSender`: `HttpURLConnection`-based `HttpSender`
 * `OkHttpSender`: OkHttp-based `HttpSender`
 * `ReactorNettySender`: Reactor Netty-based `HttpSender`
 
-There's no out-of-the-box support for retry but you can decorate it with Resilience4j retry as follows:
+There is no out-of-the-box support for retry, but you can decorate it with Resilience4j retry, as follows:
 
 [source,java]
 ----

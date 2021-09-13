@@ -1,24 +1,22 @@
 = Spring Boot support
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :dimensional: true
 
 WARNING: Spring Boot 1.5.x and Micrometer releases (up to Micrometer 1.3.x) that include the `micrometer-spring-legacy` module are now out of support.
 Please upgrade to supported releases of Spring Boot and Micrometer.
-Refer to the latest https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics[Spring Boot reference documentation on metrics] for built-in Spring Boot support post Spring Boot 1.5.
+See the latest https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics[Spring Boot reference documentation on metrics] for built-in Spring Boot support after Spring Boot 1.5.
 
 == Installing
-Micrometer provides a legacy bridge to Spring Boot 1.5. To install the required dependency in Gradle:
-
-In Gradle:
+Micrometer provides a legacy bridge to Spring Boot 1.5.
+The following example shows the required dependency in Gradle:
 
 [source,groovy,subs=+attributes]
 ----
 implementation 'io.micrometer:micrometer-spring-legacy:latest.release'
 ----
 
-Or in Maven:
+The following example shows the required dependency in Maven:
 
 [source,xml,subs=+attributes]
 ----
@@ -29,7 +27,7 @@ Or in Maven:
 </dependency>
 ----
 
-This dependency should be added alongside any registry implementations you want to use, e.g. `micrometer-registry-prometheus`.
+You should add this dependency alongside any registry implementations you want to use, such as `micrometer-registry-prometheus`.
 
 == Configuring
 
@@ -52,7 +50,7 @@ include::spring-cache.adoc[leveloffset=+1]
 include::spring-datasource.adoc[leveloffset=+1]
 
 == Registering custom metrics
-To register custom metrics, inject `MeterRegistry` into your component:
+To register custom metrics, you can inject a `MeterRegistry` into your component:
 
 [source,java,indent=0]
 ----
@@ -68,8 +66,8 @@ class Dictionary {
 ----
 
 If you find that you repeatedly instrument a suite of metrics across components or
-applications, you may encapsulate this suite in a `MeterBinder` implementation. By
-default, metrics from all `MeterBinder` beans will be automatically bound to
+applications, you can encapsulate this suite in a `MeterBinder` implementation. By
+default, metrics from all `MeterBinder` beans are automatically bound to
 the Spring-managed `MeterRegistry`.
 
 == Customizing individual metrics

@@ -1,5 +1,4 @@
 = Micrometer Graphite
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :system: graphite
@@ -9,6 +8,8 @@ Graphite is one of the most popular current hierarchical metrics systems backed 
 include::install.adoc[]
 
 == Configuring
+
+The following example configures a Graphite instance:
 
 [source,java]
 ----
@@ -27,7 +28,7 @@ GraphiteConfig graphiteConfig = new GraphiteConfig() {
 MeterRegistry registry = new GraphiteMeterRegistry(graphiteConfig, Clock.SYSTEM, HierarchicalNameMapper.DEFAULT);
 ----
 
-Micrometer uses Dropwizard Metrics as the underlying instrumentation library when recording metrics destined for Graphite. `GraphiteConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.graphite` directly to the `GraphiteConfig`:
+Micrometer uses Dropwizard Metrics as the underlying instrumentation library when recording metrics destined for Graphite. `GraphiteConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties that are prefixed with `management.metrics.export.graphite` directly to the `GraphiteConfig`:
 
 [source,yml]
 ----
@@ -44,7 +45,7 @@ management.metrics.export.graphite:
 
 == Graphite Tag Support
 
-As of Micrometer version 1.4.0, Micrometer supports exporting Graphite metrics using tags instead of the traditional hierarchical format.  Metrics are exported using the tag format by default unless any `tagsAsPrefix` values are configured.
+As of Micrometer version 1.4.0, Micrometer supports exporting Graphite metrics by using tags instead of the traditional hierarchical format. By default, metrics are exported by using the tag format, unless any `tagsAsPrefix` values are configured.
 https://graphite.readthedocs.io/en/latest/tags.html[Tag support] was added to Graphite in the 1.1.0 Graphite release.
 If you wish to revert to the traditional hierarchical format, ensure that the `graphiteTagsEnabled` config value is set to `false`.
 The following documentation sections on hierarchical name mapping and metrics prefixing are only applicable if tag support is disabled.
@@ -53,9 +54,9 @@ include::hierarchical-name-mapping.adoc[]
 
 == Prefixing your metrics
 
-To add a prefix to all metrics going to graphite, use the `GraphiteConfig#tagsAsPrefix` configuration option. This option applies the tag value of a set of common tags as a prefix. For example, if `tagsAsPrefix` contains "application", and a meter named "myTimer" is created with a tag "application=APPNAME", it will appear in Graphite as "APPNAME.myTimer".
+To add a prefix to all metrics that go to graphite, use the `GraphiteConfig#tagsAsPrefix` configuration option. This option applies the tag value of a set of common tags as a prefix. For example, if `tagsAsPrefix` contains `application`, and a meter named `myTimer` is created with a tag of `application=APPNAME`, it appears in Graphite as `APPNAME.myTimer`.
 
-Generally, when using `tagsAsPrefix`, add common tags to the registry so that the tags are present on all meters belonging to that registry:
+Generally, when you use `tagsAsPrefix`, you should add common tags to the registry so that the tags are present on all meters that belong to that registry:
 
 [source,java]
 ----
@@ -65,12 +66,11 @@ public MeterRegistryCustomizer<MeterRegistry> commonTags() {
 }
 ----
 
-The reason we do it this way is because generally a tag prefix in Graphite is correlated to a common tag elsewhere. Prefixes tend to be something like app name or host. By applying those values as common tags, you make your metrics more portable (i.e. if you ever switched to a dimensional monitoring system, you're set!).
+We do it this way because, generally, a tag prefix in Graphite is correlated to a common tag elsewhere. Prefixes tend to be something like app name or host. By applying those values as common tags, you make your metrics more portable (that is, if you ever switch to a dimensional monitoring system, you are set).
 
+You can use this when the order of the prefix matters. Micrometer always sorts tags, but the order of tag keys in `tagsAsPrefix` is preserved, so adding `host` and `application` to `tagsAsPrefix` results in a prefixed metric, such as `HOST.APP.myCounter`.
 
-You can use this when the order of the prefix matters. Micrometer always sorts tags but the order of tag keys in `tagsAsPrefix` is preserved, so adding `host`, `application` to `tagsAsPrefix` results in a prefixed metric like `HOST.APP.myCounter`.
-
-To meet your specific naming needs, you can also provide a custom hierarchical name mapper when creating `GraphiteMeterRegistry` as follows:
+To meet your specific naming needs, you can also provide a custom hierarchical name mapper when creating `GraphiteMeterRegistry`, as follows:
 
 [source,java]
 ----
@@ -80,11 +80,11 @@ GraphiteMeterRegistry r = new GraphiteMeterRegistry(
             (id, convention) -> "prefix." + HierarchicalNameMapper.DEFAULT.toHierarchicalName(id, convention));
 ----
 
-NOTE: If you use a custom `HierarchicalNameMapper`, `tagsAsPrefix` will be ignored.
+NOTE: If you use a custom `HierarchicalNameMapper`, `tagsAsPrefix` is ignored.
 
-== Further customizing the `GraphiteReporter`
+== Further Customizing the `GraphiteReporter`
 
-We give you the option to configure `GraphiteReporter` yourself if you need further customization. Just use this constructor and provide your own `GraphiteReporter`:
+We give you the option to configure `GraphiteReporter` yourself if you need further customization. To do so, use this constructor and provide your own `GraphiteReporter`:
 
 [source,java]
 ----
@@ -94,7 +94,7 @@ GraphiteMeterRegistry(GraphiteConfig config, Clock clock, HierarchicalNameMapper
 
 == Graphing
 
-This section serves as a quickstart to rendering useful representations in Graphite for metrics originating in Micrometer.
+This section serves as a quick start to rendering useful representations in Graphite for metrics originating in Micrometer.
 
 === Counters
 

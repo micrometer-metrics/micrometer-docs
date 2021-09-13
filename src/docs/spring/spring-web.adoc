@@ -1,8 +1,8 @@
-Micrometer contains built-in instrumentation for timings of requests made to Spring MVC server endpoints.
+Micrometer contains built-in instrumentation for the timings of the requests made to Spring MVC server endpoints.
 
 == Spring Web MVC
 
-Spring Boot auto-configures interceptors to record metrics on your endpoints. By default, timings are recorded for every endpoint in your app. You don't need to do anything to your controller to instrument the endpoint:
+Spring Boot auto-configures interceptors to record metrics on your endpoints. By default, timings are recorded for every endpoint in your application. You need not do anything to your controller to instrument the endpoint:
 
 [source,properties]
 ----
@@ -12,7 +12,7 @@ public class MyController {
     public List<Person> listPeople() { ... }
 ----
 
-The `Timer` is registered with a name of `http.server.requests` by default. This can be changed by setting:
+By default, the `Timer` is registered with a name of `http.server.requests`. You can change the name by setting:
 
 [source,properties]
 ----
@@ -20,15 +20,15 @@ The `Timer` is registered with a name of `http.server.requests` by default. This
 management.metrics.web.server.requests-metric-name=i.want.to.be.different
 ----
 
-The `Timer` contains a set of dimensions for every request, governed by the primary bean `WebMvcTagsProvider` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
+The `Timer` contains a set of dimensions for every request, governed by the primary `WebMvcTagsProvider` bean, which you should register in your application context. If you do not provide such a bean, a default implementation is selected. The default implementation adds the following dimensions:
 
-1. `method`, the HTTP method (for example, `GET` or `PUT`)
-2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
-3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
-4. `exception`, the simple name of the exception class thrown (only if an exception is thrown)
-5. `outcome`, request’s outcome based on the status code of the response. `1xx` is INFORMATIONAL, `2xx` is SUCCESS, `3xx` is REDIRECTION, `4xx` CLIENT_ERROR, and 5xx is `SERVER_ERROR`
+* `method`: The HTTP method (for example, `GET` or `PUT`).
+* `status`: The numeric HTTP status code (for example, `200`, `201`, or `500`).
+* `uri`: The URI template prior to variable substitution (for example, `/api/person/{id}`).
+* `exception`: The simple name of the exception class thrown (only if an exception is thrown).
+* `outcome`: The request’s outcome based on the status code of the response. `1xx` is INFORMATIONAL, `2xx` is SUCCESS, `3xx` is REDIRECTION, `4xx` CLIENT_ERROR, and 5xx is `SERVER_ERROR`.
 
-=== Adding percentiles, histograms, and SLA boundaries
+=== Adding Percentiles, Histograms, and SLA Boundaries
 
 The preferred way to add percentiles, percentile histograms, and SLA boundaries is to apply the general purpose property-based meter filter mechanism to this timer:
 
@@ -39,11 +39,11 @@ management.metrics.distribution:
     percentiles-histogram[http.server.requests]: true <1>
     sla[http.server.requests]: 10ms, 100ms
 ----
-<1> If percentile approximations based on histograms are supported by your monitoring system, prefer this _instead_ of the `percentiles` option.
+<1> If percentile approximations based on histograms are supported by your monitoring system, prefer this approach _instead_ of the `percentiles` option.
 
-=== Only timing endpoints you mark with @Timed
+=== Only Timing Endpoints That You Mark with @Timed
 
-You can turn this off by setting:
+You can turn this setting off by setting:
 
 [source,properties]
 ----
@@ -51,7 +51,7 @@ You can turn this off by setting:
 management.metrics.web.server.auto-time-requests=false
 ----
 
-If you turn off `autoTimeRequests`, or if you'd like to customize the timer for a particular endpoint, add `@io.micrometer.core.annotation.Timed` to:
+If you turn off `autoTimeRequests` or if you want to customize the timer for a particular endpoint, add `@io.micrometer.core.annotation.Timed` to your REST controller:
 
 [source,properties]
 ----
@@ -64,12 +64,12 @@ public class MyController {
     public List<Person> listPeople() { ... }
 ----
 <1> A controller class to enable timings on every request handler in the controller.
-<2> A method to enable for an individual endpoint. This is not necessary if you have it on the class, but can be used to further customize the timer for this particular endpoint.
-<3> A method with `longTask = true` to enable a long task timer for the method. Long task timers require a separate metric name, and can be stacked with a short task timer.
+<2> A method to enable for an individual endpoint. This is not necessary if you have it on the class, but you can use it to further customize the timer for this particular endpoint.
+<3> A method with `longTask = true` to enable a long task timer for the method. Long task timers require a separate metric name and can be stacked with a short task timer.
 
 == Client-side HTTP Instrumentation
 
-The instrumentation of any `RestTemplate` created using the auto-configured `RestTemplateBuilder` is enabled. It is also possible to apply `MetricsRestTemplateCustomizer` manually. A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http.client.requests` and can be changed by setting:
+The instrumentation of any `RestTemplate` created by using the auto-configured `RestTemplateBuilder` is enabled. You can also manually apply `MetricsRestTemplateCustomizer`. A timer is recorded for each invocation that includes tags for URI (before parameter substitution), host, and status. The name of this timer is `http.client.requests` and can be changed by setting:
 
 [source,properties]
 ----
@@ -77,12 +77,12 @@ The instrumentation of any `RestTemplate` created using the auto-configured `Res
 management.metrics.web.client.requests-metric-name=i.want.to.be.different.again
 ----
 
-The `Timer` contains a set of dimensions for every request, governed by the primary bean `RestTemplateExchangeTagsProvider` registered in your application context. If you don't provide such a bean, a default implementation is selected which adds the following dimensions:
+The `Timer` contains a set of dimensions for every request, governed by the primary `RestTemplateExchangeTagsProvider` bean registered in your application context. If you do not provide such a bean, a default implementation is selected. The default implementation adds the following dimensions:
 
-1. `method`, the HTTP method (for example, `GET` or `PUT`)
-2. `status`, the numeric HTTP status code (for example, `200`, `201`, `500`)
-3. `uri`, the URI template prior to variable substitution (for example, `/api/person/{id}`)
-4. `clientName`, the host portion of the URI
-5. `outcome`, request’s outcome based on the status code of the response. `1xx` is INFORMATIONAL, `2xx` is SUCCESS, `3xx` is REDIRECTION, `4xx` CLIENT_ERROR, and 5xx is `SERVER_ERROR`
+* `method`: The HTTP method (for example, `GET` or `PUT`).
+* `status`: The numeric HTTP status code (for example, `200`, `201`, or `500`).
+* `uri`: The URI template prior to variable substitution (for example, `/api/person/{id}`).
+* `clientName`: The host portion of the URI.
+* `outcome`: The request’s outcome based on the status code of the response. `1xx` is INFORMATIONAL, `2xx` is SUCCESS, `3xx` is REDIRECTION, `4xx` CLIENT_ERROR, and 5xx is `SERVER_ERROR`.
 
 You can use the convenience static functions in `RestTemplateExchangeTags` to construct your own `RestTemplateExchangeTagsProvider`.

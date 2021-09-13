@@ -1,5 +1,4 @@
 = Micrometer AppOptics
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :system: appoptics
@@ -9,6 +8,8 @@ AppOptics is a dimensional time-series SaaS with built-in dashboarding.
 include::install.adoc[]
 
 == Configuring
+
+The following example configures an AppOptics instance:
 
 [source,java]
 ----
@@ -27,7 +28,7 @@ AppOpticsConfig appopticsConfig = new AppOpticsConfig() {
 MeterRegistry registry = new AppOpticsMeterRegistry(appopticsConfig, Clock.SYSTEM);
 ----
 
-`AppOpticsConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.appoptics` directly to the `AppOpticsConfig`:
+`AppOpticsConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties that are prefixed with `management.metrics.export.appoptics` directly to the `AppOpticsConfig`:
 
 [source,yml]
 ----
@@ -43,15 +44,15 @@ management.metrics.export.appoptics:
 
 == Graphing
 
-This section serves as a quickstart to rendering useful representations in AppOptics for metrics originating in Micrometer.
+This section serves as a quick start to rendering useful representations in AppOptics for metrics that originate in Micrometer.
 
 === Timers
 
 The AppOptics implementation of `Timer` produces three fields in AppOptics:
 
-1. `sum` - Rate of calls per second.
-2. `count` - Rate of total time per second.
-3. `max` - A sliding window maximum amount recorded.
+* `sum`: Rate of calls per second.
+* `count`: Rate of total time per second.
+* `max`: A sliding window maximum amount recorded.
 
 .Dimensionally aggregable average in AppOptics.
 image::img/appoptics-timer-average.png[AppOptics timer average]

@@ -1,14 +1,15 @@
 = Micrometer SignalFx
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :system: signalfx
 
-SignalFx is a dimensional monitoring system SaaS with a full UI operating on a push model. It has a rich set of alert "detectors".
+SignalFx is a dimensional monitoring system SaaS with a full UI that operates on a push model. It has a rich set of alert "`detectors`".
 
 include::install.adoc[]
 
 == Configuring
+
+The following example configures SignalFx:
 
 [source,java]
 ----
@@ -29,7 +30,7 @@ MeterRegistry registry = new SignalFxMeterRegistry(signalFxConfig, Clock.SYSTEM)
 
 There are two distinct sources of API keys in SignalFx.
 
-`SignalFxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.signalfx` directly to the `SignalFxConfig`:
+`SignalFxConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you  instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties that are prefixed with `management.metrics.export.signalfx` directly to the `SignalFxConfig`:
 
 [source,yml]
 ----
@@ -43,17 +44,17 @@ management.metrics.export.signalfx:
 
 == Graphing
 
-This section serves as a quickstart to rendering useful representations in SignalFx for metrics originating in Micrometer. See the https://docs.signalfx.com/en/latest/charts/index.html[SignalFx docs] for a far more complete reference of what is possible in SignalFx.
+This section serves as a quick start to rendering useful representations in SignalFx for metrics originating in Micrometer. See the https://docs.signalfx.com/en/latest/charts/index.html[SignalFx docs] for a far more complete reference of what is possible in SignalFx.
 
 === Timers
 
 At each publishing interval, the SignalFx `Timer` produces several time series in SignalFx:
 
-1. `${name}.avg` - A mean latency for the publishing interval.
-2. `${name}.count` - Throughput per second over the publishing interval.
-3. `${name}.totalTime` - Total time per second over the publishing interval (used with `count`) to create aggregable means.
-4. `${name}.percentiles` - Micrometer calculated percentiles for the publishing interval. One time series is produced for each percentile, with a tag of `phi` in the range [0,1].
-5. `${name}.histogram` - One event is produced for each SLA boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLA boundaries over the publishing interval.
+* `${name}.avg`: A mean latency for the publishing interval.
+* `${name}.count`: Throughput per second over the publishing interval.
+* `${name}.totalTime`: Total time per second over the publishing interval (used with `count`) to create aggregable means.
+* `${name}.percentiles`: Micrometer calculated percentiles for the publishing interval. One time series is produced for each percentile, with a tag of `phi` in the range of [0,1].
+* `${name}.histogram`: One event is produced for each SLA boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLA boundaries over the publishing interval.
 
 To generate an aggregable view of latency in SignalFx, divide `totalTime` by `count`:
 
@@ -74,9 +75,9 @@ To generate a plot of client-side percentiles, use the `${name}.percentiles` sig
 .Timer Percentiles.
 image::img/signalfx-timer-percentiles.png[SignalFx-rendered percentiles]
 
-Note how these percentiles are _not aggregable_. The more dimensions you add to a timer, the less useful these values become.
+Note that these percentiles are _not aggregable_. The more dimensions you add to a timer, the less useful these values become.
 
-Lastly, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries using the `${name}.histogram` signal. In this example, we set SLA boundaries at 275 (green), 300 (blue), and 500 (purple) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
+Finally, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries by using the `${name}.histogram` signal. In this example, we set SLA boundaries at 275 (green), 300 (blue), and 500 (purple) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
 
 .Timer SLA boundaries.
 image::img/signalfx-timer-sla.png[SignalFx-rendered SLA boundaries]

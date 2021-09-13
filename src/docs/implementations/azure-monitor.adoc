@@ -1,5 +1,4 @@
 = Micrometer Azure Monitor
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :system: azure-monitor
@@ -9,6 +8,8 @@ Azure Monitor is a dimensional time-series SaaS with built-in dashboarding.
 include::install.adoc[]
 
 == Configuring
+
+The following example configures a Micrometer Azure Monitor:
 
 [source,java]
 ----
@@ -26,7 +27,7 @@ AzureMonitorConfig azureMonitorConfig = new AzureMonitorConfig() {
 MeterRegistry registry = new AzureMonitorMeterRegistry(azureMonitorConfig, Clock.SYSTEM);
 ----
 
-`AzureMonitorConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.azure-monitor` directly to the `AzureMonitorConfig`:
+`AzureMonitorConfig` is an interface with a set of default methods. If, in the implementation of `get(String k)`, rather than returning `null`, you instead bind it to a property source, you can override the default configuration. For example, Micrometer's Spring Boot support binds properties that are prefixed with `management.metrics.export.azure-monitor` directly to the `AzureMonitorConfig`:
 
 [source,yml]
 ----

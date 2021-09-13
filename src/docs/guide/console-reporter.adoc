@@ -1,8 +1,7 @@
-= Passing through to Dropwizard's console reporter
-Jon Schneider <jschneider@pivotal.io>
+= Passing through to Dropwizard's Console Reporter
 :toc:
 
-This guide illustrates how to plug in less-commonly-used Dropwizard `Reporter` implementations, in this case the `ConsoleReporter`.
+This guide shows how to plug in less commonly used Dropwizard `Reporter` implementations -- in this case, the `ConsoleReporter`.
 
 [source,java]
 ----
@@ -46,7 +45,7 @@ This guide illustrates how to plug in less-commonly-used Dropwizard `Reporter` i
 	}
 ----
 
-Note that in a Spring environment, this registry is added to other implementations in a composite, and will be used for all metrics, both custom and
+Note that, in a Spring environment, this registry is added to other implementations in a composite and is used for all metrics, both custom and
 auto-configured.
 
 [source,java]
@@ -66,7 +65,7 @@ class MyComponent {
 }
 ----
 
-Output looks something like this for this custom timer:
+The following listing shows typical output for this custom timer:
 
 [source,txt]
 ----

@@ -1,4 +1,4 @@
-Spring Boot Actuator provides its own metrics support and it's not interacting with Micrometer at all. So the metrics collections happen independently.
+Spring Boot Actuator provides its own metrics support, and it does not interact with Micrometer at all. So the metrics collections happen independently.
 
 If you want to disable the metrics support from Spring Boot Actuator, add the following properties:
 
