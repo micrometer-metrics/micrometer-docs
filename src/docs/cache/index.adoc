@@ -40,5 +40,5 @@ sum(rate(book_guava_requests_total{result="hit"}[1m])) / sum(rate(book_guava_req
 In a real-world scenario, we tune caches according to how we evaluate the tradeoff between storage and load efficiency. You could create an alert based on some upper bound for the rate at which misses occur or on a lower bound for the hit ratio. Setting an upper bound on miss ratio is better than a lower bound on hit ratio. For both ratios, an absence of any activity drops the value to 0.
 The following image shows the miss ratio when it exceeds 10%:
 
-.Alerting when the miss ratio exceeds 12%
+.Alerting when the miss ratio exceeds 10%
 image::img/grafana-guava-miss-ratio.png[Miss ratio (alerted),width=800]
