@@ -91,7 +91,7 @@ For Maven, add the following dependency:
 </dependency>
 ----
 
-Metrics are immediately shipped over UDP to DogStatsD by using Datadog's flavor of the StatsD line protocol. `java-dogstatsd-client` is _not_ needed on the classpath for this to work, as Micrometer uses its own implementation.
+Metrics are immediately shipped to DogStatsD using Datadog's flavor of the StatsD line protocol. `java-dogstatsd-client` is _not_ needed on the classpath for this to work, as Micrometer uses its own implementation.
 
 [source,java]
 ----
@@ -111,3 +111,18 @@ MeterRegistry registry = new StatsdMeterRegistry(config, Clock.SYSTEM);
 ----
 
 Since version 1.7.0, Micrometer supports DogStatsD's https://docs.datadoghq.com/developers/dogstatsd/?tab=kubernetes#origin-detection-over-udp[origin detection over UDP] feature on Kubernetes if the `DD_ENTITY_ID` environment variable is properly set.
+
+Micrometer, by default, publishes `Timer` meters to DogStatsD as the StatsD "timimg" metric type `ms`, 
+which are sent to Datadog as https://docs.datadoghq.com/metrics/types/?tab=histogram#metric-types[histogram] type metrics.
+Micrometer publishes `DistributionSummary` meters as histogram type metrics by default, also.
+
+Since version 1.8.0, when `percentileHistogram` is enabled for the meter, Micrometer sends `Timer` and `DistributionSummary` meters as Datadog https://docs.datadoghq.com/metrics/distributions[Distributions] to DogStatsD.
+You can make a `DistributionSummary` with `percentileHistogram` enabled as follows:
+
+[source,java]
+----
+DistributionSummary responseSizeSummary = DistributionSummary.builder("http.server.response.size")
+        .baseUnit("bytes")
+        .publishPercentileHistogram()
+        .register(registry);
+----
