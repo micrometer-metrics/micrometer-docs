@@ -54,7 +54,7 @@ Micrometer's Spring Boot support binds properties prefixed with `management.metr
 This allows configuring the Dynatrace exporter by using the <<bookmark-available-properties, the available properties>>.
 
 To use the Dynatrace metrics exporter for Micrometer in your Spring Boot project, it is enough to include the `runtimeOnly 'io.micrometer:micrometer-registry-dynatrace'` dependency.
-In this default configuration, metrics will be exported to the v2 endpoint.
+In this default configuration, metrics will be exported to the local OneAgent endpoint.
 
 === Using a custom endpoint
 
@@ -102,7 +102,7 @@ Metrics.addRegistry(registry);
 ----
 
 These properties can also be set via Spring Boot, using the properties file.
-It is possible to reference environment variables using the Spring property placeholder notation here (`${VAR_NAME}`).
+It is possible to reference environment variables using the Spring property placeholder notation here (e.g. `uri: ${DT_METRICS_INGEST_URL}`), if they are set up in your environment.
 `v2` is used as the default API version unless a deviceId is set (<<bookmark-apiv1, see below>>).
 
 [source,yml]
@@ -110,10 +110,10 @@ It is possible to reference environment variables using the Spring property plac
 management.metrics.export.dynatrace:
     # for SaaS: https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest
     # for managed deployments: https://{your-domain}/e/{your-environment-id}/api/v2/metrics/ingest
-    uri: ${DT_METRICS_INGEST_URL}
+    uri: YOUR_METRICS_INGEST_URL
 
     # should not be hardcoded but rather read from a secure source, like environment variables.
-    api-token: ${DT_METRICS_INGEST_API_TOKEN}
+    api-token: YOUR_METRICS_INGEST_TOKEN
 ----
 
 == API Versions
@@ -150,12 +150,12 @@ management.metrics.export.dynatrace:
     # Required only if not using the OneAgent endpoint
     # For SaaS: https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest
     # For managed deployments: https://{your-domain}/e/{your-environment-id}/api/v2/metrics/ingest
-    uri: ${DT_METRICS_INGEST_URL}
+    uri: YOUR_METRICS_INGEST_URL
 
     # It is *not* recommended to put the token into the YAML or properties file directly.
     # It should be read from a secure source instead, e.g. from environment variables.
     # E.g. using `api-token: ${DT_METRICS_INGEST_API_TOKEN}` to read from the environment.
-    api-token: ${DT_METRICS_INGEST_API_TOKEN}
+    api-token: YOUR_METRICS_INGEST_TOKEN
 
     # These properties can only be used with the v2 exporter.
     v2:
