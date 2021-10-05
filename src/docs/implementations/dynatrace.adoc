@@ -78,14 +78,14 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
         // "https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest".
         // Should be read from a secure source and not hard-coded.
         // This example shows how it could be read from an environment variable:
-        String endpoint = System.getenv("DT_METRICS_INGEST_URL");
+        String endpoint = System.getenv("YOUR_METRICS_INGEST_URL");
         return endpoint != null ? endpoint : DynatraceConfig.super.uri();
     }
 
     @Override
     public String apiToken() {
         // It is *not* recommended to place secrets in config files but to read them from a secure source.
-        String token = System.getenv("DT_METRICS_INGEST_API_TOKEN");
+        String token = System.getenv("YOUR_METRICS_INGEST_TOKEN");
         return token != null ? token : "";
     }
 
