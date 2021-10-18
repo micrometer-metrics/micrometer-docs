@@ -112,7 +112,7 @@ MeterRegistry registry = new StatsdMeterRegistry(config, Clock.SYSTEM);
 
 Since version 1.7.0, Micrometer supports DogStatsD's https://docs.datadoghq.com/developers/dogstatsd/?tab=kubernetes#origin-detection-over-udp[origin detection over UDP] feature on Kubernetes if the `DD_ENTITY_ID` environment variable is properly set.
 
-Micrometer, by default, publishes `Timer` meters to DogStatsD as the StatsD "timimg" metric type `ms`, 
+Micrometer, by default, publishes `Timer` meters to DogStatsD as the StatsD "timing" metric type `ms`,
 which are sent to Datadog as https://docs.datadoghq.com/metrics/types/?tab=histogram#metric-types[histogram] type metrics.
 Micrometer publishes `DistributionSummary` meters as histogram type metrics by default, also.
 
