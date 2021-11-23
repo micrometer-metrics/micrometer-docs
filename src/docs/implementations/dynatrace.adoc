@@ -24,12 +24,12 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     @Override
     @Nullable
     public String get(String k) {
-        // This method for retrieving arbitrary config items introduced by the interface is currently not used in DynatraceConfig.
+        // This method can be used for retrieving arbitrary config items,
+        // null means accepting the defaults defined in DynatraceConfig
         return null;
     }
 };
 MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTEM);
-Metrics.addRegistry(registry);
 ----
 
 It is also possible to specify the exporter version explicitly, which defaults to `v2` unless a deviceId is set:
@@ -44,8 +44,11 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 
     @Override
     @Nullable
-    public String get(String k) { return null; }
+    public String get(String k) {
+        return null; // accept the rest of the defaults
+    }
 };
+MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTEM);
 ----
 
 
@@ -68,23 +71,21 @@ It is recommended to limit scope to only this permission.
 DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     @Override
     public DynatraceApiVersion apiVersion() {
-        // not strictly required, but makes the code more clear.
+        // not strictly required, but makes the code more clear/explicit
         return DynatraceApiVersion.V2;
     }
 
     @Override
     public String uri() {
         // The endpoint of the Dynatrace Metrics API v2 including path, e.g.:
-        // "https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest".
-        // Should be read from a secure source and not hard-coded.
-        // This example shows how it could be read from an environment variable:
+        // "https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest"
         String endpoint = System.getenv("YOUR_METRICS_INGEST_URL");
         return endpoint != null ? endpoint : DynatraceConfig.super.uri();
     }
 
     @Override
     public String apiToken() {
-        // It is *not* recommended to place secrets in config files but to read them from a secure source.
+        // should be read from a secure source
         String token = System.getenv("YOUR_METRICS_INGEST_TOKEN");
         return token != null ? token : "";
     }
@@ -92,18 +93,19 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     @Override
     @Nullable
     public String get(String k) {
-        // This method for retrieving arbitrary config items introduced by the interface is currently not used in DynatraceConfig.
+        // This method can be used for retrieving arbitrary config items,
+        // null means accepting the defaults defined in DynatraceConfig
         return null;
     }
 };
 MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTEM);
-// Register the Dynatrace registry with the global MeterRegistry.
-Metrics.addRegistry(registry);
 ----
 
-These properties can also be set via Spring Boot, using the properties file.
-It is possible to reference environment variables using the Spring property placeholder notation here (e.g. `uri: ${DT_METRICS_INGEST_URL}`), if they are set up in your environment.
-`v2` is used as the default API version unless a deviceId is set (<<bookmark-apiv1, see below>>).
+These properties can also be set via Spring Boot, using property/yaml files.
+It is also possible to reference environment variables using the Spring property placeholders +
+(e.g.: `management.metrics.export.dynatrace.uri: ${DT_METRICS_INGEST_URL}`).
+
+NOTE: `v2` is used as the default API version unless a `deviceId`` is set (<<bookmark-apiv1, see below>>).
 
 [source,yml]
 ----
@@ -112,7 +114,7 @@ management.metrics.export.dynatrace:
     # for managed deployments: https://{your-domain}/e/{your-environment-id}/api/v2/metrics/ingest
     uri: YOUR_METRICS_INGEST_URL
 
-    # should not be hardcoded but rather read from a secure source, like environment variables.
+    # should be read from a secure source
     api-token: YOUR_METRICS_INGEST_TOKEN
 ----
 
@@ -138,7 +140,7 @@ If no local OneAgent is running on the host or the metrics should be sent to a d
 The https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication/[API token] must have the https://www.dynatrace.com/support/help/shortlink/api-authentication#token-permissions["Ingest metrics"] (`metrics.ingest`) permission set.
 It is recommended to limit scope to only this permission.
 
-The entire Metrics v2 API endpoint URI has to be specified including its path, i.e., with the path `/api/v2/metrics/ingest` on SaaS and managed deployments, or `/metrics/ingest` for OneAgent endpoints as mentioned in the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/post-ingest-metrics/[documentation].
+The entire Metrics v2 API endpoint URI has to be specified including its path, i.e.: with the path `/api/v2/metrics/ingest` on SaaS and managed deployments, or `/metrics/ingest` for OneAgent endpoints as mentioned in the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/post-ingest-metrics/[documentation].
 
 *Properties available in the v2 exporter* [[bookmark-available-properties]]
 
@@ -152,9 +154,7 @@ management.metrics.export.dynatrace:
     # For managed deployments: https://{your-domain}/e/{your-environment-id}/api/v2/metrics/ingest
     uri: YOUR_METRICS_INGEST_URL
 
-    # It is *not* recommended to put the token into the YAML or properties file directly.
-    # It should be read from a secure source instead, e.g. from environment variables.
-    # E.g. using `api-token: ${DT_METRICS_INGEST_API_TOKEN}` to read from the environment.
+    # should be read from a secure source
     api-token: YOUR_METRICS_INGEST_TOKEN
 
     # These properties can only be used with the v2 exporter.
@@ -191,14 +191,13 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     public String uri() {
         // The endpoint of the Dynatrace Metrics API v2 including path, e.g.:
         // "https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest".
-        // Should be read from a secure source and not hard-coded.
         String endpoint = System.getenv("DT_METRICS_INGEST_URL");
         return endpoint != null ? endpoint : DynatraceConfig.super.uri();
     }
 
     @Override
     public String apiToken() {
-        // It is *not* recommended to place secrets in config files but to read them from a secure source.
+        // should be read from a secure source
         String token = System.getenv("DT_METRICS_INGEST_API_TOKEN");
         return token != null ? token : "";
     }
@@ -225,8 +224,7 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     @Override
     @Nullable
     public String get(String k) {
-        // This method for retrieving arbitrary config items introduced by the interface is currently not used in DynatraceConfig.
-        return null;
+        return null; // accept the rest of the defaults
     }
 };
 ----
@@ -256,7 +254,7 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 
     @Override
     public String apiToken() {
-        // It is *not* recommended to place secrets in config files, but to read them from a secure source.
+        // should be read from a secure source
         return MY_TOKEN;
     }
 
@@ -282,7 +280,7 @@ management.metrics.export.dynatrace:
     # For managed deployments: https://{your-domain}/e/{your-environment-id}
     uri: https://{your-environment-id}.live.dynatrace.com
 
-    # This should not be hardcoded but rather read from a secure source.
+    # should be read from a secure source
     api-token: MY_TOKEN
 
     # When setting the device id, metrics will be exported to the v1 timeseries endpoint
