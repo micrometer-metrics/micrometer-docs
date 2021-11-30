@@ -53,7 +53,7 @@ MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTE
 
 
 `DynatraceConfig` is an interface with a set of default methods.
-Micrometer's Spring Boot support binds properties prefixed with `management.metrics.export.dynatrace` directly to the `DynatraceConfig`.
+Spring Boot's Micrometer support binds properties prefixed with `management.metrics.export.dynatrace` directly to the `DynatraceConfig`.
 This allows configuring the Dynatrace exporter by using the <<bookmark-available-properties, the available properties>>.
 
 To use the Dynatrace metrics exporter for Micrometer in your Spring Boot project, it is enough to include the `runtimeOnly 'io.micrometer:micrometer-registry-dynatrace'` dependency.
@@ -102,7 +102,7 @@ MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTE
 ----
 
 These properties can also be set via Spring Boot, using property/yaml files.
-It is also possible to reference environment variables using the Spring property placeholders +
+It is also possible to reference environment variables using the Spring property placeholders
 (e.g.: `management.metrics.export.dynatrace.uri: ${DT_METRICS_INGEST_URL}`).
 
 NOTE: `v2` is used as the default API version unless a `deviceId`` is set (<<bookmark-apiv1, see below>>).
@@ -131,7 +131,7 @@ If no OneAgent is running on the target host, it is possible to specify endpoint
 *Minimal configuration with a local Dynatrace OneAgent*
 
 In the minimal configuration <<bookmark-oneagent-example, shown above>> (no URI or API token), the v2 exporter will attempt to export to the https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/local-api/[local OneAgent metrics ingest endpoint].
-Note that this only works if the a OneAgent is running on the host and the https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/local-api/#enable-the-oneagent-metric-api[local OneAgent Metric API] is available.
+Note that this only works if a OneAgent is running on the host and the https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/local-api/#enable-the-oneagent-metric-api[local OneAgent Metric API] is available.
 If the ingestion port was changed to a custom one, the full endpoint URI has to be provided for the URI property (with API token left empty).
 
 *Configuration with URI and API token*
@@ -216,7 +216,7 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
     @Override
     public Map<String, String> defaultDimensions() {
         // create and return a map containing the desired key-value pairs.
-        Map<String, String> dims = new HashMap<String,String>();
+        Map<String, String> dims = new HashMap<>();
         dims.put("dimensionKey", "dimensionValue");
         return dims;
     }
