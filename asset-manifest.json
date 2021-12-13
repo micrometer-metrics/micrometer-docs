@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/micrometer-docs/static/css/main.6901d5e3.chunk.css",
-    "main.js": "/micrometer-docs/static/js/main.e1086952.chunk.js",
-    "main.js.map": "/micrometer-docs/static/js/main.e1086952.chunk.js.map",
+    "main.js": "/micrometer-docs/static/js/main.2695aac3.chunk.js",
+    "main.js.map": "/micrometer-docs/static/js/main.2695aac3.chunk.js.map",
     "runtime-main.js": "/micrometer-docs/static/js/runtime-main.c299116a.js",
     "runtime-main.js.map": "/micrometer-docs/static/js/runtime-main.c299116a.js.map",
     "static/css/2.6655f630.chunk.css": "/micrometer-docs/static/css/2.6655f630.chunk.css",
-    "static/js/2.7bfd47b8.chunk.js": "/micrometer-docs/static/js/2.7bfd47b8.chunk.js",
-    "static/js/2.7bfd47b8.chunk.js.map": "/micrometer-docs/static/js/2.7bfd47b8.chunk.js.map",
+    "static/js/2.608fc855.chunk.js": "/micrometer-docs/static/js/2.608fc855.chunk.js",
+    "static/js/2.608fc855.chunk.js.map": "/micrometer-docs/static/js/2.608fc855.chunk.js.map",
     "atlas-long-task-timer.png": "/micrometer-docs/01093efa2acafe9591966b47300356fa.png",
     "wavefront-timer-throughput.png": "/micrometer-docs/02ce98c10dfbeb55a321ac9397c55b33.png",
     "prometheus-timer.png": "/micrometer-docs/0574a37fbfe1531ca2c8e23506e9db34.png",
@@ -41,7 +41,7 @@
     "index.html": "/micrometer-docs/index.html",
     "static/css/2.6655f630.chunk.css.map": "/micrometer-docs/static/css/2.6655f630.chunk.css.map",
     "static/css/main.6901d5e3.chunk.css.map": "/micrometer-docs/static/css/main.6901d5e3.chunk.css.map",
-    "static/js/2.7bfd47b8.chunk.js.LICENSE.txt": "/micrometer-docs/static/js/2.7bfd47b8.chunk.js.LICENSE.txt",
+    "static/js/2.608fc855.chunk.js.LICENSE.txt": "/micrometer-docs/static/js/2.608fc855.chunk.js.LICENSE.txt",
     "static/media/font-awesome.min.css": "/micrometer-docs/static/media/fontawesome-webfont.f691f37e.woff",
     "static/media/logo-no-title.3817e272.svg": "/micrometer-docs/static/media/logo-no-title.3817e272.svg",
     "static/media/logo.69e5ee7b.svg": "/micrometer-docs/static/media/logo.69e5ee7b.svg",
@@ -50,8 +50,8 @@
   "entrypoints": [
     "static/js/runtime-main.c299116a.js",
     "static/css/2.6655f630.chunk.css",
-    "static/js/2.7bfd47b8.chunk.js",
+    "static/js/2.608fc855.chunk.js",
     "static/css/main.6901d5e3.chunk.css",
-    "static/js/main.e1086952.chunk.js"
+    "static/js/main.2695aac3.chunk.js"
   ]
 }
