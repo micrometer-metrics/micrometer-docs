@@ -1,12 +1,14 @@
 {
   "name": "micrometer-docs",
   "version": "0.1.2",
+  "homepage": "https://micrometer.io",
   "private": true,
   "dependencies": {
     "asciidoc-loader": "^0.2.0",
     "asciidoctor": "^2.2.0",
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
+    "gh-pages": "^3.2.3",
     "history": "^4.6.3",
     "octicons": "^5.0.1",
     "react": "^17.0.2",
@@ -26,6 +28,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "predeploy": "react-scripts build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "analyze": "source-map-explorer build/static/js/main.*",
