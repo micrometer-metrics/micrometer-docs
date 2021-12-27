@@ -41,13 +41,13 @@ Instead, if your summary's domain is more constrained, scale your summary's rang
 DistributionSummary.builder("my.ratio").scale(100).register(registry)
 ----
 
-This way, the ratio winds up in the range [0,100] and we can set `maximumExpectedValue` to 100. You can pair this with custom SLA boundaries if you care about particular ratios:
+This way, the ratio winds up in the range [0,100] and we can set `maximumExpectedValue` to 100. You can pair this with custom SLO boundaries if you care about particular ratios:
 
 [source,java]
 ----
 DistributionSummary.builder("my.ratio")
    .scale(100)
-   .sla(70, 80, 90)
+   .serviceLevelObjectives(70, 80, 90)
    .register(registry)
 ----
 
