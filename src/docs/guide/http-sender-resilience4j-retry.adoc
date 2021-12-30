@@ -1,11 +1,10 @@
 = HttpSender with Resilience4j Retry
 
 `HttpSender` is an interface for HTTP clients that are used in meter registries for HTTP-based metrics publication. There
-are three implementations:
+are two implementations:
 
 * `HttpUrlConnectionSender`: `HttpURLConnection`-based `HttpSender`
 * `OkHttpSender`: OkHttp-based `HttpSender`
-* `ReactorNettySender`: Reactor Netty-based `HttpSender`
 
 There is no out-of-the-box support for retry, but you can decorate it with Resilience4j retry, as follows:
 
