@@ -1,0 +1,67 @@
+Micrometer Tracing comes with a `micrometer-tracing-test` module. It provides a `SampleTestRunner` mechanism that you can hook into your samples. It will
+
+* Configure a OpenZipkin Brave Tracer
+** Set it up with Tanzu Observability by Wavefront Reporter
+** Set it up with OpenZipkin Zipkin Reporter
+* Configure a OpenTelemetry Tracer
+** Set it up with Tanzu Observability by Wavefront Exporter
+** Set it up with OpenZipkin Zipkin Exporter
+* Run all the combinations above against the user code and running infrastructure
+
+== Installing
+
+The following example shows the required dependency in Gradle (assuming that Micrometer Tracing BOM has been added):
+
+[source,groovy,subs=+attributes]
+----
+implementation 'io.micrometer:micrometer-tracing-test'
+----
+
+The following example shows the required dependency in Maven (assuming that Micrometer Tracing BOM has been added):
+
+[source,xml,subs=+attributes]
+----
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-tracing-test</artifactId>
+</dependency>
+----
+
+== Running
+
+The following example shows how you can run your code to test against running Tanzu Observability by Wavefront instance and Zipkin.
+
+[source,java,subs=+attributes]
+-----
+class TestTest extends SampleTestRunner {
+
+	TestTest() {
+		super(SamplerRunnerConfig
+				.builder()
+				.wavefrontApplicationName("my-app")
+				.wavefrontServiceName("my-service")
+				.wavefrontToken("...")
+				.wavefrontUrl("...")
+				.zipkinUrl("...") // defaults to localhost:9411
+				.build());
+	}
+
+	@Override
+	public BiConsumer<Tracer, MeterRegistry> yourCode() {
+		// example for testing Reactor Netty
+		byte[] bytes = new byte[1024*8];
+		Random rndm = new Random();
+		rndm.nextBytes(bytes);
+		return (tracer, meterRegistry) ->
+				HttpClient.create()
+						.wiretap(true)
+						.metrics(true, Function.identity())
+						.post()
+						.uri("https://httpbin.org/post")
+						.send(ByteBufMono.fromString(Mono.just(new String(bytes))))
+						.responseContent()
+						.aggregate()
+						.block();
+	}
+}
+-----
