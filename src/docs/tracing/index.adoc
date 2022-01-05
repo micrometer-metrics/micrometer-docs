@@ -7,7 +7,7 @@
 
 Micrometer Tracing provides a simple facade for the most popular tracer libraries, letting you instrument your JVM-based application code without vendor lock-in. It is designed to add little to no overhead to your tracing collection activity while maximizing the portability of your tracing effort.
 
-It also provides a tracing extension to Micrometer's `TimerRecordingHandler`. Whenever a `Timer.Sample` is used, a corresponding span will be created, stared, stopped and reported.
+It also provides a tracing extension to Micrometer's `TimerRecordingHandler` (starting from Micrometer 2.0.0 version). Whenever a `Timer.Sample` is used, a corresponding span will be created, stared, stopped and reported.
 
 == Installing
 
@@ -49,16 +49,20 @@ You should add a tracing bridge you want to use, such as `micrometer-tracing-bri
 
 == Glossary
 
-include::glossary.adoc[leveloffset=+1]
+include::tracing-glossary.adoc[leveloffset=+1]
 
 == Supported Tracers
 
-include::tracers.adoc[leveloffset=+1]
+include::tracing-tracers.adoc[leveloffset=+1]
 
 == Supported Reporters
 
-include::reporters.adoc[leveloffset=+1]
+include::tracing-reporters.adoc[leveloffset=+1]
+
+== Configuring
+
+include::tracing-configuring.adoc[leveloffset=+1]
 
 == Testing
 
-include::testing.adoc[leveloffset=+1]
+include::tracing-testing.adoc[leveloffset=+1]

@@ -16,14 +16,12 @@ implementation 'io.micrometer:micrometer-tracing-reporter-wavefront'
 .OpenZipkin Zipkin with Brave
 [source,groovy,subs=+attributes]
 ----
-implementation platform('io.zipkin.brave:brave-bom:latest.release')
 implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 ----
 
 .OpenZipkin Zipkin with OpenTelemetry
 [source,groovy,subs=+attributes]
 ----
-implementation platform('io.opentelemetry:opentelemetry-bom:latest.release')
 implementation 'io.opentelemetry:opentelemetry-exporter-zipkin'
 ----
 
@@ -41,45 +39,17 @@ The following example shows the required dependency in Maven (assuming that Micr
 .OpenZipkin Zipkin with Brave
 [source,xml,subs=+attributes]
 ----
-<dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.zipkin.brave</groupId>
-        <artifactId>brave-bom</artifactId>
-        <version>${brave.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-<dependencies>
-    <dependency>
-      <groupId>io.zipkin.reporter2</groupId>
-      <artifactId>zipkin-reporter-brave</artifactId>
-    </dependency>
-</dependencies>
+<dependency>
+  <groupId>io.zipkin.reporter2</groupId>
+  <artifactId>zipkin-reporter-brave</artifactId>
+</dependency>
 ----
 
 .OpenZipkin Zipkin with OpenTelemetry
 [source,xml,subs=+attributes]
 ----
-<dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.opentelemetry</groupId>
-        <artifactId>opentelemetry-bom</artifactId>
-        <version>${otel.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-<dependencies>
-    <dependency>
-      <groupId>io.opentelemetry</groupId>
-      <artifactId>opentelemetry-exporter-zipkin</artifactId>
-    </dependency>
-</dependencies>
+<dependency>
+  <groupId>io.opentelemetry</groupId>
+  <artifactId>opentelemetry-exporter-zipkin</artifactId>
+</dependency>
 ----
