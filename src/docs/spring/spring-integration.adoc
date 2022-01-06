@@ -1,9 +1,0 @@
-If Spring Integration is on the classpath, metrics for Spring integration are collected automatically.
-
-Three gauges are monitored:
-
-* `spring.integration.channelNames`: Number of channel names
-* `spring.integration.handlerNames`: Number of handler names
-* `spring.integration.sourceNames`: Number of source names
-
-For each source, a counter (`spring.integration.source.messages`) is registered.

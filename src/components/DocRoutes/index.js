@@ -6,7 +6,6 @@ import DocSection from '../DocSection';
 
 /* eslint import/no-webpack-loader-syntax: off */
 let docsInstalling = require('!asciidoc-loader!../../docs/installing/index.adoc');
-let docsSpring = require('!asciidoc-loader!../../docs/spring/index.adoc');
 let docsConcepts = require('!asciidoc-loader!../../docs/concepts/index.adoc');
 let docsJvm = require('!asciidoc-loader!../../docs/jvm/index.adoc');
 let docsCache = require('!asciidoc-loader!../../docs/cache/index.adoc');
@@ -40,8 +39,6 @@ export default function DocRoutes() {
                       content={docsBySystem[system]} /> :
           <Redirect to="/docs" />;
       }} />
-
-      <Route path="/docs/ref/spring/1.5" render={() => <DocSection title="Spring Boot 1.5" content={docsSpring} />} />
 
       <Route path="/docs/ref/jvm" render={() =>
         <DocSection title="JVM and System Metrics" content={docsJvm}/>

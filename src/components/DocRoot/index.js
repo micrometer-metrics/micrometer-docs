@@ -134,15 +134,9 @@ export default function DocRoot() {
         <li><span className="doc-section">Reference</span>. Detailed list of out-of-the-box
           instrumentation provided by Micrometer.
           <ul>
-            <li><span className="doc-section">Spring Boot</span>. As of Spring Boot 2.0, Micrometer is the
-              instrumentation library powering the delivery of application metrics from Spring. The <i>micrometer-spring-legacy </i>
-               module provides drop-down support for Spring Boot 1.5.x.
-              <ul>
-                <li><a className="doc-section"
-                       href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics">Spring
-                  Boot 2.x</a></li>
-                <li><NavLink className="doc-section" to="/docs/ref/spring/1.5">Spring Boot 1.5.x</NavLink> (no longer supported)</li>
-              </ul>
+            <li><a className="doc-section"
+                   href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics">Spring
+              Boot</a>. Micrometer is the instrumentation library powering the delivery of application metrics from Spring.
             </li>
             <li><NavLink className="doc-section" to="/docs/ref/jvm">JVM</NavLink>. Metrics on classloaders, memory,
               garbage collection, threads, etc.
