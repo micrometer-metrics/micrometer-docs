@@ -1,23 +1,12 @@
 Micrometer's open source support policy is defined as follows for different types of releases. Release versions follow a MAJOR.MINOR.PATCH convention, as defined in https://semver.org/[semantic versioning].
 
 * *Major release lines* (such as 1.x or 2.x) are supported with patch releases for a minimum of 3 years from the date the major release (such as `1.0.0` or `2.0.0`) was made available for download.
-* *Minor release lines* (such as 1.1.x or 1.2.x)
-  ** Long Term Support (LTS) Minor release lines are supported with patch releases for a minimum of 12 months from the date the minor release (such as `1.1.0` or `1.2.0`) was made available for download.
-  ** Non-LTS Minor release lines are supported until a more recent minor release line (LTS or non-LTS) is published.
+* *Minor release lines* (such as 1.1.x or 1.2.x) are supported with patch releases for a minimum of 12 months from the date the minor release (such as `1.1.0` or `1.2.0`) was made available for download.
 * Any confirmed security vulnerabilities on supported release lines should result in a patch release to Maven Central.
 
-Commercial support is also available from VMware. It offers an extended support period for LTS releases.
+Commercial support that extends beyond the OSS support period described above is https://tanzu.vmware.com/spring-runtime[available from VMware].
 
-[NOTE]
-====
-Designation of LTS and non-LTS releases:
-
-* LTS and non-LTS minor releases are not differentiated by their version number alone. That is, Micrometer follows standard semantic versioning in its version numbers.
-* LTS releases are marked as such on https://github.com/micrometer-metrics/micrometer/releases[the GitHub releases].
-* All supported versions are maintained in the following table, which indicates LTS/non-LTS status.
-====
-
-Going forward, a new LTS version (major or minor) will be released every 6 months (in May and November).
+We generally plan to release a new major or minor version every 6 months (in May and November).
 
 ## Released versions
 
@@ -26,9 +15,9 @@ The following releases are actively maintained:
 .Supported minor releases
 [width="35%",options="header"]
 |===========
-| Minor release | LTS | OSS Support Until
-| 1.8.x         | Yes | November 2022
-| 1.7.x         | Yes | May 2022
+| Minor release | OSS Support Until
+| 1.8.x         | November 2022
+| 1.7.x         | May 2022
 |===========
 
 The following releases are out of OSS support:
@@ -36,14 +25,14 @@ The following releases are out of OSS support:
 .Out of OSS support minor releases
 [width="35%",options="header"]
 |===========
-| Minor release | LTS | Final patch
-| 1.6.x         | Yes | `1.6.13`
-| 1.5.x         | Yes | `1.5.17`
-| 1.4.x         | No  | `1.4.2`
-| 1.3.x         | Yes | `1.3.20`
-| 1.2.x         | No  | `1.2.2`
-| 1.1.x         | Yes | `1.1.19`
-| 1.0.x         | Yes | `1.0.11`
+| Minor release | Final patch
+| 1.6.x         | `1.6.13`
+| 1.5.x         | `1.5.17`
+| 1.4.x         | `1.4.2`
+| 1.3.x         | `1.3.20`
+| 1.2.x         | `1.2.2`
+| 1.1.x         | `1.1.19`
+| 1.0.x         | `1.0.11`
 |===========
 
 ## Examples
@@ -52,6 +41,5 @@ The following examples demonstrate how the support policy applies:
 
 ** Micrometer 1.0.0 was released in February 2018. At a minimum, support for the 1.x line extends through February 2021 (Major Releases statement). Practically, the Micrometer 1.x line is supported for at least as long as Spring Boot 2.x and major versions of other dependent web frameworks are supported.
 ** Micrometer 1.1.0 was released in October 2018, minimally extending support through October 2019 (Minor Releases statement). Practically, the Micrometer 1.1.x line is supported for at least as long as the Spring Boot 2.1.x line is supported.
-** If a hypothetical Micrometer 1.2.x were to be released, support for the 1.x line would be extended another 12 months from its release date.
+** If Micrometer 1.2.x were to be released, support for the 1.x line would be extended another 12 months from the 1.2.x release date.
 ** Patch releases, such as Micrometer 1.0.7, do not increase the support obligations for the 1.0.x release line.
-** Micrometer 1.1.0 (LTS) was released in October 2018. Micrometer 1.2.0 (non-LTS) was released in March 2019. Micrometer 1.3.0 (non-LTS) was released in February 2020. Maintenance fixes that affect all of 1.1.0, 1.2.0, and 1.3.0 are applied to 1.1.x and 1.3.x branches and 1.1.1 and 1.3.1 releases are published. Since 1.2.0 is succeeded by a minor release (1.3.0), no maintenance release on the 1.2.x line is made.
