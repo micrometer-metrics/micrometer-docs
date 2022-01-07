@@ -14,6 +14,7 @@ let docsConsoleReporter = require('!asciidoc-loader!../../docs/guide/console-rep
 let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../docs/guide/http-sender-resilience4j-retry.adoc');
 let docsCustomMeterRegistry = require('!asciidoc-loader!../../docs/guide/custom-meter-registry.adoc');
 let docsSupport = require('!asciidoc-loader!../../docs/support/index.adoc');
+let docsTracing = require('!asciidoc-loader!../../docs/tracing/index.adoc');
 
 const systems = ['appOptics', 'atlas', 'azure-monitor', 'cloudwatch', 'datadog', 'dynatrace', 'elastic', 'ganglia', 'graphite', 'humio', 'influx', 'instana', 'jmx', 'kairos', 'new-relic', 'prometheus', 'signalFx', 'stackdriver', 'statsD', 'wavefront'];
 
@@ -66,6 +67,10 @@ export default function DocRoutes() {
 
       <Route path="/docs/support" render={() =>
         <DocSection title="Micrometer Support Policy" content={docsSupport}/>
+      }/>
+
+      <Route path="/docs/tracing" render={() =>
+        <DocSection title="Tracing" content={docsTracing}/>
       }/>
     </div>
   )

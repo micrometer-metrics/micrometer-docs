@@ -1,0 +1,55 @@
+Micrometer Tracing supports directly the following Reporters.
+
+* https://tanzu.vmware.com/observability[*Tanzu Observability by Wavefront*]
+* https://zipkin.io[*OpenZipkin Zipkin*]
+
+== Installing
+
+The following example shows the required dependency in Gradle (assuming that Micrometer Tracing BOM has been added):
+
+.Tanzu Observability by Wavefront
+[source,groovy,subs=+attributes]
+----
+implementation 'io.micrometer:micrometer-tracing-reporter-wavefront'
+----
+
+.OpenZipkin Zipkin with Brave
+[source,groovy,subs=+attributes]
+----
+implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+----
+
+.OpenZipkin Zipkin with OpenTelemetry
+[source,groovy,subs=+attributes]
+----
+implementation 'io.opentelemetry:opentelemetry-exporter-zipkin'
+----
+
+The following example shows the required dependency in Maven (assuming that Micrometer Tracing BOM has been added):
+
+.Tanzu Observability by Wavefront
+[source,xml,subs=+attributes]
+----
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-tracing-reporter-wavefront</artifactId>
+</dependency>
+----
+
+.OpenZipkin Zipkin with Brave
+[source,xml,subs=+attributes]
+----
+<dependency>
+  <groupId>io.zipkin.reporter2</groupId>
+  <artifactId>zipkin-reporter-brave</artifactId>
+</dependency>
+----
+
+.OpenZipkin Zipkin with OpenTelemetry
+[source,xml,subs=+attributes]
+----
+<dependency>
+  <groupId>io.opentelemetry</groupId>
+  <artifactId>opentelemetry-exporter-zipkin</artifactId>
+</dependency>
+----

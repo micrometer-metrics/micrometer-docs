@@ -9,7 +9,7 @@ Jon Schneider <jschneider@pivotal.io>
 Micrometer is a metrics instrumentation library for JVM-based applications. It provides a simple facade over the instrumentation clients for the most popular monitoring systems, letting you instrument your JVM-based application code without vendor lock-in. It is designed to add little to no overhead to your metrics collection activity while maximizing the portability of your metrics effort.
 
 Micrometer is _not_ a distributed tracing system or an event logger. Adrian Cole's talk, titled https://www.dotconferences.com/2017/04/adrian-cole-observability-3-ways-logging-metrics-tracing[Observability
-3 Ways], does a great job of highlighting the differences between these different types of systems.
+3 Ways], does a great job of highlighting the differences between these different types of systems. Micrometer 2.0.0 does however provide the plugin mechanism that allows you to add capabilities including the tracing features. You can read more about this in the link:../docs/tracing[Micrometer Tracing documentation].
 
 == Supported Monitoring Systems
 
