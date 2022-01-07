@@ -1,6 +1,7 @@
 == Handler Configuration
 
-For Micrometer Tracing to work with Micrometer, you need to add a tracing related `RecordingHandler`. Check the example below for an example of adding and using a single, `DefaultTracingRecordingHandler`.
+For Micrometer Tracing to work with Micrometer, you need to add a tracing related `TimerRecordingHandler`.
+Check the example below for an example of adding and using a single, `DefaultTracingRecordingHandler`.
 
 [source,java,subs=+attributes]
 -----
@@ -37,7 +38,7 @@ For Micrometer Tracing to work with Micrometer, you need to add a tracing relate
         yourCodeToMeasure();
     }
     finally {
-        // The corresponding Span will no longer be in ThreadLocal due to try-with-resources block
+        // The corresponding Span will no longer be in ThreadLocal due to try-with-resources block (Timer.Scope is an AutoCloseable)
 		// Stop the Sample
         // The corresponding Span will be stopped and reported to an external system
         sample.stop(Timer.builder("my.operation"));
@@ -49,7 +50,11 @@ This will result in the following Micrometer Metrics:
 ```
 Gathered the following metrics
 	Meter with name <my.operation> and type <TIMER> has the following measurements
-		<[Measurement{statistic='COUNT', value=1.0}, Measurement{statistic='TOTAL_TIME', value=1.011949454}, Measurement{statistic='MAX', value=1.011949454}]>
+		<[
+            Measurement{statistic='COUNT', value=1.0},
+            Measurement{statistic='TOTAL_TIME', value=1.011949454},
+            Measurement{statistic='MAX', value=1.011949454}
+        ]>
 		and has the following tags <[tag(this.tag=will end up as a meter tag and a span tag)]>
 ```
 
@@ -59,5 +64,7 @@ image::img/zipkin.jpg[Trace Info propagation]
 
 === Ordered Handler Configuration
 
-Micrometer Tracing comes with multiple `RecordingHandler` implementations. To introduce ordering, you can use the `TimerRecordingHandler.AllMatchingCompositeTimerRecordingHandler` to run logic for all `RecordingHandler` that are matching the given predicate and `TimerRecordingHandler.FirstMatchingCompositeTimerRecordingHandler` to run logic only for the first `RecordingHandler` that matches the predicate. The former can group or handlers and the latter can be chosen to e.g. run only one matching `TracingRecordingHandler`.
+Micrometer Tracing comes with multiple `TimerRecordingHandler` implementations.
+To introduce ordering, you can use the `TimerRecordingHandler.AllMatchingCompositeTimerRecordingHandler` to run logic for all `RecordingHandler` that are matching the given predicate and `TimerRecordingHandler.FirstMatchingCompositeTimerRecordingHandler` to run logic only for the first `TimerRecordingHandler` that matches the predicate.
+The former can group or handlers and the latter can be chosen to e.g. run only one matching `TracingRecordingHandler`.
 

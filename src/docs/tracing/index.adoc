@@ -5,9 +5,11 @@
 
 == Purpose
 
-Micrometer Tracing provides a simple facade for the most popular tracer libraries, letting you instrument your JVM-based application code without vendor lock-in. It is designed to add little to no overhead to your tracing collection activity while maximizing the portability of your tracing effort.
+Micrometer Tracing provides a simple facade for the most popular tracer libraries, letting you instrument your JVM-based application code without vendor lock-in.
+It is designed to add little to no overhead to your tracing collection activity while maximizing the portability of your tracing effort.
 
-It also provides a tracing extension to Micrometer's `TimerRecordingHandler` (starting from Micrometer 2.0.0 version). Whenever a `Timer.Sample` is used, a corresponding span will be created, stared, stopped and reported.
+It also provides a tracing extension to Micrometer's `TimerRecordingHandler` (starting from Micrometer 2.0.0 version).
+Whenever a `Timer.Sample` is used, a corresponding span will be created, started, stopped and reported.
 
 == Installing
 
@@ -45,7 +47,8 @@ The following example shows the required dependency in Maven:
 </dependencies>
 ----
 
-You should add a tracing bridge you want to use, such as `micrometer-tracing-bridge-brave` or `micrometer-tracing-bridge-otel` and span exporters / reporters. In case of adding a bridge the `micrometer-tracing` library is added transitively.
+You should add a tracing bridge you want to use, such as `micrometer-tracing-bridge-brave` or `micrometer-tracing-bridge-otel` and span exporters / reporters.
+In case of adding a bridge the `micrometer-tracing` library is added transitively.
 
 == Glossary
 

@@ -39,4 +39,5 @@ The following example shows the required dependency in Maven (assuming that Micr
 </dependency>
 ----
 
-IMPORTANT: Remember to pick *only one* bridge. You *shouldn't have* two bridges on the classpath.
+IMPORTANT: Remember to pick *only one* bridge.
+You *shouldn't have* two bridges on the classpath.

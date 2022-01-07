@@ -1,4 +1,6 @@
-Micrometer Tracing comes with a `micrometer-tracing-test` module. It provides a `SampleTestRunner` mechanism that you can hook into your samples. It will
+Micrometer Tracing comes with a `micrometer-tracing-test` module.
+It provides a `SampleTestRunner` mechanism that you can hook into your samples.
+It will
 
 * Configure a OpenZipkin Brave Tracer
 ** Set it up with Tanzu Observability by Wavefront Reporter
