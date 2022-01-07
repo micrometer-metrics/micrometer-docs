@@ -35,9 +35,8 @@ export default function Home() {
           <div className="col-lg-4 text-center">
             <i className="fa fa-4x fa-leaf" aria-hidden="true" />
             <h2>Integrated into Spring</h2>
-            <p>Starting with Spring Boot 2.0, Micrometer is the instrumentation library powering
-              the delivery of application metrics from Spring. Support is ported back to Boot 1.x
-              through an additional library dependency.</p>
+            <p>Micrometer is the instrumentation library powering
+              the delivery of application metrics from Spring Boot applications.</p>
           </div>
         </div>
         <div className="row justify-content-center" style={{ padding: 30 }}>
