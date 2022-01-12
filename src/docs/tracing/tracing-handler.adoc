@@ -1,0 +1,67 @@
+Micrometer supports measuring the latency and the frequency of events with its link:concepts#_timers[`Timer`] concept.
+
+A popular way to record them is storing the start state in a `Timer.Sample` instance and stop it when the even has ended. In this case, the sample does the recording and reports the data through the `Timer`. +
+Recording such measurements could look like this:
+
+[source,java]
+----
+Timer.Sample sample = Timer.start(registry);
+// do some work here
+sample.stop(Timer.builder("my.timer"));
+----
+
+One of the new features in Micrometer 2.0 is the ability of registering "handlers" (`TimerRecordingHandler`) that are notified about the lifecycle event of a sample (e.g.: you can run custom code when a sample is stopped/started).
+Using this feature lets you add tracing capabilities to your existing metrics instrumentation (see: `DefaultTracingRecordingHandler`). The implementation of these handlers does not need to be tracing related, it is completely up to you how you are going to implement them (e.g.: you can add logging capabilities) if you want.
+
+=== HandlerContext
+
+In order to pass information between the instrumented code and the handler (or between handler methods, e.g.: `onStart` and `onStop`), you can utilize a `HandlerContext`. A `HandlerContext` is a `Map`-like container that can store values for you while your handler can access the data inside the context.
+
+=== TimerRecordingHandler Example
+
+Based on this, we can implement a simple handler that lets the users know about its invocations by printing them out to `stdout`.
+
+[source,java]
+----
+class SimpleHandler implements TimerRecordingHandler<Timer.HandlerContext> {
+    @Override
+    public void onStart(Timer.Sample sample, Timer.HandlerContext context) {
+        System.out.println("START " + "data: " + context.get(String.class));
+    }
+
+    @Override
+    public void onError(Timer.Sample sample, Timer.HandlerContext context, Throwable throwable) {
+        System.out.println("ERROR " + "data: " + context.get(String.class) + ", error: " + throwable);
+    }
+
+    @Override
+    public void onStop(Timer.Sample sample, Timer.HandlerContext context, Timer timer, Duration duration) {
+        System.out.println("STOP  " + "data: " + context.get(String.class));
+    }
+
+    @Override
+    public boolean supportsContext(Timer.HandlerContext handlerContext) {
+        return true; // you can decide if your handler should be invoked for this context object or not
+    }
+}
+----
+
+You can register this handler like this:
+
+[source,java]
+----
+SimpleMeterRegistry registry = new SimpleMeterRegistry();
+registry.config().timerRecordingHandler(new SimpleHandler());
+----
+
+And instrument your codebase:
+
+[source,java]
+----
+// using a context is optional, you can call start without it: Timer.start(registry)
+Timer.HandlerContext context = new Timer.HandlerContext().put(String.class, "test");
+Timer.Sample sample = Timer.start(registry, context);
+// do some work here
+sample.error(new IOException("simulated")); // and don't forget to handle exceptions
+sample.stop(Timer.builder("sample.timer"));
+----

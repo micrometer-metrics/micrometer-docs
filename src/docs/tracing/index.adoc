@@ -62,6 +62,10 @@ include::tracing-tracers.adoc[leveloffset=+1]
 
 include::tracing-reporters.adoc[leveloffset=+1]
 
+== TimerRecordingHandler
+
+include::tracing-handler.adoc[leveloffset=+1]
+
 == Configuring
 
 include::tracing-configuring.adoc[leveloffset=+1]
