@@ -53,8 +53,10 @@ export default function DocRoot() {
             </li>
 
             <li><NavLink className="doc-section" to="/docs/registry/dynatrace">Dynatrace</NavLink>. Dynatrace
-              is a dimensional time-series SAAS with built-in dashboarding. Micrometer supports shipping
-              metrics to Dynatrace directly via its API.
+              is a Software Intelligence Platform featuring application performance monitoring (APM), artificial
+              intelligence for operations (AIOps), IT infrastructure monitoring, digital experience management (DEM),
+              and digital business analytics capabilities. Micrometer supports shipping metrics to Dynatrace directly
+              via its API.
             </li>
 
             <li><NavLink className="doc-section" to="/docs/registry/elastic">Elastic</NavLink>. Elasticsearch is an
