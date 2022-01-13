@@ -1,7 +1,7 @@
 == Handler Configuration
 
 For Micrometer Tracing to work with Micrometer, you need to add a tracing related `TimerRecordingHandler`.
-Check the example below for an example of adding and using a single, `DefaultTracingRecordingHandler`.
+Check the example below for an example of adding and using a single `DefaultTracingRecordingHandler`.
 
 [source,java,subs=+attributes]
 -----
@@ -65,6 +65,6 @@ image::img/zipkin.jpg[Trace Info propagation]
 === Ordered Handler Configuration
 
 Micrometer Tracing comes with multiple `TimerRecordingHandler` implementations.
-To introduce ordering, you can use the `TimerRecordingHandler.AllMatchingCompositeTimerRecordingHandler` to run logic for all `RecordingHandler` that are matching the given predicate and `TimerRecordingHandler.FirstMatchingCompositeTimerRecordingHandler` to run logic only for the first `TimerRecordingHandler` that matches the predicate.
-The former can group or handlers and the latter can be chosen to e.g. run only one matching `TracingRecordingHandler`.
+To introduce ordering, you can use the `TimerRecordingHandler.AllMatchingCompositeTimerRecordingHandler` to run logic for all ``TimerRecordingHandler``s that are matching the given predicate and `TimerRecordingHandler.FirstMatchingCompositeTimerRecordingHandler` to run logic only for the first `TimerRecordingHandler` that matches the predicate.
+The former can be chosen to e.g. run group of handlers and the latter can be chosen to e.g. run only one matching `TracingRecordingHandler`.
 

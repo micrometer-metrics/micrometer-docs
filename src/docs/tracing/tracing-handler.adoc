@@ -1,6 +1,6 @@
 Micrometer supports measuring the latency and the frequency of events with its link:concepts#_timers[`Timer`] concept.
 
-A popular way to record them is storing the start state in a `Timer.Sample` instance and stop it when the even has ended. In this case, the sample does the recording and reports the data through the `Timer`. +
+A popular way to record them is storing the start state in a `Timer.Sample` instance and stop it when the event has ended. In this case, the sample does the recording and reports the data through the `Timer`. +
 Recording such measurements could look like this:
 
 [source,java]
