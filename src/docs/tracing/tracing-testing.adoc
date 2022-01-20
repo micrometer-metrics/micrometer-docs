@@ -1,4 +1,7 @@
 Micrometer Tracing comes with a `micrometer-tracing-test` and `micrometer-tracing-integration-test` modules.
+
+For unit tests it provides a `SimpleTracer` that is a test implementation of a `Tracer`.
+
 For the integration tests it provides a `SampleTestRunner` mechanism that you can hook into your samples.
 It will
 
@@ -9,8 +12,6 @@ It will
 ** Set it up with Tanzu Observability by Wavefront Exporter
 ** Set it up with OpenZipkin Zipkin Exporter
 * Run all the combinations above against the user code and running infrastructure
-
-For unit tests it provides a `SimpleTracer` that is a test implementation of a `Tracer`.
 
 == Installing
 
@@ -38,7 +39,89 @@ The following example shows the required dependency in Maven (assuming that Micr
 </dependency>
 ----
 
-== Running
+== Running unit tests
+
+To run unit tests of your custom handler you may want to use the `SimpleTracer` test `Tracer` implementation. Let's assume the following custom `TracingRecordingHandler`.
+
+[source,java,subs=+attributes]
+-----
+public class MyTracingRecordingHandler implements TracingRecordingHandler<MyCustomHandlerContext> {
+
+	private final Tracer tracer;
+
+	private boolean setRemoteIpAndPortEnabled;
+
+	public MongoTracingRecordingHandler(Tracer tracer) {
+		this.tracer = tracer;
+	}
+
+	@Override public Tracer getTracer() {
+		return this.tracer;
+	}
+
+	@Override public void onStart(Timer.Sample sample, MyCustomHandlerContext context) {
+		String databaseName = context.getDatabaseName();
+		Span.Builder builder = this.tracer.spanBuilder().kind(Span.Kind.CLIENT)
+				.remoteServiceName(databaseName);
+		getTracingContext(context).setSpan(builder.start());
+	}
+
+	@Override public void onError(Timer.Sample sample, MyCustomHandlerContext context, Throwable throwable) {
+		getTracingContext(context).getSpan().error(throwable);
+	}
+
+	@Override public void onStop(Timer.Sample sample, MyCustomHandlerContext context, Timer timer, Duration duration) {
+		TracingContext tracingContext = getTracingContext(context);
+		Span span = tracingContext.getSpan();
+		span.name(context.getContextualName());
+		tagSpan(context, timer.getId(), span);
+		span.end();
+	}
+
+	@Override public boolean supportsContext(Timer.HandlerContext context) {
+		return context instanceof MyCustomHandlerContext;
+	}
+}
+-----
+
+To verify whether the spans got properly created we can use the `SimpleTracer` as follows:
+
+[source,java,subs=+attributes]
+-----
+class SomeComponentThatIsUsingMyTracingRecordingHandlerTests {
+
+	MeterRegistry registry = new SimpleMeterRegistry();
+	
+	SomeComponent someComponent = new SomeComponent(registry);
+
+	SimpleTracer simpleTracer = new SimpleTracer();
+
+	MyTracingRecordingHandler handler = new MyTracingRecordingHandler(simpleTracer);
+
+	@BeforeEach
+	void setup() {
+		registry.config().timerRecordingHandler(handler);
+	}
+
+	@Test 
+	void should_store_a_span() {
+		someComponent.doSthThatShouldCreateSpans();
+
+		SimpleSpan simpleSpan = simpleTracer.onlySpan();
+		assertThat(simpleSpan.getName()).isEqualTo("some name");
+		assertThat(simpleSpan.getSpanKind()).isEqualTo(Span.Kind.CLIENT);
+		assertThat(simpleSpan.getRemoteServiceName()).isEqualTo("database");
+		assertThat(simpleSpan.getTags())
+				.containsEntry("key", "value")
+				.containsKey("another key");
+		assertThat(span.getIp()).isNotNull();
+		assertThat(span.getPort()).isPositive();
+	}
+
+}
+-----
+
+== Running integration tests
 
 The following example shows how you can run your code to test against running Tanzu Observability by Wavefront instance and Zipkin.
 
