@@ -1,5 +1,5 @@
-Micrometer Tracing comes with a `micrometer-tracing-test` module.
-It provides a `SampleTestRunner` mechanism that you can hook into your samples.
+Micrometer Tracing comes with a `micrometer-tracing-test` and `micrometer-tracing-integration-test` modules.
+For the integration tests it provides a `SampleTestRunner` mechanism that you can hook into your samples.
 It will
 
 * Configure a OpenZipkin Brave Tracer
@@ -10,13 +10,16 @@ It will
 ** Set it up with OpenZipkin Zipkin Exporter
 * Run all the combinations above against the user code and running infrastructure
 
+For unit tests it provides a `SimpleTracer` that is a test implementation of a `Tracer`.
+
 == Installing
 
 The following example shows the required dependency in Gradle (assuming that Micrometer Tracing BOM has been added):
 
 [source,groovy,subs=+attributes]
 ----
-implementation 'io.micrometer:micrometer-tracing-test'
+testImplementation 'io.micrometer:micrometer-tracing-test' // for unit tests
+testImplementation 'io.micrometer:micrometer-tracing-integration-test' // for integration tests
 ----
 
 The following example shows the required dependency in Maven (assuming that Micrometer Tracing BOM has been added):
@@ -25,7 +28,13 @@ The following example shows the required dependency in Maven (assuming that Micr
 ----
 <dependency>
   <groupId>io.micrometer</groupId>
-  <artifactId>micrometer-tracing-test</artifactId>
+  <artifactId>micrometer-tracing-test</artifactId> <!-- For unit tests -->
+  <scope>test</scope>
+</dependency>
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-tracing-integration-test</artifactId> <!-- For integration tests -->
+  <scope>test</scope>
 </dependency>
 ----
 
@@ -47,7 +56,18 @@ class TestTest extends SampleTestRunner {
 				.zipkinUrl("...") // defaults to localhost:9411
 				.build());
 	}
+	
+	// Here you can add your own custom handlers in the desired order
+	@Override
+	public BiConsumer<BuildingBlocks, LinkedList<TimerRecordingHandler>> customizeTimerRecordingHandlers() {
+		return (bb, timerRecordingHandlers) -> {
+			timerRecordingHandlers.add(timerRecordingHandlers.size() - 1, new ReactorNettyTracingRecordingHandler(bb.getTracer()));
+			timerRecordingHandlers.addFirst(new ReactorNettyHttpClientTracingRecordingHandler(bb.getTracer(), bb.getHttpClientHandler()));
+			timerRecordingHandlers.addFirst(new ReactorNettyHttpServerTracingRecordingHandler(bb.getTracer(), bb.getHttpServerHandler()));
+		};
+	}
 
+	// Here you can pass the code you want to run the instrumentation against
 	@Override
 	public BiConsumer<Tracer, MeterRegistry> yourCode() {
 		// example for testing Reactor Netty
