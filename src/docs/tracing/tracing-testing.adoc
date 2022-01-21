@@ -107,15 +107,19 @@ class SomeComponentThatIsUsingMyTracingRecordingHandlerTests {
 	void should_store_a_span() {
 		someComponent.doSthThatShouldCreateSpans();
 
-		SimpleSpan simpleSpan = simpleTracer.onlySpan();
-		assertThat(simpleSpan.getName()).isEqualTo("some name");
-		assertThat(simpleSpan.getSpanKind()).isEqualTo(Span.Kind.CLIENT);
-		assertThat(simpleSpan.getRemoteServiceName()).isEqualTo("database");
-		assertThat(simpleSpan.getTags())
-				.containsEntry("key", "value")
-				.containsKey("another key");
-		assertThat(span.getIp()).isNotNull();
-		assertThat(span.getPort()).isPositive();
+		TracerAssert.assertThat(simpleTracer)
+				.onlySpan()
+					.hasNameEqualTo("insert user")
+					.hasSpanWithKindEqualTo(Span.Kind.CLIENT)
+					.hasRemoteServiceNameEqualTo("mongodb-database")
+					.hasTag("mongodb.command", "insert")
+					.hasTag("mongodb.collection", "user")
+					.hasTagWithKey("mongodb.cluster_id")
+					.assertThatThrowable()
+						.isInstanceOf(IllegalAccessException.class)
+						.backToSpan()
+					.hasIpThatIsBlank()
+					.hasPortThatIsNotSet();
 	}
 
 }
