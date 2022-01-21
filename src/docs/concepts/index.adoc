@@ -10,7 +10,7 @@ Micrometer is a metrics instrumentation library for JVM-based applications. It p
 
 Micrometer is _not_ a distributed tracing system or an event logger. In Micrometer 2.0, we do however provide a plugin mechanism that allows you to add capabilities including the tracing features. You can read more about this in the link:../docs/tracing[Micrometer Tracing documentation].
 
-For better understanding the differences between these different types of systems (Metrics, Distributed Tracing, and Logging) we recommend Adrian Cole's talk, titled https://www.dotconferences.com/2017/04/adrian-cole-observability-3-ways-logging-metrics-tracing[Observability
+For better understanding the differences among these different types of systems (Metrics, Distributed Tracing, and Logging) we recommend Adrian Cole's talk, titled https://www.dotconferences.com/2017/04/adrian-cole-observability-3-ways-logging-metrics-tracing[Observability
 3 Ways].
 
 == Supported Monitoring Systems

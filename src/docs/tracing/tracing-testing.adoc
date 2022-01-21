@@ -1,4 +1,4 @@
-Micrometer Tracing comes with a `micrometer-tracing-test` and `micrometer-tracing-integration-test` modules.
+Micrometer Tracing comes with `micrometer-tracing-test` and `micrometer-tracing-integration-test` modules.
 
 For unit tests it provides a `SimpleTracer` that is a test implementation of a `Tracer`.
 
@@ -49,9 +49,7 @@ public class MyTracingRecordingHandler implements TracingRecordingHandler<MyCust
 
 	private final Tracer tracer;
 
-	private boolean setRemoteIpAndPortEnabled;
-
-	public MongoTracingRecordingHandler(Tracer tracer) {
+	public MyTracingRecordingHandler(Tracer tracer) {
 		this.tracer = tracer;
 	}
 
@@ -146,7 +144,7 @@ class TestTest extends SampleTestRunner {
 	
 	// Here you can add your own custom handlers in the desired order
 	@Override
-	public BiConsumer<BuildingBlocks, LinkedList<TimerRecordingHandler>> customizeTimerRecordingHandlers() {
+	public BiConsumer<BuildingBlocks, Deque<TimerRecordingHandler>> customizeTimerRecordingHandlers() {
 		return (bb, timerRecordingHandlers) -> {
 			timerRecordingHandlers.add(timerRecordingHandlers.size() - 1, new ReactorNettyTracingRecordingHandler(bb.getTracer()));
 			timerRecordingHandlers.addFirst(new ReactorNettyHttpClientTracingRecordingHandler(bb.getTracer(), bb.getHttpClientHandler()));
