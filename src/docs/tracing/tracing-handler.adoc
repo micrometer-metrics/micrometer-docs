@@ -6,8 +6,11 @@ Recording such measurements could look like this:
 [source,java]
 ----
 Timer.Sample sample = Timer.start(registry);
-// do some work here
-sample.stop(Timer.builder("my.timer"));
+try (Timer.Scope scope = sample.makeCurrent()) {
+  // do some work here
+} finally {
+  sample.stop(Timer.builder("my.timer"));
+}
 ----
 
 One of the new features in Micrometer 2.0 is the ability of registering "handlers" (`TimerRecordingHandler`) that are notified about the lifecycle event of a sample (e.g.: you can run custom code when a sample is stopped/started).
@@ -61,7 +64,12 @@ And instrument your codebase:
 // using a context is optional, you can call start without it: Timer.start(registry)
 Timer.HandlerContext context = new Timer.HandlerContext().put(String.class, "test");
 Timer.Sample sample = Timer.start(registry, context);
-// do some work here
-sample.error(new IOException("simulated")); // and don't forget to handle exceptions
-sample.stop(Timer.builder("sample.timer"));
+try (Timer.Scope scope = sample.makeCurrent()) {
+  // do some work here
+} catch(Exception ex) {
+  sample.error(ex); // and don't forget to handle exceptions
+  throw ex;
+} finally {
+  sample.stop(Timer.builder("sample.timer"));
+}
 ----
