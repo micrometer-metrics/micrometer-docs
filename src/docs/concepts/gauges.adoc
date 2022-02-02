@@ -62,6 +62,31 @@ It is your responsibility to hold a strong reference to the state object that yo
 
 If you see your gauge reporting for a few minutes and then disappearing or reporting NaN, it almost certainly suggests that the underlying object being gauged has been garbage collected.
 
+== `TimeGauge`
+
+`TimeGauge` is a specialized gauge that tracks a time value, to be scaled to the base unit of time expected by each registry implementation.
+
+`TimeGauge` can be registered with `TimeUnit` as follows:
+
+[source, java]
+----
+AtomicInteger msTimeGauge = new AtomicInteger(4000);
+AtomicInteger usTimeGauge = new AtomicInteger(4000);
+TimeGauge.builder("my.gauge", msTimeGauge, TimeUnit.MILLISECONDS, AtomicInteger::get).register(registry);
+TimeGauge.builder("my.other.gauge", usTimeGauge, TimeUnit.MICROSECONDS, AtomicInteger::get).register(registry);
+----
+
+And for example, if the registry is Prometheus, they will be converted in seconds as follows:
+
+```
+# HELP my_gauge_seconds
+# TYPE my_gauge_seconds gauge
+my_gauge_seconds 4.0
+# HELP my_other_gauge_seconds
+# TYPE my_other_gauge_seconds gauge
+my_other_gauge_seconds 0.004
+```
+
 == Multi-gauge
 
 Micrometer supports one last special type of `Gauge`, called a `MultiGauge`, to help manage gauging a growing or shrinking list of criteria.
