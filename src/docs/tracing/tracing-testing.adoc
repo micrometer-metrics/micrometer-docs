@@ -98,7 +98,7 @@ class SomeComponentThatIsUsingMyTracingRecordingHandlerTests {
 
 	@BeforeEach
 	void setup() {
-		registry.config().timerRecordingHandler(handler);
+		registry.config().ObservationHandler(handler);
 	}
 
 	@Test 
@@ -144,11 +144,11 @@ class TestTest extends SampleTestRunner {
 	
 	// Here you can add your own custom handlers in the desired order
 	@Override
-	public BiConsumer<BuildingBlocks, Deque<TimerRecordingHandler>> customizeTimerRecordingHandlers() {
-		return (bb, timerRecordingHandlers) -> {
-			timerRecordingHandlers.add(timerRecordingHandlers.size() - 1, new ReactorNettyTracingRecordingHandler(bb.getTracer()));
-			timerRecordingHandlers.addFirst(new ReactorNettyHttpClientTracingRecordingHandler(bb.getTracer(), bb.getHttpClientHandler()));
-			timerRecordingHandlers.addFirst(new ReactorNettyHttpServerTracingRecordingHandler(bb.getTracer(), bb.getHttpServerHandler()));
+	public BiConsumer<BuildingBlocks, Deque<ObservationHandler>> customizeObservationHandlers() {
+		return (bb, ObservationHandlers) -> {
+			ObservationHandlers.add(ObservationHandlers.size() - 1, new ReactorNettyTracingRecordingHandler(bb.getTracer()));
+			ObservationHandlers.addFirst(new ReactorNettyHttpClientTracingRecordingHandler(bb.getTracer(), bb.getHttpClientHandler()));
+			ObservationHandlers.addFirst(new ReactorNettyHttpServerTracingRecordingHandler(bb.getTracer(), bb.getHttpServerHandler()));
 		};
 	}
 

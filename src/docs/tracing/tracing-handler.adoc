@@ -1,44 +1,43 @@
-Micrometer supports measuring the latency and the frequency of events with its link:concepts#_timers[`Timer`] concept.
-
 A popular way to record them is storing the start state in a `Timer.Sample` instance and stop it when the event has ended. In this case, the sample does the recording and reports the data through the `Timer`. +
 Recording such measurements could look like this:
 
 [source,java]
 ----
-Timer.Sample sample = Timer.start(registry);
-try (Timer.Scope scope = sample.makeCurrent()) {
-  // do some work here
-} finally {
-  sample.stop(Timer.builder("my.timer"));
-}
+    ObservationRegistry registry = new SimpleMeterRegistry();
+    Observation observation = Observation.start("my.operation", registry);
+    try {
+		observation.scoped(() -> doSomeWorkHere());
+    } finally {
+    	observation.stop();
+    }
 ----
 
-One of the new features in Micrometer 2.0 is the ability of registering "handlers" (`TimerRecordingHandler`) that are notified about the lifecycle event of a sample (e.g.: you can run custom code when a sample is stopped/started).
-Using this feature lets you add tracing capabilities to your existing metrics instrumentation (see: `DefaultTracingRecordingHandler`). The implementation of these handlers does not need to be tracing related, it is completely up to you how you are going to implement them (e.g.: you can add logging capabilities) if you want.
+One of the new features in Micrometer 2.0 is the ability of registering "handlers" (`ObservationHandler`) that are notified about the lifecycle event of an observation (e.g.: you can run custom code when an observation is stopped/started).
+Using this feature lets you add tracing capabilities to your existing metrics instrumentation (see: `DefaultTracingObservationHandler`). The implementation of these handlers does not need to be tracing related, it is completely up to you how you are going to implement them (e.g.: you can add logging capabilities) if you want.
 
-=== HandlerContext
+=== Observation.Context
 
-In order to pass information between the instrumented code and the handler (or between handler methods, e.g.: `onStart` and `onStop`), you can utilize a `HandlerContext`. A `HandlerContext` is a `Map`-like container that can store values for you while your handler can access the data inside the context.
+In order to pass information between the instrumented code and the handler (or between handler methods, e.g.: `onStart` and `onStop`), you can utilize a `Observation.Context`. A `Observation.Context` is a `Map`-like container that can store values for you while your handler can access the data inside the context.
 
-=== TimerRecordingHandler Example
+=== ObservationHandler Example
 
 Based on this, we can implement a simple handler that lets the users know about its invocations by printing them out to `stdout`.
 
 [source,java]
 ----
-class SimpleHandler implements TimerRecordingHandler<Timer.HandlerContext> {
+class SimpleHandler implements ObservationHandler<Observation.Context> {
     @Override
-    public void onStart(Timer.Sample sample, Timer.HandlerContext context) {
+    public void onStart(Observation.Context context) {
         System.out.println("START " + "data: " + context.get(String.class));
     }
 
     @Override
-    public void onError(Timer.Sample sample, Timer.HandlerContext context, Throwable throwable) {
-        System.out.println("ERROR " + "data: " + context.get(String.class) + ", error: " + throwable);
+    public void onError(Observation.Context context) {
+        System.out.println("ERROR " + "data: " + context.get(String.class) + ", error: " + context.getError().get());
     }
 
     @Override
-    public void onStop(Timer.Sample sample, Timer.HandlerContext context, Timer timer, Duration duration) {
+    public void onStop(Observation.Context context) {
         System.out.println("STOP  " + "data: " + context.get(String.class));
     }
 
@@ -53,23 +52,40 @@ You can register this handler like this:
 
 [source,java]
 ----
-SimpleMeterRegistry registry = new SimpleMeterRegistry();
-registry.config().timerRecordingHandler(new SimpleHandler());
+ObservationRegistry registry = new SimpleMeterRegistry();
+registry.observationConfig().observationHandler(new SimpleHandler());
 ----
 
-And instrument your codebase:
+And instrument your codebase. Using the `scoped` method example:
 
 [source,java]
 ----
-// using a context is optional, you can call start without it: Timer.start(registry)
-Timer.HandlerContext context = new Timer.HandlerContext().put(String.class, "test");
-Timer.Sample sample = Timer.start(registry, context);
-try (Timer.Scope scope = sample.makeCurrent()) {
-  // do some work here
-} catch(Exception ex) {
+// using a context is optional, you can call start without it: Observation.start(name, registry)
+ObservationRegistry registry = new SimpleMeterRegistry();
+Observation.Context context = new Observation.Context().put(String.class, "test");
+Observation observation = Observation.start("my.operation", context, registry);
+try {
+    observation.scoped(() -> doSomeWorkHere());
+} finally {
+    observation.stop();
+}
+----
+
+Fully taking control of the scoping mechanism.
+
+[source,java]
+----
+// using a context is optional, you can call start without it: Observation.start(name, registry)
+ObservationRegistry registry = new SimpleMeterRegistry();
+Observation.Context context = new Observation.Context().put(String.class, "test");
+Observation observation = Observation.start("my.operation", context, registry);
+try (Observation.Scope scope = observation.openScope()) {
+  doSomeWorkHere();
+} observation(Exception ex) {
   sample.error(ex); // and don't forget to handle exceptions
   throw ex;
 } finally {
-  sample.stop(Timer.builder("sample.timer"));
+  observation.stop();
 }
 ----
+
