@@ -88,7 +88,7 @@ To verify whether the spans got properly created we can use the `SimpleTracer` a
 -----
 class SomeComponentThatIsUsingMyTracingRecordingHandlerTests {
 
-	MeterRegistry registry = new SimpleMeterRegistry();
+	ObservationRegistry registry = new SimpleMeterRegistry();
 	
 	SomeComponent someComponent = new SomeComponent(registry);
 
@@ -98,12 +98,12 @@ class SomeComponentThatIsUsingMyTracingRecordingHandlerTests {
 
 	@BeforeEach
 	void setup() {
-		registry.config().ObservationHandler(handler);
+		registry.config().observationHandler(handler);
 	}
 
 	@Test 
 	void should_store_a_span() {
-		someComponent.doSthThatShouldCreateSpans();
+		someComponent.doSthThatShouldCreateSpans(); // this code will call actual Observation API
 
 		TracerAssert.assertThat(simpleTracer)
 				.onlySpan()
