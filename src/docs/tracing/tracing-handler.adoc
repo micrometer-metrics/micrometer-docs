@@ -1,15 +1,16 @@
-A popular way to record them is storing the start state in a `Timer.Sample` instance and stop it when the event has ended. In this case, the sample does the recording and reports the data through the `Timer`. +
+A popular way to record them is storing the start state in a `Observation` instance and stop it when the event has ended. In this case, the `Observation` does the recording and reports the data through the `ObservationHandler`s. +
 Recording such measurements could look like this:
 
 [source,java]
 ----
-    ObservationRegistry registry = new SimpleMeterRegistry();
-    Observation observation = Observation.start("my.operation", registry);
-    try {
-		observation.scoped(() -> doSomeWorkHere());
-    } finally {
-    	observation.stop();
-    }
+ObservationRegistry registry = new SimpleMeterRegistry();
+Observation observation = Observation.start("my.operation", registry);
+try (Observation.Scope scope = observation.openScope()) {
+    doSomeWorkHere();
+}
+finally {
+    observation.stop();
+}
 ----
 
 One of the new features in Micrometer 2.0 is the ability of registering "handlers" (`ObservationHandler`) that are notified about the lifecycle event of an observation (e.g.: you can run custom code when an observation is stopped/started).
@@ -64,9 +65,10 @@ And instrument your codebase. Using the `scoped` method example:
 ObservationRegistry registry = new SimpleMeterRegistry();
 Observation.Context context = new Observation.Context().put(String.class, "test");
 Observation observation = Observation.start("my.operation", context, registry);
-try {
-    observation.scoped(() -> doSomeWorkHere());
-} finally {
+try (Observation.Scope scope = observation.openScope()) {
+    doSomeWorkHere();
+}
+finally {
     observation.stop();
 }
 ----
@@ -80,12 +82,13 @@ ObservationRegistry registry = new SimpleMeterRegistry();
 Observation.Context context = new Observation.Context().put(String.class, "test");
 Observation observation = Observation.start("my.operation", context, registry);
 try (Observation.Scope scope = observation.openScope()) {
-  doSomeWorkHere();
-} observation(Exception ex) {
-  sample.error(ex); // and don't forget to handle exceptions
-  throw ex;
-} finally {
-  observation.stop();
+    doSomeWorkHere();
+}
+catch (Exception ex) {
+    sample.error(ex); // and don't forget to handle exceptions
+    throw ex;
+}
+finally {
+    observation.stop();
 }
 ----
-

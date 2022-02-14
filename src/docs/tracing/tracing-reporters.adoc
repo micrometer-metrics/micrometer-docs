@@ -31,8 +31,8 @@ The following example shows the required dependency in Maven (assuming that Micr
 [source,xml,subs=+attributes]
 ----
 <dependency>
-  <groupId>io.micrometer</groupId>
-  <artifactId>micrometer-tracing-reporter-wavefront</artifactId>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-tracing-reporter-wavefront</artifactId>
 </dependency>
 ----
 
@@ -40,8 +40,8 @@ The following example shows the required dependency in Maven (assuming that Micr
 [source,xml,subs=+attributes]
 ----
 <dependency>
-  <groupId>io.zipkin.reporter2</groupId>
-  <artifactId>zipkin-reporter-brave</artifactId>
+    <groupId>io.zipkin.reporter2</groupId>
+    <artifactId>zipkin-reporter-brave</artifactId>
 </dependency>
 ----
 
@@ -49,7 +49,7 @@ The following example shows the required dependency in Maven (assuming that Micr
 [source,xml,subs=+attributes]
 ----
 <dependency>
-  <groupId>io.opentelemetry</groupId>
-  <artifactId>opentelemetry-exporter-zipkin</artifactId>
+    <groupId>io.opentelemetry</groupId>
+    <artifactId>opentelemetry-exporter-zipkin</artifactId>
 </dependency>
 ----

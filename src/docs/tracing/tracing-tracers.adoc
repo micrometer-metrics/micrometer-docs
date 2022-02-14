@@ -25,8 +25,8 @@ The following example shows the required dependency in Maven (assuming that Micr
 [source,xml,subs=+attributes]
 ----
 <dependency>
-  <groupId>io.micrometer</groupId>
-  <artifactId>micrometer-tracing-bridge-brave</artifactId>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-tracing-bridge-brave</artifactId>
 </dependency>
 ----
 
@@ -34,8 +34,8 @@ The following example shows the required dependency in Maven (assuming that Micr
 [source,xml,subs=+attributes]
 ----
 <dependency>
-  <groupId>io.micrometer</groupId>
-  <artifactId>micrometer-tracing-bridge-otel</artifactId>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-tracing-bridge-otel</artifactId>
 </dependency>
 ----
 

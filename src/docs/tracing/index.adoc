@@ -29,20 +29,20 @@ The following example shows the required dependency in Maven:
 ----
 <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>io.micrometer</groupId>
-        <artifactId>micrometer-tracing-bom</artifactId>
-        <version>${micrometer-tracing.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bom</artifactId>
+            <version>${micrometer-tracing.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
     </dependencies>
-  </dependencyManagement>
+</dependencyManagement>
 
 <dependencies>
     <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-tracing</artifactId>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-tracing</artifactId>
     </dependency>
 </dependencies>
 ----

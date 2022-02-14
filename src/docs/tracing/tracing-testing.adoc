@@ -28,57 +28,52 @@ The following example shows the required dependency in Maven (assuming that Micr
 [source,xml,subs=+attributes]
 ----
 <dependency>
-  <groupId>io.micrometer</groupId>
-  <artifactId>micrometer-tracing-test</artifactId> <!-- For unit tests -->
-  <scope>test</scope>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-tracing-test</artifactId> <!-- For unit tests -->
+    <scope>test</scope>
 </dependency>
 <dependency>
-  <groupId>io.micrometer</groupId>
-  <artifactId>micrometer-tracing-integration-test</artifactId> <!-- For integration tests -->
-  <scope>test</scope>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-tracing-integration-test</artifactId> <!-- For integration tests -->
+    <scope>test</scope>
 </dependency>
 ----
 
 == Running unit tests
 
-To run unit tests of your custom handler you may want to use the `SimpleTracer` test `Tracer` implementation. Let's assume the following custom `TracingRecordingHandler`.
+To run unit tests of your custom handler you may want to use the `SimpleTracer` test `Tracer` implementation. Let's assume the following custom `ObservationHandler`.
 
 [source,java,subs=+attributes]
 -----
-public class MyTracingRecordingHandler implements TracingRecordingHandler<MyCustomHandlerContext> {
+public class MyObservationHandler implements ObservationHandler<CustomContext> {
+    private final Tracer tracer;
 
-	private final Tracer tracer;
+    public MyObservationHandler(Tracer tracer) {
+        this.tracer = tracer;
+    }
 
-	public MyTracingRecordingHandler(Tracer tracer) {
-		this.tracer = tracer;
-	}
+    @Override public void onStart(CustomContext context) {
+        String databaseName = context.getDatabaseName();
+        Span.Builder builder = this.tracer.spanBuilder().kind(Span.Kind.CLIENT)
+                .remoteServiceName(databaseName);
+        getTracingContext(context).setSpan(builder.start());
+    }
 
-	@Override public Tracer getTracer() {
-		return this.tracer;
-	}
+    @Override public void onError(CustomContext context) {
+        getTracingContext(context).getSpan().error(context.getError().get());
+    }
 
-	@Override public void onStart(Timer.Sample sample, MyCustomHandlerContext context) {
-		String databaseName = context.getDatabaseName();
-		Span.Builder builder = this.tracer.spanBuilder().kind(Span.Kind.CLIENT)
-				.remoteServiceName(databaseName);
-		getTracingContext(context).setSpan(builder.start());
-	}
+    @Override public void onStop(CustomContext context) {
+        TracingContext tracingContext = getTracingContext(context);
+        Span span = tracingContext.getSpan();
+        span.name(context.getContextualName());
+        tagSpan(context, span);
+        span.end();
+    }
 
-	@Override public void onError(Timer.Sample sample, MyCustomHandlerContext context, Throwable throwable) {
-		getTracingContext(context).getSpan().error(throwable);
-	}
-
-	@Override public void onStop(Timer.Sample sample, MyCustomHandlerContext context, Timer timer, Duration duration) {
-		TracingContext tracingContext = getTracingContext(context);
-		Span span = tracingContext.getSpan();
-		span.name(context.getContextualName());
-		tagSpan(context, timer.getId(), span);
-		span.end();
-	}
-
-	@Override public boolean supportsContext(Timer.HandlerContext context) {
-		return context instanceof MyCustomHandlerContext;
-	}
+    @Override public boolean supportsContext(Observation.Context context) {
+        return context instanceof CustomContext;
+    }
 }
 -----
 
@@ -87,39 +82,34 @@ To verify whether the spans got properly created we can use the `SimpleTracer` a
 [source,java,subs=+attributes]
 -----
 class SomeComponentThatIsUsingMyTracingRecordingHandlerTests {
+    ObservationRegistry registry = new SimpleMeterRegistry();
+    SomeComponent someComponent = new SomeComponent(registry);
+    SimpleTracer simpleTracer = new SimpleTracer();
+    MyObservationHandler handler = new MyObservationHandler(simpleTracer);
 
-	ObservationRegistry registry = new SimpleMeterRegistry();
-	
-	SomeComponent someComponent = new SomeComponent(registry);
+    @BeforeEach
+    void setup() {
+        registry.config().observationHandler(handler);
+    }
 
-	SimpleTracer simpleTracer = new SimpleTracer();
+    @Test
+    void should_store_a_span() {
+        someComponent.doSthThatShouldCreateSpans(); // this code will call actual Observation API
 
-	MyTracingRecordingHandler handler = new MyTracingRecordingHandler(simpleTracer);
-
-	@BeforeEach
-	void setup() {
-		registry.config().observationHandler(handler);
-	}
-
-	@Test 
-	void should_store_a_span() {
-		someComponent.doSthThatShouldCreateSpans(); // this code will call actual Observation API
-
-		TracerAssert.assertThat(simpleTracer)
-				.onlySpan()
-					.hasNameEqualTo("insert user")
-					.hasSpanWithKindEqualTo(Span.Kind.CLIENT)
-					.hasRemoteServiceNameEqualTo("mongodb-database")
-					.hasTag("mongodb.command", "insert")
-					.hasTag("mongodb.collection", "user")
-					.hasTagWithKey("mongodb.cluster_id")
-					.assertThatThrowable()
-						.isInstanceOf(IllegalAccessException.class)
-						.backToSpan()
-					.hasIpThatIsBlank()
-					.hasPortThatIsNotSet();
-	}
-
+        TracerAssert.assertThat(simpleTracer)
+                .onlySpan()
+                    .hasNameEqualTo("insert user")
+                    .hasSpanWithKindEqualTo(Span.Kind.CLIENT)
+                    .hasRemoteServiceNameEqualTo("mongodb-database")
+                    .hasTag("mongodb.command", "insert")
+                    .hasTag("mongodb.collection", "user")
+                    .hasTagWithKey("mongodb.cluster_id")
+                    .assertThatThrowable()
+                        .isInstanceOf(IllegalAccessException.class)
+                        .backToSpan()
+                    .hasIpThatIsBlank()
+                    .hasPortThatIsNotSet();
+    }
 }
 -----
 
@@ -131,44 +121,44 @@ The following example shows how you can run your code to test against running Ta
 -----
 class TestTest extends SampleTestRunner {
 
-	TestTest() {
-		super(SamplerRunnerConfig
-				.builder()
-				.wavefrontApplicationName("my-app")
-				.wavefrontServiceName("my-service")
-				.wavefrontToken("...")
-				.wavefrontUrl("...")
-				.zipkinUrl("...") // defaults to localhost:9411
-				.build());
-	}
-	
-	// Here you can add your own custom handlers in the desired order
-	@Override
-	public BiConsumer<BuildingBlocks, Deque<ObservationHandler>> customizeObservationHandlers() {
-		return (bb, ObservationHandlers) -> {
-			ObservationHandlers.add(ObservationHandlers.size() - 1, new ReactorNettyTracingRecordingHandler(bb.getTracer()));
-			ObservationHandlers.addFirst(new ReactorNettyHttpClientTracingRecordingHandler(bb.getTracer(), bb.getHttpClientHandler()));
-			ObservationHandlers.addFirst(new ReactorNettyHttpServerTracingRecordingHandler(bb.getTracer(), bb.getHttpServerHandler()));
-		};
-	}
+    TestTest() {
+        super(SamplerRunnerConfig
+                .builder()
+                .wavefrontApplicationName("my-app")
+                .wavefrontServiceName("my-service")
+                .wavefrontToken("...")
+                .wavefrontUrl("...")
+                .zipkinUrl("...") // defaults to localhost:9411
+                .build());
+    }
 
-	// Here you can pass the code you want to run the instrumentation against
-	@Override
-	public BiConsumer<Tracer, MeterRegistry> yourCode() {
-		// example for testing Reactor Netty
-		byte[] bytes = new byte[1024*8];
-		Random rndm = new Random();
-		rndm.nextBytes(bytes);
-		return (tracer, meterRegistry) ->
-				HttpClient.create()
-						.wiretap(true)
-						.metrics(true, Function.identity())
-						.post()
-						.uri("https://httpbin.org/post")
-						.send(ByteBufMono.fromString(Mono.just(new String(bytes))))
-						.responseContent()
-						.aggregate()
-						.block();
-	}
+    // Here you can add your own custom handlers in the desired order
+    @Override
+    public BiConsumer<BuildingBlocks, Deque<ObservationHandler>> customizeObservationHandlers() {
+        return (bb, ObservationHandlers) -> {
+            ObservationHandlers.add(ObservationHandlers.size() - 1, new ReactorNettyTracingRecordingHandler(bb.getTracer()));
+            ObservationHandlers.addFirst(new ReactorNettyHttpClientTracingRecordingHandler(bb.getTracer(), bb.getHttpClientHandler()));
+            ObservationHandlers.addFirst(new ReactorNettyHttpServerTracingRecordingHandler(bb.getTracer(), bb.getHttpServerHandler()));
+        };
+    }
+
+    // Here you can pass the code you want to run the instrumentation against
+    @Override
+    public BiConsumer<Tracer, MeterRegistry> yourCode() {
+        // example for testing Reactor Netty
+        byte[] bytes = new byte[1024*8];
+        Random rndm = new Random();
+        rndm.nextBytes(bytes);
+        return (tracer, meterRegistry) ->
+                HttpClient.create()
+                        .wiretap(true)
+                        .metrics(true, Function.identity())
+                        .post()
+                        .uri("https://httpbin.org/post")
+                        .send(ByteBufMono.fromString(Mono.just(new String(bytes))))
+                        .responseContent()
+                        .aggregate()
+                        .block();
+    }
 }
 -----
