@@ -3,6 +3,18 @@ Recording such measurements could look like this:
 
 [source,java]
 ----
+Timer.Sample sample = Timer.start(registry);
+try {
+// do some work here
+} finally {
+sample.stop(Timer.builder("my.timer"));
+}
+----
+
+If you want to have more observation options (such as metrics and tracing out of the box plus anything else you will plug in) then you'll need to rewrite that code to use the `Observation` API.
+
+[source,java]
+----
 ObservationRegistry registry = new SimpleMeterRegistry();
 Observation observation = Observation.start("my.operation", registry);
 try (Observation.Scope scope = observation.openScope()) {
@@ -92,3 +104,206 @@ finally {
     observation.stop();
 }
 ----
+
+=== Observation.TagsProvider Example
+
+When **instrumenting** code we want to provide sensible defaults for tags but also we want to allow users to easily change those defaults. A `TagsProvider` interface is a description of what tags we should create for an `Observation.Context`. See the full usage example of an instrumentation together with overriding the default tags.
+
+```java
+public class TagsProviderSample {
+
+    public static void main(String[] args) {
+        // Registry setup
+        ObservationRegistry observationRegistry = new SimpleMeterRegistry()
+                // add metrics
+                .withTimerObservationHandler();
+        observationRegistry
+                .observationConfig()
+                    // this will be applied to all observations
+                    .tagsProvider(new GlobalTagsProvider());
+
+        TaxCalculator taxCalculator = new TaxCalculator(observationRegistry);
+        // you can use a setter to override the default tags provider
+        taxCalculator.setTagsProvider(new CustomTaxTagsProvider());
+        // run the logic you want to observe
+        taxCalculator.calculateTax("INCOME_TAX", "1234567890");
+    }
+
+}
+
+class TaxContext extends Observation.Context {
+    private final String taxType;
+
+    private final String userId;
+
+    TaxContext(String taxType, String userId) {
+        this.taxType = taxType;
+        this.userId = userId;
+    }
+
+    public String getTaxType() {
+        return taxType;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+}
+
+// When registered via the `ObservationRegistry#observationConfig#tagsProvider` will be applied globally
+class GlobalTagsProvider implements Observation.TagsProvider<Observation.Context> {
+
+    @Override
+    public Tags getLowCardinalityTags(Observation.Context context) {
+        return Tags.of(Tag.of("cloud.zone", CloudUtils.getZone()));
+    }
+
+    @Override
+    public Tags getHighCardinalityTags(Observation.Context context) {
+        return Tags.of(Tag.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
+    }
+
+    // this will be applicable for all contexts
+    @Override
+    public boolean supportsContext(Observation.Context context) {
+        return true;
+    }
+}
+
+// Interface for a TagsProvider related to calculating Tax
+interface TaxTagsProvider extends Observation.TagsProvider<TaxContext> {
+    @Override
+    default boolean supportsContext(Observation.Context context) {
+        return context instanceof TaxContext;
+    }
+}
+
+// Default provider of tags related to calculating Tax
+class DefaultTaxTagsProvider implements TaxTagsProvider {
+
+    @Override
+    public Tags getLowCardinalityTags(TaxContext context) {
+        return Tags.of(TaxObservation.TaxLowCardinalityTags.TAX_TYPE.of(context.getTaxType()));
+    }
+
+    @Override
+    public Tags getHighCardinalityTags(TaxContext context) {
+        return Tags.of(TaxObservation.TaxHighCardinalityTags.USER_ID.of(context.getUserId()));
+    }
+}
+
+/**
+ * If micrometer-docs-generator is used, we will automatically
+ * generate documentation for your observations.
+ * Check this URL https://github.com/micrometer-metrics/micrometer-docs-generator#documentation for setup example and read the DocumentedObservation javadocs.
+ */
+enum TaxObservation implements DocumentedObservation {
+    CALCULATE {
+        @Override
+        public String getName() {
+            return "tax.calculate";
+        }
+
+        @Override
+        public String getContextualName() {
+            return "calculate tax";
+        }
+
+        @Override
+        public String getPrefix() {
+            return "tax";
+        }
+
+        @Override
+        public TagKey[] getLowCardinalityTagKeys() {
+            return TaxLowCardinalityTags.values();
+        }
+
+        @Override
+        public TagKey[] getHighCardinalityTagKeys() {
+            return TaxHighCardinalityTags.values();
+        }
+    };
+
+    enum TaxLowCardinalityTags implements TagKey {
+        TAX_TYPE {
+            @Override
+            public String getKey() {
+                return "tax.type";
+            }
+        }
+    }
+
+    enum TaxHighCardinalityTags implements TagKey {
+        USER_ID {
+            @Override
+            public String getKey() {
+                return "tax.user.id";
+            }
+        }
+    }
+}
+
+// Class that we want to observe
+class TaxCalculator implements Observation.TagsProviderAware<TaxTagsProvider> {
+
+    private final ObservationRegistry observationRegistry;
+
+    private TaxTagsProvider tagsProvider = new DefaultTaxTagsProvider();
+
+    TaxCalculator(ObservationRegistry observationRegistry) {
+        this.observationRegistry = observationRegistry;
+    }
+
+    public void calculateTax(String taxType, String userId) {
+        // Create a new context
+        TaxContext taxContext = new TaxContext(taxType, userId);
+        // Create a new observation
+        Observation observation = TaxObservation.CALCULATE.start(this.observationRegistry, taxContext)
+                // Remember to add a tags provider
+                .tagsProvider(this.tagsProvider)
+                // Example of setting a fixed contextual name
+                .contextualName(TaxObservation.CALCULATE.getContextualName());
+        // Run the actual logic you want to observe
+        observation.scoped(this::calculateInterest);
+        // Remember to stop the observation when you're done
+        observation.stop();
+    }
+
+    private void calculateInterest() {
+        // do some work
+    }
+
+    // Use this if you want to override the defaults
+    @Override
+    public void setTagsProvider(TaxTagsProvider tagsProvider) {
+        this.tagsProvider = tagsProvider;
+    }
+}
+
+// Example of user changing the default behaviour
+class CustomTaxTagsProvider extends DefaultTaxTagsProvider {
+    @Override
+    public Tags getLowCardinalityTags(TaxContext context) {
+        return super.getLowCardinalityTags(context).and(Tag.of("additional.low.cardinality.tag", "value"));
+    }
+
+    @Override
+    public Tags getHighCardinalityTags(TaxContext context) {
+        return Tags.of("this.would.override.the.default.high.cardinality.tags", "value");
+    }
+}
+
+class CloudUtils {
+
+    static String getZone() {
+        return "...";
+    }
+
+    static String getCloudInstanceId() {
+        return "...";
+    }
+}
+```
+
+

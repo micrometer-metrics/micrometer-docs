@@ -20,7 +20,7 @@ The following example shows the required dependency in Gradle:
 [source,groovy,subs=+attributes]
 ----
 implementation platform('io.micrometer:micrometer-tracing-bom:latest.release')
-implementation 'io.micrometer:micrometer-tracing'
+implementation 'io.micrometer:micrometer-tracing-api'
 ----
 
 The following example shows the required dependency in Maven:
@@ -41,14 +41,14 @@ The following example shows the required dependency in Maven:
 
 <dependencies>
     <dependency>
-        <groupId>io.micrometer</groupId>
-        <artifactId>micrometer-tracing</artifactId>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-tracing-api</artifactId>
     </dependency>
 </dependencies>
 ----
 
 You should add a tracing bridge you want to use, such as `micrometer-tracing-bridge-brave` or `micrometer-tracing-bridge-otel` and span exporters / reporters.
-In case of adding a bridge the `micrometer-tracing` library is added transitively.
+In case of adding a bridge the `micrometer-tracing-api` library is added transitively.
 
 == Glossary
 
