@@ -13,8 +13,10 @@ Check the example below for an example of adding and using a single, `DefaultTra
 // or have it injected by a DI framework.
 
 // We set up a handler that creates timers - it comes from Micrometer
-MeterRegistry registry = new SimpleMeterRegistry().withTimerObservationHandler();
+ObservationRegistry registry = ObservationRegistry.create();
 registry.observationConfig()
+    // assuming that micrometer-core is on the classpath
+    .observationHandler(new TimerObservationHandler())
     // we set up a handler that creates spans - it comes from Micrometer Tracing
     .observationHandler(new DefaultTracingObservationHandler(tracer));
 
@@ -38,6 +40,17 @@ finally {
     // The corresponding Span will be stopped and reported to an external system
     observation.stop();
 }
+-----
+
+You can also use a shorter version to perform measurements via the `observe` method.
+
+[source,java,subs=+attributes]
+-----
+Observation.createNotStarted("my.operation", meterRegistry)
+    .contextualName("This name is more readable - we can reuse it for e.g. spans")
+    .lowCardinalityTag("this.tag", "will end up as a meter tag and a span tag")
+    .highCardinalityTag("but.this.tag", "will end up as a span tag only")
+    .observe(() -> yourCodeToMeasure());
 -----
 
 This will result in the following Micrometer Metrics:

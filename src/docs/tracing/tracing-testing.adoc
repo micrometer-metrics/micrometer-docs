@@ -39,6 +39,55 @@ The following example shows the required dependency in Maven (assuming that Micr
 </dependency>
 ----
 
+== Running Observation Unit Tests
+
+In your instrumentation code you will depend on `io.micrometer:micrometer-observation` module only. To run unit tests of `Observation`s, you should just use `io.micrometer:micrometer-observation-test`.
+
+Let's say that you have the following production code. It will create an observation with 2 tags (low and high) and then call `observe` that will start the observation, put it in scope, close the scope and stop the observation.
+
+[source,java,subs=+attributes]
+----
+class Example {
+
+    private final ObservationRegistry registry;
+
+    Example(ObservationRegistry registry) {
+        this.registry = registry;
+    }
+
+    void run() {
+        Observation.createNotStarted("foo", registry)
+                .lowCardinalityTag("lowTag", "lowTagValue")
+                .highCardinalityTag("highTag", "highTagValue")
+                .observe(() -> System.out.println("Hello"));
+    }
+}
+----
+
+To unit test this code you can use the `TestObservationRegistry` class.
+
+[source,java,subs=+attributes]
+----
+    // create a test registry in your tests
+    TestObservationRegistry registry = TestObservationRegistry.create();
+
+    @Test
+    void should_assert_your_observation() {
+        // run your production code with the TestObservationRegistry
+        new Example(registry).run();
+
+        // check your observation
+        TestObservationRegistryAssert.assertThat(registry)
+                .thenObservationWithNameEqualTo("foo")
+                    .hasHighCardinalityTag("highTag", "highTagValue")
+                    .hasLowCardinalityTag("lowTag", "lowTagValue")
+                    .isStarted()
+                    .isStopped()
+                .backToTestObservationRegistry()
+                    .doesNotHaveRemainingObservation();
+    }
+----
+
 == Running Tracing Unit Tests
 
 To run unit tests of your custom handler you may want to use the `SimpleTracer` test `Tracer` implementation. Let's assume the following custom `TracingObservationHandler`.
@@ -65,8 +114,7 @@ public class MyTracingObservationHandler implements TracingObservationHandler<My
     }
 
     @Override public void onStop(CustomContext context) {
-        TracingContext tracingContext = getTracingContext(context);
-        Span span = tracingContext.getSpan();
+        Span span = getRequiredSpan(context);
         span.name(context.getContextualName());
         tagSpan(context, span);
         span.end();
@@ -84,7 +132,7 @@ To verify whether the spans got properly created we can use the `SimpleTracer` a
 -----
 class SomeComponentThatIsUsingMyTracingObservationHandlerTests {
 
-	ObservationRegistry registry = new SimpleMeterRegistry();
+	ObservationRegistry registry = ObservationRegistry.create();
 
 	SomeComponent someComponent = new SomeComponent(registry);
 
@@ -143,12 +191,12 @@ class ObservabilitySmokeTest extends SampleTestRunner {
 
 	@Override
 	public BiConsumer<BuildingBlocks, Deque<ObservationHandler>> customizeObservationHandlers() {
-		return (bb, timerObservationHandlers) -> {
-			ObservationHandler defaultHandler = timerObservationHandlers.removeLast();
-			timerObservationHandlers.addLast(new ReactorNettyTracingObservationHandler(bb.getTracer()));
-			timerObservationHandlers.addLast(defaultHandler);
-			timerObservationHandlers.addFirst(new ReactorNettyHttpClientTracingObservationHandler(bb.getTracer(), bb.getHttpClientHandler()));
-			timerObservationHandlers.addFirst(new ReactorNettyHttpServerTracingObservationHandler(bb.getTracer(), bb.getHttpServerHandler()));
+		return (bb, handlers) -> {
+			ObservationHandler defaultHandler = handlers.removeLast();
+			handlers.addLast(new ReactorNettyTracingObservationHandler(bb.getTracer()));
+			handlers.addLast(defaultHandler);
+			handlers.addFirst(new ReactorNettyHttpClientTracingObservationHandler(bb.getTracer(), bb.getHttpClientHandler()));
+			handlers.addFirst(new ReactorNettyHttpServerTracingObservationHandler(bb.getTracer(), bb.getHttpServerHandler()));
 		};
 	}
 
