@@ -78,13 +78,12 @@ To unit test this code you can use the `TestObservationRegistry` class.
 
         // check your observation
         TestObservationRegistryAssert.assertThat(registry)
-                .thenObservationWithNameEqualTo("foo")
+                .doesNotHaveAnyRemainingCurrentObservation()
+                .hasObservationWithNameEqualTo("foo").that()
                     .hasHighCardinalityTag("highTag", "highTagValue")
                     .hasLowCardinalityTag("lowTag", "lowTagValue")
-                    .isStarted()
-                    .isStopped()
-                .backToTestObservationRegistry()
-                    .doesNotHaveRemainingObservation();
+                    .hasBeenStarted()
+                    .hasBeenStopped();
     }
 ----
 
