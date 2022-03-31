@@ -20,7 +20,7 @@ ResourceConfig resourceConfig = new ResourceConfig();
 resourceConfig.register(new MetricsApplicationEventListener(
                 registry,
                 new DefaultJerseyTagsProvider(),
-                "jersey",
+                "http.server.requests",
                 true));
 ServletContainer servletContainer = new ServletContainer(resourceConfig);
 ----
