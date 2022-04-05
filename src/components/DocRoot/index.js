@@ -148,6 +148,8 @@ export default function DocRoot() {
             </li>
             <li><NavLink className="doc-section" to="/docs/ref/okhttpclient">OkHttpClient</NavLink>. Instrumentation for OkHttpClient.
             </li>
+            <li><NavLink className="doc-section" to="/docs/ref/jetty">Jetty and Jersey</NavLink>. Instrumentation for Jetty and Jersey.
+            </li>
           </ul>
         </li>
         <li><span className="doc-section">Guides</span>.
