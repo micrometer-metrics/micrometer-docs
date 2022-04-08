@@ -38,6 +38,21 @@ try {
 ----
 <1> The `PrometheusMeterRegistry` has a `scrape()` function that knows how to supply the String data necessary for the scrape. All you have to do is wire it to an endpoint.
 
+You can alternatively use `io.prometheus.client.exporter.HTTPServer` that you can find in `io.prometheus:simpleclient_httpserver`:
+[source,java]
+----
+PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+// you can set the daemon flag to false if you want the server to block
+new HTTPServer(new InetSocketAddress(8080), prometheusRegistry.getPrometheusRegistry(), true);
+----
+
+Another alternative can be `io.prometheus.client.exporter.MetricsServlet` that you can find in `io.prometheus:simpleclient_servlet` in case your app is running in a servlet container (e.g.: Tomcat):
+[source,java]
+----
+PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+HttpServlet metricsServlet = new MetricsServlet(prometheusRegistry.getPrometheusRegistry());
+----
+
 === Scrape format
 
 By default, the https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format[Prometheus text format] is returned from the `PrometheusMeterRegistry` `scrape()` method.
