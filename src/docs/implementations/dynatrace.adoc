@@ -175,6 +175,11 @@ management.metrics.export.dynatrace:
             key1: "value1"
             key2: "value2"
 
+        # (since 1.9.0) Wheter or not to use the Dynatrace-specific summary instruments. (default: true)
+        # This should only be disabled if problems with existing instrumentation are discovered after upgrading to 1.9.0
+        # Set to false, this will restore the previous (1.8.x) behavior for Timers and DistributionSummaries.
+        use-dynatrace-summary-instruments: true
+
     # The export interval in which metrics are sent to Dynatrace (default: 60s).
     step: 60s
 ----
@@ -223,6 +228,12 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
         return dims;
     }
 
+    // Only available in Micrometer 1.9.0 and above
+    @Override
+    public boolean useDynatraceSummaryInstruments() {
+        return false;
+    }
+
     @Override
     @Nullable
     public String get(String k) {
@@ -232,6 +243,8 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 ----
 
 For more information about the metadata picked up by the Dynatrace metadata enrichment feature, see https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/enrich-metrics/[the Dynatrace documentation].
+
+In Micrometer 1.9.0, Dynatrace-specific summary instruments (`DynatraceTimer` and `DynatraceDistributionSummary`) were introduced. These specialized instruments are tailored to the Dynatrace metrics ingest, and prevent the creation of invalid metrics. They are available from version 1.9.0 and are used as a drop-in replacement by default. No action is needed from users upgrading to 1.9.0. If there is a discrepancy in the observed metrics, it is possible to return to the previous behavior by setting the `useDynatraceSummaryInstruments` toggle to `false`.
 
 === API v1 (Legacy) [[bookmark-apiv1]]
 
