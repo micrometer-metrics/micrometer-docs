@@ -15,7 +15,7 @@ If you want to have more observation options (such as metrics and tracing out of
 
 [source,java]
 ----
-ObservationRegistry registry = new SimpleMeterRegistry();
+ObservationRegistry registry = ObservationRegistry.create();
 Observation observation = Observation.start("my.operation", registry);
 try (Observation.Scope scope = observation.openScope()) {
     doSomeWorkHere();
@@ -65,7 +65,7 @@ You can register this handler like this:
 
 [source,java]
 ----
-ObservationRegistry registry = new SimpleMeterRegistry();
+ObservationRegistry registry = ObservationRegistry.create();
 registry.observationConfig().observationHandler(new SimpleHandler());
 ----
 
@@ -74,15 +74,9 @@ And instrument your codebase. Using the `scoped` method example:
 [source,java]
 ----
 // using a context is optional, you can call start without it: Observation.start(name, registry)
-ObservationRegistry registry = new SimpleMeterRegistry();
+ObservationRegistry registry = ObservationRegistry.create();
 Observation.Context context = new Observation.Context().put(String.class, "test");
-Observation observation = Observation.start("my.operation", context, registry);
-try (Observation.Scope scope = observation.openScope()) {
-    doSomeWorkHere();
-}
-finally {
-    observation.stop();
-}
+Observation.createNotStarted("my.operation", context, registry).observe(() -> doSomeWorkHere());
 ----
 
 Fully taking control of the scoping mechanism.
@@ -90,14 +84,14 @@ Fully taking control of the scoping mechanism.
 [source,java]
 ----
 // using a context is optional, you can call start without it: Observation.start(name, registry)
-ObservationRegistry registry = new SimpleMeterRegistry();
+ObservationRegistry registry = ObservationRegistry.create();
 Observation.Context context = new Observation.Context().put(String.class, "test");
 Observation observation = Observation.start("my.operation", context, registry);
 try (Observation.Scope scope = observation.openScope()) {
     doSomeWorkHere();
 }
 catch (Exception ex) {
-    sample.error(ex); // and don't forget to handle exceptions
+    observation.error(ex); // and don't forget to handle exceptions
     throw ex;
 }
 finally {
@@ -105,26 +99,29 @@ finally {
 }
 ----
 
-=== Observation.TagsProvider Example
+=== Observation.KeyValuesProvider Example
 
-When **instrumenting** code we want to provide sensible defaults for tags but also we want to allow users to easily change those defaults. A `TagsProvider` interface is a description of what tags we should create for an `Observation.Context`. See the full usage example of an instrumentation together with overriding the default tags.
+When **instrumenting** code we want to provide sensible defaults for tags but also we want to allow users to easily change those defaults. A `KeyValuesProvider` interface is a description of what tags we should create for an `Observation.Context`. See the full usage example of an instrumentation together with overriding the default tags.
 
 ```java
-public class TagsProviderSample {
+public class KeyValuesProviderSample {
 
     public static void main(String[] args) {
         // Registry setup
-        ObservationRegistry observationRegistry = new SimpleMeterRegistry()
-                // add metrics
-                .withTimerObservationHandler();
+        ObservationRegistry observationRegistry = Observation.create();
+		// add metrics
+        SimpleMeterRegistry registry = new SimpleMeterRegistry();
+        observationRegistry
+                .observationConfig()
+                    .observationHandler(new TimerObservationHandler(registry));
         observationRegistry
                 .observationConfig()
                     // this will be applied to all observations
-                    .tagsProvider(new GlobalTagsProvider());
+                    .keyValuesProvider(new GlobalKeyValuesProvider());
 
         TaxCalculator taxCalculator = new TaxCalculator(observationRegistry);
         // you can use a setter to override the default tags provider
-        taxCalculator.setTagsProvider(new CustomTaxTagsProvider());
+        taxCalculator.setKeyValuesProvider(new CustomTaxKeyValuesProvider());
         // run the logic you want to observe
         taxCalculator.calculateTax("INCOME_TAX", "1234567890");
     }
@@ -150,17 +147,17 @@ class TaxContext extends Observation.Context {
     }
 }
 
-// When registered via the `ObservationRegistry#observationConfig#tagsProvider` will be applied globally
-class GlobalTagsProvider implements Observation.TagsProvider<Observation.Context> {
+// When registered via the `ObservationRegistry#observationConfig#keyValuesProvider` will be applied globally
+class GlobalKeyValuesProvider implements Observation.KeyValuesProvider<Observation.Context> {
 
     @Override
-    public Tags getLowCardinalityTags(Observation.Context context) {
-        return Tags.of(Tag.of("cloud.zone", CloudUtils.getZone()));
+    public KeyValues getLowCardinalityKeyValues(Observation.Context context) {
+        return KeyValues.of(KeyValue.of("cloud.zone", CloudUtils.getZone()));
     }
 
     @Override
-    public Tags getHighCardinalityTags(Observation.Context context) {
-        return Tags.of(Tag.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
+    public KeyValues getHighCardinalityKeyValues(Observation.Context context) {
+        return KeyValues.of(KeyValue.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
     }
 
     // this will be applicable for all contexts
@@ -170,8 +167,8 @@ class GlobalTagsProvider implements Observation.TagsProvider<Observation.Context
     }
 }
 
-// Interface for a TagsProvider related to calculating Tax
-interface TaxTagsProvider extends Observation.TagsProvider<TaxContext> {
+// Interface for a KeyValuesProvider related to calculating Tax
+interface TaxKeyValuesProvider extends Observation.KeyValuesProvider<TaxContext> {
     @Override
     default boolean supportsContext(Observation.Context context) {
         return context instanceof TaxContext;
@@ -179,16 +176,16 @@ interface TaxTagsProvider extends Observation.TagsProvider<TaxContext> {
 }
 
 // Default provider of tags related to calculating Tax
-class DefaultTaxTagsProvider implements TaxTagsProvider {
+class DefaultTaxKeyValuesProvider implements TaxKeyValuesProvider {
 
     @Override
-    public Tags getLowCardinalityTags(TaxContext context) {
-        return Tags.of(TaxObservation.TaxLowCardinalityTags.TAX_TYPE.of(context.getTaxType()));
+    public KeyValues getLowCardinalityKeyValues(TaxContext context) {
+        return KeyValues.of(TaxObservation.TaxLowCardinalityKeyValues.TAX_TYPE.of(context.getTaxType()));
     }
 
     @Override
-    public Tags getHighCardinalityTags(TaxContext context) {
-        return Tags.of(TaxObservation.TaxHighCardinalityTags.USER_ID.of(context.getUserId()));
+    public KeyValues getHighCardinalityKeyValues(TaxContext context) {
+        return KeyValues.of(TaxObservation.TaxHighCardinalityKeyValues.USER_ID.of(context.getUserId()));
     }
 }
 
@@ -215,17 +212,17 @@ enum TaxObservation implements DocumentedObservation {
         }
 
         @Override
-        public TagKey[] getLowCardinalityTagKeys() {
-            return TaxLowCardinalityTags.values();
+        public KeyName[] getLowCardinalityKeyNames() {
+            return TaxLowCardinalityKeyNames.values();
         }
 
         @Override
-        public TagKey[] getHighCardinalityTagKeys() {
-            return TaxHighCardinalityTags.values();
+        public KeyName[] getHighCardinalityKeyNames() {
+            return TaxHighCardinalityKeyNames.values();
         }
     };
 
-    enum TaxLowCardinalityTags implements TagKey {
+    enum TaxLowCardinalityKeyNames implements KeyName {
         TAX_TYPE {
             @Override
             public String getKey() {
@@ -234,7 +231,7 @@ enum TaxObservation implements DocumentedObservation {
         }
     }
 
-    enum TaxHighCardinalityTags implements TagKey {
+    enum TaxHighCardinalityKeyNames implements KeyName {
         USER_ID {
             @Override
             public String getKey() {
@@ -245,11 +242,11 @@ enum TaxObservation implements DocumentedObservation {
 }
 
 // Class that we want to observe
-class TaxCalculator implements Observation.TagsProviderAware<TaxTagsProvider> {
+class TaxCalculator implements Observation.KeyValuesProviderAware<TaxKeyValuesProvider> {
 
     private final ObservationRegistry observationRegistry;
 
-    private TaxTagsProvider tagsProvider = new DefaultTaxTagsProvider();
+    private TaxKeyValuesProvider keyValuesProvider = new DefaultTaxKeyValuesProvider();
 
     TaxCalculator(ObservationRegistry observationRegistry) {
         this.observationRegistry = observationRegistry;
@@ -259,15 +256,11 @@ class TaxCalculator implements Observation.TagsProviderAware<TaxTagsProvider> {
         // Create a new context
         TaxContext taxContext = new TaxContext(taxType, userId);
         // Create a new observation
-        Observation observation = TaxObservation.CALCULATE.start(this.observationRegistry, taxContext)
+        TaxObservation.CALCULATE.start(this.observationRegistry, taxContext)
                 // Remember to add a tags provider
-                .tagsProvider(this.tagsProvider)
-                // Example of setting a fixed contextual name
-                .contextualName(TaxObservation.CALCULATE.getContextualName());
-        // Run the actual logic you want to observe
-        observation.scoped(this::calculateInterest);
-        // Remember to stop the observation when you're done
-        observation.stop();
+                .keyValuesProvider(this.keyValuesProvider)
+                // Run the actual logic you want to observe
+                .observe(this::calculateInterest);
     }
 
     private void calculateInterest() {
@@ -276,21 +269,21 @@ class TaxCalculator implements Observation.TagsProviderAware<TaxTagsProvider> {
 
     // Use this if you want to override the defaults
     @Override
-    public void setTagsProvider(TaxTagsProvider tagsProvider) {
-        this.tagsProvider = tagsProvider;
+    public void setKeyValuesProvider(TaxKeyValuesProvider keyValuesProvider) {
+        this.keyValuesProvider = keyValuesProvider;
     }
 }
 
 // Example of user changing the default behaviour
-class CustomTaxTagsProvider extends DefaultTaxTagsProvider {
+class CustomTaxKeyValuesProvider extends DefaultTaxKeyValuesProvider {
     @Override
-    public Tags getLowCardinalityTags(TaxContext context) {
-        return super.getLowCardinalityTags(context).and(Tag.of("additional.low.cardinality.tag", "value"));
+    public KeyValues getLowCardinalityKeyValues(TaxContext context) {
+        return super.getLowCardinalityKeyValues(context).and(KeyValue.of("additional.low.cardinality.tag", "value"));
     }
 
     @Override
-    public Tags getHighCardinalityTags(TaxContext context) {
-        return Tags.of("this.would.override.the.default.high.cardinality.tags", "value");
+    public KeyValues getHighCardinalityKeyValues(TaxContext context) {
+        return KeyValues.of("this.would.override.the.default.high.cardinality.tags", "value");
     }
 }
 
