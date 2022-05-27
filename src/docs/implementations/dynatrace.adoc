@@ -20,7 +20,7 @@ Dynatrace auto-configuration is available for hosts that are monitored by a OneA
 
 If a Dynatrace OneAgent is installed on the host running Micrometer, metrics can be exported directly using the OneAgent without having to specify an endpoint URI or API token.
 If running in Kubernetes with the Dynatrace operator installed, the registry will pick up your endpoint URI and API token from the operator instead.
-In this case there is no need to configure anything, you can use the following code in your project to export Micrometer metrics to Dynatrace:
+In this case there is no need to configure anything, so you can use the following code in your project to export Micrometer metrics to Dynatrace:
 
 [source,java]
 ----
@@ -125,7 +125,7 @@ management.metrics.export.dynatrace:
 When the API version is configured to `v2`, the registry will send data using the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/[Metrics API v2].
 In order to maintain backwards compatibility, when a `deviceId` is set (which is required for `v1` and not used in `v2`), `v1` is used as the default.
 Otherwise, the version defaults to `v2`, and does not have to be set explicitly.
-With no endpoint URI and token set, metrics will be exported to the local OneAgent endpoint or, if a running in Kubernetes with the Dynatrace operator installed, to the endpoint provided by the operator.
+With no endpoint URI and token set, metrics will be exported to the local OneAgent endpoint or, if running in Kubernetes with the Dynatrace operator installed, to the endpoint provided by the operator.
 If no auto-configuration is desired, it is possible to specify endpoint and token explicitly, in order to export metrics to that specific endpoint.
 Explicitly specifying these will overwrite auto-configuration.
 
@@ -133,7 +133,7 @@ Explicitly specifying these will overwrite auto-configuration.
 
 In the minimal configuration <<bookmark-auto-configuration, shown above>> (no URI or API token), the v2 registry will attempt to retrieve the endpoint provided by the Dynatrace Kubernetes operator.
 If the operator is not set up or does not provide this information, the exporter will attempt to send metrics to the https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/local-api/[local OneAgent metrics ingest endpoint].
-Note that this only works if the a OneAgent is running on the host and the https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/local-api/#enable-the-oneagent-metric-api[local OneAgent Metric API] is available.
+Note that this only works if a OneAgent is running on the host and the https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/local-api/#enable-the-oneagent-metric-api[local OneAgent Metric API] is available.
 If the ingestion port for the local OneAgent was changed to a custom one, the full endpoint URI has to be provided for the URI property (with API token left empty).
 
 *Configuration with URI and API token*
@@ -175,8 +175,8 @@ management.metrics.export.dynatrace:
             key1: "value1"
             key2: "value2"
 
-        # (since 1.9.0) Wheter or not to use the Dynatrace-specific summary instruments. (default: true)
-        # This should only be disabled if problems with existing instrumentation are discovered after upgrading to 1.9.0
+        # (since 1.9.0) Whether or not to use the Dynatrace-specific summary instruments. (default: true)
+        # This should only be disabled if problems with existing instrumentation are discovered after upgrading to 1.9.0.
         # Set to false, this will restore the previous (1.8.x) behavior for Timers and DistributionSummaries.
         use-dynatrace-summary-instruments: true
 
