@@ -57,7 +57,7 @@ HttpServlet metricsServlet = new MetricsServlet(prometheusRegistry.getPrometheus
 
 By default, the https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format[Prometheus text format] is returned from the `PrometheusMeterRegistry` `scrape()` method.
 
-Since Micrometer 1.7.0, the https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md[OpenMetrics] format can also be produced.
+The https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md[OpenMetrics] format can also be produced.
 To specify the format to be returned, you can pass a content type to the `scrape` method.
 For example, to get the OpenMetrics 1.0.0 format scrape, you could use the Prometheus Java client constant for it, as follows:
 

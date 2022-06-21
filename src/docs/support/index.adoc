@@ -18,7 +18,6 @@ The following releases are actively maintained:
 | Minor release | OSS Support Until
 | 1.9.x         | May 2023
 | 1.8.x         | November 2022
-| 1.7.x         | May 2022
 |===========
 
 The following releases are out of OSS support:
@@ -27,6 +26,7 @@ The following releases are out of OSS support:
 [width="35%",options="header"]
 |===========
 | Minor release | Final patch
+| 1.7.x         | `1.7.12`
 | 1.6.x         | `1.6.13`
 | 1.5.x         | `1.5.17`
 | 1.4.x         | `1.4.2`
