@@ -5,7 +5,7 @@
 
 The InfluxData suite of tools supports real-time stream processing and storage of time-series data. It supports downsampling, automatically expiring and deleting unwanted data, as well as backup and restore.
 
-Since Micrometer 1.7, the InfluxMeterRegistry supports the 1.x InfluxDB API as well as the v2 API.
+The InfluxMeterRegistry supports the 1.x InfluxDB API as well as the v2 API.
 
 == Configuring
 
