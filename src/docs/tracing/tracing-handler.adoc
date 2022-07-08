@@ -99,12 +99,12 @@ finally {
 }
 ----
 
-=== Observation.KeyValuesProvider Example
+=== Observation.ObservationConvention Example
 
-When **instrumenting** code we want to provide sensible defaults for tags but also we want to allow users to easily change those defaults. A `KeyValuesProvider` interface is a description of what tags we should create for an `Observation.Context`. See the full usage example of an instrumentation together with overriding the default tags.
+When **instrumenting** code we want to provide sensible defaults for tags but also we want to allow users to easily change those defaults. A `ObservationConvention` interface is a description of what tags and name we should create for an `Observation.Context`. See the full usage example of an instrumentation together with overriding the default tags.
 
 ```java
-public class KeyValuesProviderSample {
+public class ObservationConventionSample {
 
     public static void main(String[] args) {
         // Registry setup
@@ -117,11 +117,11 @@ public class KeyValuesProviderSample {
         observationRegistry
                 .observationConfig()
                     // this will be applied to all observations
-                    .keyValuesProvider(new GlobalKeyValuesProvider());
+                    .observationConvention(new GlobalObservationConvention());
 
         TaxCalculator taxCalculator = new TaxCalculator(observationRegistry);
         // you can use a setter to override the default tags provider
-        taxCalculator.setKeyValuesProvider(new CustomTaxKeyValuesProvider());
+        taxCalculator.setObservationConvention(new CustomTaxObservationConvention());
         // run the logic you want to observe
         taxCalculator.calculateTax("INCOME_TAX", "1234567890");
     }
@@ -147,8 +147,8 @@ class TaxContext extends Observation.Context {
     }
 }
 
-// When registered via the `ObservationRegistry#observationConfig#keyValuesProvider` will be applied globally
-class GlobalKeyValuesProvider implements Observation.KeyValuesProvider<Observation.Context> {
+// When registered via the `ObservationRegistry#observationConfig#observationConvention` will be applied globally
+class GlobalObservationConvention implements Observation.ObservationConvention<Observation.Context> {
 
     @Override
     public KeyValues getLowCardinalityKeyValues(Observation.Context context) {
@@ -167,8 +167,8 @@ class GlobalKeyValuesProvider implements Observation.KeyValuesProvider<Observati
     }
 }
 
-// Interface for a KeyValuesProvider related to calculating Tax
-interface TaxKeyValuesProvider extends Observation.KeyValuesProvider<TaxContext> {
+// Interface for a ObservationConvention related to calculating Tax
+interface TaxObservationConvention extends Observation.ObservationConvention<TaxContext> {
     @Override
     default boolean supportsContext(Observation.Context context) {
         return context instanceof TaxContext;
@@ -176,7 +176,7 @@ interface TaxKeyValuesProvider extends Observation.KeyValuesProvider<TaxContext>
 }
 
 // Default provider of tags related to calculating Tax
-class DefaultTaxKeyValuesProvider implements TaxKeyValuesProvider {
+class DefaultTaxObservationConvention implements TaxObservationConvention {
 
     @Override
     public KeyValues getLowCardinalityKeyValues(TaxContext context) {
@@ -197,9 +197,9 @@ class DefaultTaxKeyValuesProvider implements TaxKeyValuesProvider {
 enum TaxObservation implements DocumentedObservation {
     CALCULATE {
         @Override
-        public String getName() {
-            return "tax.calculate";
-        }
+		public Class<? extends Observation.ObservationConvention<? extends Observation.Context>> getDefaultConvention() {
+			return DefaultTaxObservationConvention.class;
+		}
 
         @Override
         public String getContextualName() {
@@ -246,7 +246,7 @@ class TaxCalculator implements Observation.KeyValuesProviderAware<TaxKeyValuesPr
 
     private final ObservationRegistry observationRegistry;
 
-    private TaxKeyValuesProvider keyValuesProvider = new DefaultTaxKeyValuesProvider();
+    private TaxObservationConvention observationConvention;
 
     TaxCalculator(ObservationRegistry observationRegistry) {
         this.observationRegistry = observationRegistry;
@@ -256,9 +256,7 @@ class TaxCalculator implements Observation.KeyValuesProviderAware<TaxKeyValuesPr
         // Create a new context
         TaxContext taxContext = new TaxContext(taxType, userId);
         // Create a new observation
-        TaxObservation.CALCULATE.start(this.observationRegistry, taxContext)
-                // Remember to add a tags provider
-                .keyValuesProvider(this.keyValuesProvider)
+        TaxObservation.CALCULATE.start.observation(this.observationConvention, new DefaultTaxObservationConvention(), taxContext, observationRegistry)
                 // Run the actual logic you want to observe
                 .observe(this::calculateInterest);
     }
@@ -268,14 +266,13 @@ class TaxCalculator implements Observation.KeyValuesProviderAware<TaxKeyValuesPr
     }
 
     // Use this if you want to override the defaults
-    @Override
-    public void setKeyValuesProvider(TaxKeyValuesProvider keyValuesProvider) {
-        this.keyValuesProvider = keyValuesProvider;
+    public void setObservationConvention(TaxObservationConvention observationConvention) {
+        this.observationConvention = observationConvention;
     }
 }
 
 // Example of user changing the default behaviour
-class CustomTaxKeyValuesProvider extends DefaultTaxKeyValuesProvider {
+class CustomTaxObservationConvention extends DefaultTaxObservationConvention {
     @Override
     public KeyValues getLowCardinalityKeyValues(TaxContext context) {
         return super.getLowCardinalityKeyValues(context).and(KeyValue.of("additional.low.cardinality.tag", "value"));
@@ -284,6 +281,11 @@ class CustomTaxKeyValuesProvider extends DefaultTaxKeyValuesProvider {
     @Override
     public KeyValues getHighCardinalityKeyValues(TaxContext context) {
         return KeyValues.of("this.would.override.the.default.high.cardinality.tags", "value");
+    }
+
+	@Override
+    public String getName() {
+		return "tax.calculate";
     }
 }
 
@@ -299,4 +301,47 @@ class CloudUtils {
 }
 ```
 
+=== Using Annotations With @Observed
 
+If you have turned on Aspect Oriented Programming (e.g. via `org.aspectj:aspectjweaver`) you can use the `@Observed` annotation to create observations. You can put that annotation either on a method to observe it or a class to observe all methods in it. Let's look at the following example.
+
+Here you can see an `ObservedService` that has an annotation on a method.
+
+```java
+static class ObservedService {
+
+    @Observed(name = "test.call", contextualName = "test#call",
+            lowCardinalityKeyValues = { "abc", "123", "test", "42" })
+    void call() {
+        System.out.println("call");
+    }
+
+}
+```
+
+The following test asserts whether when a proxied `ObservedService` instance gets called the proper observation gets created.
+
+```java
+@Test
+    void annotatedCallShouldBeObserved() {
+        // create a test registry
+	    TestObservationRegistry registry = TestObservationRegistry.create();
+		// add a system out printing handler
+        registry.observationConfig().observationHandler(new ObservationTextPublisher());
+
+		// create a proxy around the observed service
+        AspectJProxyFactory pf = new AspectJProxyFactory(new ObservedService());
+        pf.addAspect(new ObservedAspect(registry));
+
+		// make a call
+        ObservedService service = pf.getProxy();
+        service.call();
+
+		// assert that observation has been properly created
+        TestObservationRegistryAssert.assertThat(registry).hasSingleObservationThat().hasBeenStopped()
+                .hasNameEqualTo("test.call").hasContextualNameEqualTo("test#call")
+                .hasLowCardinalityKeyValue("abc", "123").hasLowCardinalityKeyValue("test", "42")
+                .hasLowCardinalityKeyValue("class", ObservedService.class.getName())
+                .hasLowCardinalityKeyValue("method", "call").doesNotHaveError();
+    }
+```
