@@ -116,8 +116,9 @@ public class ObservationConventionSample {
                     .observationHandler(new TimerObservationHandler(registry));
         observationRegistry
                 .observationConfig()
-                    // this will be applied to all observations
-                    .observationConvention(new GlobalObservationConvention());
+                    // these will be applied to all observations
+                    .keyValuesProvider(new GlobalKeyValueProvider())
+                    .observationConvention(new GlobalTaxObservationConvention());
 
         TaxCalculator taxCalculator = new TaxCalculator(observationRegistry);
         // you can use a setter to override the default tags provider
@@ -147,8 +148,8 @@ class TaxContext extends Observation.Context {
     }
 }
 
-// When registered via the `ObservationRegistry#observationConfig#observationConvention` will be applied globally
-class GlobalObservationConvention implements Observation.ObservationConvention<Observation.Context> {
+// When registered via the `ObservationRegistry#observationConfig#keyValueProvider` will be applied globally
+class GlobalKeyValueProvider implements Observation.KeyValuesProvider<Observation.Context> {
 
     @Override
     public KeyValues getLowCardinalityKeyValues(Observation.Context context) {
@@ -159,11 +160,20 @@ class GlobalObservationConvention implements Observation.ObservationConvention<O
     public KeyValues getHighCardinalityKeyValues(Observation.Context context) {
         return KeyValues.of(KeyValue.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
     }
+}
 
-    // this will be applicable for all contexts
+// When registered via the `ObservationRegistry#observationConfig#observationConvention` will be applied globally
+class GlobalTaxObservationConvention implements Observation.ObservationConvention<TaxContext> {
+
+    // this will be applicable for all tax contexts - it will rename all the tax contexts
     @Override
     public boolean supportsContext(Observation.Context context) {
-        return true;
+        return context instanceof TaxContext;
+    }
+
+	@Override
+    public String getName() {
+		return "global.tax.calculate";
     }
 }
 
