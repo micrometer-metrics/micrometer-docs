@@ -30,7 +30,7 @@
     "build": "react-scripts build",
     "predeploy": "react-scripts build",
     "deploy": "gh-pages -d build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "analyze": "source-map-explorer build/static/js/main.*",
     "prod-start": "chmod +x bin/server && ./bin/server"
@@ -46,5 +46,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "packageManager": "yarn@3.0.0"
 }

@@ -25,3 +25,27 @@ yarn-error.log*
 .idea
 
 .eslintcache
+
+.gradle/
+out/
+
+*.iml
+*.ipr
+*.iws
+.idea
+
+.classpath
+.project
+.settings/
+.sts4-cache/
+bin/
+.factorypath
+.vscode
+.DS_Store
+.java-version
+
+node/
+.yarn/
+
+build/
+.yarnrc.yml
