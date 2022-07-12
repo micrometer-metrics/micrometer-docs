@@ -12,6 +12,8 @@ To upgrade project dependencies, run `./gardlew yarnUpgrade` (or `yarn upgrade`)
 
 To deploy the site to GitHub Pages, use the `./gradlew publish` (or `yarn deploy`) command.
 
+To regenerate the adoc files just run `./gradlew :docs-util:generateCoalescedAdocs`.
+
 -------------------------------------
 _Licensed under [Apache Software License 2.0](https://www.apache.org/licenses/LICENSE-2.0)_
 
