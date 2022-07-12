@@ -1,3 +1,5 @@
+import org.siouan.frontendgradleplugin.infrastructure.gradle.RunYarn
+
 buildscript {
     dependencyLocking {
         lockAllConfigurations()
@@ -198,6 +200,18 @@ wrapper {
 
 [assembleFrontend, checkFrontend].each {
     it.dependsOn(":samples:build", ":docs-util:generateCoalescedAdocs")
+}
+
+tasks.register('yarnStart', RunYarn) {
+    dependsOn tasks.named('installNode')
+    dependsOn tasks.named('installFrontend')
+    script = 'run start'
+}
+
+tasks.register('yarnUpgrade', RunYarn) {
+    dependsOn tasks.named('installNode')
+    dependsOn tasks.named('installFrontend')
+    script = 'run upgrade'
 }
 
 defaultTasks 'build'

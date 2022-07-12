@@ -17,6 +17,7 @@ task generateCoalescedAdocs(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
     mainClass = 'io.micrometer.docs.adoc.CoalescerMain'
+
     inputs.dir(new File(project.rootDir, "src/docs"))
     outputs.dir(new File(project.rootDir, "src/generated-docs"))
 
