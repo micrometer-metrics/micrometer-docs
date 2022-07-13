@@ -186,9 +186,9 @@ subprojects {
 apply plugin: 'org.siouan.frontend-jdk8'
 
 frontend {
-    nodeVersion = '14.17.3'
+    nodeVersion = '16.16.0'
     yarnEnabled = true
-    yarnVersion = '3.0.0'
+    yarnVersion = '3.2.1'
     assembleScript = 'run build'
     cleanScript = 'run clean'
     publishScript = 'run deploy'
@@ -198,20 +198,21 @@ wrapper {
     gradleVersion = '7.4.2'
 }
 
-[assembleFrontend, checkFrontend].each {
-    it.dependsOn(":samples:build", ":docs-util:generateCoalescedAdocs")
-}
-
 tasks.register('yarnStart', RunYarn) {
     dependsOn tasks.named('installNode')
     dependsOn tasks.named('installFrontend')
     script = 'run start'
+    // TODO: I have no idea how to terminate Yarn when we ctrl+c this task
 }
 
 tasks.register('yarnUpgrade', RunYarn) {
     dependsOn tasks.named('installNode')
     dependsOn tasks.named('installFrontend')
     script = 'run upgrade'
+}
+
+[assembleFrontend, checkFrontend, yarnStart].each {
+    it.dependsOn(":samples:build", ":docs-util:generateCoalescedAdocs")
 }
 
 defaultTasks 'build'

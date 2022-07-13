@@ -26,8 +26,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
-    - run: yarn install
-    - run: yarn build
+    - run: ./gradlew build
     - name: Deploy GitHub Pages
       # Don't deploy pull requests
       if: github.event_name == 'push'

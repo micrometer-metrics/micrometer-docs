@@ -46,7 +46,8 @@ public class CoalescerMain {
     }
 
     void walk(File input, File output) throws IOException {
-        cleanOutputFolder(output);
+        // TODO: This will be done by ./gradlew clean
+        // cleanOutputFolder(output);
         try (Stream<Path> walk = Files.walk(input.toPath())) {
             walk.filter(Files::isRegularFile).forEach(path -> {
                 Path relative = input.toPath().relativize(path);

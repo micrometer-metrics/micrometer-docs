@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Sources for tracing-configuring.adoc
  */
-public class TracingConfiguringTests {
+class TracingConfiguringTests {
 
     @Test
     void handler_configuration() {

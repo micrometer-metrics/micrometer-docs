@@ -8,8 +8,20 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic'
     implementation 'org.slf4j:slf4j-api'
 
+    testImplementation 'io.micrometer:micrometer-test'
+    testImplementation 'io.micrometer:micrometer-observation-test'
     testImplementation 'io.micrometer:micrometer-tracing-test'
+    testImplementation 'io.micrometer:micrometer-tracing-integration-test'
+    testImplementation 'org.aspectj:aspectjweaver'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-inline'
     testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.springframework:spring-context'
 }
+
+task customCleanUp(type:Delete) {
+    new File(project.rootDir, "src/generated-docs").deleteDir()
+}
+
+tasks.clean.dependsOn(tasks.customCleanUp)
+
