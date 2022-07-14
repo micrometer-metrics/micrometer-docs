@@ -34,6 +34,9 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - name: Cache Node Modules
       uses: actions/cache@v3
       with:
@@ -41,7 +44,8 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-    - run: ./gradlew build
+    - name: Run build
+      run: ./gradlew build
     - name: Deploy GitHub Pages
       # Don't deploy pull requests
       if: github.event_name == 'push'
