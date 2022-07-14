@@ -18,15 +18,15 @@ It will
 The following example shows the required dependency in Gradle (assuming that Micrometer Tracing BOM has been added):
 
 [source,groovy,subs=+attributes]
-----
+-----
 testImplementation 'io.micrometer:micrometer-tracing-test' // for unit tests
 testImplementation 'io.micrometer:micrometer-tracing-integration-test' // for integration tests
-----
+-----
 
 The following example shows the required dependency in Maven (assuming that Micrometer Tracing BOM has been added):
 
 [source,xml,subs=+attributes]
-----
+-----
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-tracing-test</artifactId> <!-- For unit tests -->
@@ -37,7 +37,7 @@ The following example shows the required dependency in Maven (assuming that Micr
     <artifactId>micrometer-tracing-integration-test</artifactId> <!-- For integration tests -->
     <scope>test</scope>
 </dependency>
-----
+-----
 
 == Running Observation Unit Tests
 
