@@ -48,4 +48,3 @@ node/
 .yarn/
 
 build/
-.yarnrc.yml
