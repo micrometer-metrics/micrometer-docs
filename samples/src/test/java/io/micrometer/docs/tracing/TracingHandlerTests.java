@@ -241,7 +241,7 @@ class TracingHandlerTests {
      * `ObservationRegistry#observationConfig#observationConvention` will be applied
      * globally.
      */
-    class GlobalTaxObservationConvention implements Observation.ObservationConvention<TaxContext> {
+    class GlobalTaxObservationConvention implements Observation.GlobalObservationConvention<TaxContext> {
 
         // this will be applicable for all tax contexts - it will rename all the tax
         // contexts
