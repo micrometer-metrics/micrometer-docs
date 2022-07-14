@@ -208,10 +208,16 @@ tasks.register('setupYarnRc') {
 }
 
 tasks.register('yarnStart', RunYarn) {
+    dependsOn tasks.named('yarnStop')
     dependsOn tasks.named('installNode')
     dependsOn tasks.named('installFrontend')
     script = 'run start'
-    // TODO: I have no idea how to terminate Yarn when we ctrl+c this task
+}
+
+tasks.register('yarnStop', Exec) {
+    executable "sh"
+    args "-c", '''kill -15 $(ps -efw | grep node | grep scripts/start.js | awk '{print $2}') '''
+    ignoreExitValue = true
 }
 
 tasks.register('yarnUpgrade', RunYarn) {

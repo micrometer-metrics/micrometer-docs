@@ -4,7 +4,7 @@ This repo is the source code for [micrometer.io](https://micrometer.io).
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-To check changes to this repository locally use `./gradlew yarnStart` (or `yarn start`) for development mode. 
+To check changes to this repository locally use `./gradlew yarnStart` (or `yarn start`) for development mode. If there was a server running before, we will first shut it down. To stop the server you can run `./gradlew yarnStop`. 
 
 To run the build use `./gradlew build` (or `yarn build`). Note that you need to run `yarn` or `yarn install` first to install all the dependencies defined in `package.json`. To do that you can run `./gradlew installFrontend`
 
