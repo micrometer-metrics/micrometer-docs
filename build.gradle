@@ -1,0 +1,221 @@
+import org.siouan.frontendgradleplugin.infrastructure.gradle.RunYarn
+
+buildscript {
+    dependencyLocking {
+        lockAllConfigurations()
+    }
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath 'gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.16.1'
+        classpath 'io.spring.nohttp:nohttp-gradle:0.0.10'
+        classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.34'
+        classpath 'org.siouan:frontend-gradle-plugin-jdk8:6.0.0'
+
+        constraints {
+            classpath('org.ow2.asm:asm:7.3.1') {
+                because 'Supports modern JDKs'
+            }
+        }
+    }
+
+    configurations.classpath.resolutionStrategy.cacheDynamicVersionsFor 0, 'minutes'
+}
+
+apply from: 'dependencies.gradle'
+
+allprojects {
+    group = 'io.micrometer'
+
+    afterEvaluate { project -> println "I'm configuring $project.name with version $project.version" }
+}
+
+subprojects {
+    apply plugin: 'io.spring.javaformat'
+
+    apply plugin: 'java-library'
+    apply plugin: 'com.github.hierynomus.license'
+    apply plugin: 'checkstyle'
+    apply plugin: 'io.spring.nohttp'
+
+    java {
+        // It is more idiomatic to define different features for different sets of optional
+        // dependencies, e.g., 'dropwizard' and 'reactor'. If this library published Gradle
+        // metadata, Gradle users would be able to use these feature names in their dependency
+        // declarations instead of understanding the actual required optional dependencies.
+        // But we don't publish Gradle metadata yet and this may be overkill so just have a
+        // single feature for now to correspond to any optional dependency.
+        registerFeature('optional') {
+            usingSourceSet(sourceSets.main)
+        }
+    }
+
+    // All projects use optional annotations, but since we don't expose them downstream we would
+    // have to add the dependency in every project, which is tedious so just do it here.
+    dependencies {
+        // JSR-305 only used for non-required meta-annotations
+        optionalApi "com.google.code.findbugs:jsr305:latest.release"
+        checkstyle("io.spring.javaformat:spring-javaformat-checkstyle:latest.release")
+    }
+
+    tasks {
+        compileJava {
+            options.encoding = 'UTF-8'
+            options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+
+            // ensure Java 8 baseline is enforced for main source
+            if (JavaVersion.current().isJava9Compatible()) {
+                options.release = 8
+            }
+        }
+        compileTestJava {
+            options.encoding = 'UTF-8'
+            options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+    }
+
+    normalization {
+        runtimeClasspath {
+            metaInf {
+                [
+                    'Build-Date',
+                    'Build-Date-UTC',
+                    'Built-By',
+                    'Built-OS',
+                    'Build-Host',
+                    'Build-Job',
+                    'Build-Number',
+                    'Build-Id',
+                    'Change',
+                    'Full-Change',
+                    'Branch',
+                    'Module-Origin',
+                    'Created-By',
+                    'Build-Java-Version'
+                ].each {
+                    ignoreAttribute it
+                    ignoreProperty it
+                }
+            }
+        }
+    }
+
+    //noinspection GroovyAssignabilityCheck
+    test {
+        // set heap size for the test JVM(s)
+        maxHeapSize = "1500m"
+
+        useJUnitPlatform {
+        }
+    }
+
+    project.tasks.withType(Test) { Test testTask ->
+        testTask.testLogging.exceptionFormat = 'full'
+    }
+
+    license {
+        header rootProject.file('gradle/licenseHeader.txt')
+        strictCheck true
+        mapping {
+            java = 'SLASHSTAR_STYLE'
+        }
+        sourceSets = project.sourceSets
+
+        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+        skipExistingHeaders = true
+        exclude '**/*.json' // comments not supported
+    }
+
+    dependencyLocking {
+        lockAllConfigurations()
+    }
+
+    tasks.register('resolveAndLockAll') {
+        description = 'Resolves dependencies of all configurations and writes them into the lock file.'
+        outputs.upToDateWhen { false }
+        doFirst {
+            assert gradle.startParameter.writeDependencyLocks || gradle.startParameter.lockedDependenciesToUpdate : 'Execute resolveAndLockAll --write-locks or --update-locks <dependencies>'
+        }
+        doLast {
+            project.configurations.findAll { it.canBeResolved }*.resolve()
+        }
+    }
+
+    description = 'Docs for Micrometer portfolio'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://repo.spring.io/snapshot/'
+        }
+        maven {
+            url 'https://repo.spring.io/milestone/'
+        }
+    }
+}
+
+apply plugin: 'org.siouan.frontend-jdk8'
+
+frontend {
+    nodeVersion = '16.16.0'
+    yarnEnabled = true
+    yarnVersion = '3.2.1'
+    assembleScript = 'run build'
+    cleanScript = 'run clean'
+    publishScript = 'run deploy'
+}
+
+wrapper {
+    gradleVersion = '7.4.2'
+}
+
+tasks.register('setupYarnRc') {
+    doLast {
+        File file = new File(".yarnrc.yml")
+        if (!file.exists()) {
+            println("Creating .yarnrc.yml")
+            file.createNewFile()
+            file.text = "nodeLinker: node-modules"
+        }
+    }
+}
+
+tasks.register('yarnStart', RunYarn) {
+    dependsOn tasks.named('installNode')
+    dependsOn tasks.named('installFrontend')
+    script = 'run start'
+}
+
+tasks.register('yarnStop', Exec) {
+    executable "sh"
+    args "-c", '''kill -15 $(ps -efw | grep node | grep scripts/start.js | awk '{print $2}') '''
+    ignoreExitValue = true
+    doLast {
+        println 'Stopping running node server.'
+    }
+}
+
+yarnStart.configure { finalizedBy yarnStop }
+
+tasks.register('yarnUpgrade', RunYarn) {
+    dependsOn tasks.named('installNode')
+    dependsOn tasks.named('installFrontend')
+    script = 'run upgrade'
+}
+
+installYarnGlobally.dependsOn("setupYarnRc")
+
+[assembleFrontend, checkFrontend, yarnStart].each {
+    it.dependsOn(":samples:build", ":docs-util:generateCoalescedAdocs")
+}
+
+defaultTasks 'build'

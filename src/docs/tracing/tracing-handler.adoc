@@ -1,29 +1,17 @@
-A popular way to record them is storing the start state in a `Observation` instance and stop it when the event has ended. In this case, the `Observation` does the recording and reports the data through the `ObservationHandler`s. +
+A popular way to record them is storing the start state in a `Timer.Sample` instance and stop it when the event has ended.
 Recording such measurements could look like this:
 
-[source,java]
-----
-Timer.Sample sample = Timer.start(registry);
-try {
-// do some work here
-} finally {
-sample.stop(Timer.builder("my.timer"));
-}
-----
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=timer,indent=0]
+-----
 
 If you want to have more observation options (such as metrics and tracing out of the box plus anything else you will plug in) then you'll need to rewrite that code to use the `Observation` API.
 
-[source,java]
-----
-ObservationRegistry registry = ObservationRegistry.create();
-Observation observation = Observation.start("my.operation", registry);
-try (Observation.Scope scope = observation.openScope()) {
-    doSomeWorkHere();
-}
-finally {
-    observation.stop();
-}
-----
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=observation,indent=0]
+-----
 
 One of the new features in Micrometer 1.10 is the ability to register "handlers" (`ObservationHandler`) that are notified about the lifecycle event of an observation (e.g.: you can run custom code when an observation is stopped/started).
 Using this feature lets you add tracing capabilities to your existing metrics instrumentation (see: `DefaultTracingObservationHandler`). The implementation of these handlers does not need to be tracing related, it is completely up to you how you are going to implement them (e.g.: you can add logging capabilities) if you want.
@@ -36,280 +24,47 @@ In order to pass information between the instrumented code and the handler (or b
 
 Based on this, we can implement a simple handler that lets the users know about its invocations by printing them out to `stdout`.
 
-[source,java]
-----
-class SimpleHandler implements ObservationHandler<Observation.Context> {
-    @Override
-    public void onStart(Observation.Context context) {
-        System.out.println("START " + "data: " + context.get(String.class));
-    }
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=simple_handler,indent=0]
+-----
 
-    @Override
-    public void onError(Observation.Context context) {
-        System.out.println("ERROR " + "data: " + context.get(String.class) + ", error: " + context.getError().get());
-    }
+You need to register the handler to the `ObservationRegistry`.
 
-    @Override
-    public void onStop(Observation.Context context) {
-        System.out.println("STOP  " + "data: " + context.get(String.class));
-    }
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=register_handler,indent=0]
+-----
 
-    @Override
-    public boolean supportsContext(Timer.HandlerContext handlerContext) {
-        return true; // you can decide if your handler should be invoked for this context object or not
-    }
-}
-----
+You can use the `scoped` method to instrument your codebase.
 
-You can register this handler like this:
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=instrumenting_code,indent=0]
+-----
 
-[source,java]
-----
-ObservationRegistry registry = ObservationRegistry.create();
-registry.observationConfig().observationHandler(new SimpleHandler());
-----
+You can also take full control of the scoping mechanism.
 
-And instrument your codebase. Using the `scoped` method example:
-
-[source,java]
-----
-// using a context is optional, you can call start without it: Observation.start(name, registry)
-ObservationRegistry registry = ObservationRegistry.create();
-Observation.Context context = new Observation.Context().put(String.class, "test");
-Observation.createNotStarted("my.operation", context, registry).observe(() -> doSomeWorkHere());
-----
-
-Fully taking control of the scoping mechanism.
-
-[source,java]
-----
-// using a context is optional, you can call start without it: Observation.start(name, registry)
-ObservationRegistry registry = ObservationRegistry.create();
-Observation.Context context = new Observation.Context().put(String.class, "test");
-Observation observation = Observation.start("my.operation", context, registry);
-try (Observation.Scope scope = observation.openScope()) {
-    doSomeWorkHere();
-}
-catch (Exception ex) {
-    observation.error(ex); // and don't forget to handle exceptions
-    throw ex;
-}
-finally {
-    observation.stop();
-}
-----
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=manual_scoping,indent=0]
+-----
 
 === Observation.ObservationConvention Example
 
 When **instrumenting** code we want to provide sensible defaults for tags but also we want to allow users to easily change those defaults. A `ObservationConvention` interface is a description of what tags and name we should create for an `Observation.Context`. See the full usage example of an instrumentation together with overriding the default tags.
 
-```java
-public class ObservationConventionSample {
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=tax_example,indent=0]
+-----
 
-    public static void main(String[] args) {
-        // Registry setup
-        ObservationRegistry observationRegistry = Observation.create();
-		// add metrics
-        SimpleMeterRegistry registry = new SimpleMeterRegistry();
-        observationRegistry
-                .observationConfig()
-                    .observationHandler(new TimerObservationHandler(registry));
-        observationRegistry
-                .observationConfig()
-                    // these will be applied to all observations
-                    .keyValuesProvider(new GlobalKeyValueProvider())
-                    .observationConvention(new GlobalTaxObservationConvention());
+Below you can find an example of setting the whole code together.
 
-        TaxCalculator taxCalculator = new TaxCalculator(observationRegistry);
-        // you can use a setter to override the default tags provider
-        taxCalculator.setObservationConvention(new CustomTaxObservationConvention());
-        // run the logic you want to observe
-        taxCalculator.calculateTax("INCOME_TAX", "1234567890");
-    }
-
-}
-
-class TaxContext extends Observation.Context {
-    private final String taxType;
-
-    private final String userId;
-
-    TaxContext(String taxType, String userId) {
-        this.taxType = taxType;
-        this.userId = userId;
-    }
-
-    public String getTaxType() {
-        return taxType;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-}
-
-// When registered via the `ObservationRegistry#observationConfig#keyValueProvider` will be applied globally
-class GlobalKeyValueProvider implements Observation.KeyValuesProvider<Observation.Context> {
-
-    @Override
-    public KeyValues getLowCardinalityKeyValues(Observation.Context context) {
-        return KeyValues.of(KeyValue.of("cloud.zone", CloudUtils.getZone()));
-    }
-
-    @Override
-    public KeyValues getHighCardinalityKeyValues(Observation.Context context) {
-        return KeyValues.of(KeyValue.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
-    }
-}
-
-// When registered via the `ObservationRegistry#observationConfig#observationConvention` will be applied globally
-class GlobalTaxObservationConvention implements Observation.ObservationConvention<TaxContext> {
-
-    // this will be applicable for all tax contexts - it will rename all the tax contexts
-    @Override
-    public boolean supportsContext(Observation.Context context) {
-        return context instanceof TaxContext;
-    }
-
-	@Override
-    public String getName() {
-		return "global.tax.calculate";
-    }
-}
-
-// Interface for a ObservationConvention related to calculating Tax
-interface TaxObservationConvention extends Observation.ObservationConvention<TaxContext> {
-    @Override
-    default boolean supportsContext(Observation.Context context) {
-        return context instanceof TaxContext;
-    }
-}
-
-// Default provider of tags related to calculating Tax
-class DefaultTaxObservationConvention implements TaxObservationConvention {
-
-    @Override
-    public KeyValues getLowCardinalityKeyValues(TaxContext context) {
-        return KeyValues.of(TaxObservation.TaxLowCardinalityKeyValues.TAX_TYPE.of(context.getTaxType()));
-    }
-
-    @Override
-    public KeyValues getHighCardinalityKeyValues(TaxContext context) {
-        return KeyValues.of(TaxObservation.TaxHighCardinalityKeyValues.USER_ID.of(context.getUserId()));
-    }
-}
-
-/**
- * If micrometer-docs-generator is used, we will automatically
- * generate documentation for your observations.
- * Check this URL https://github.com/micrometer-metrics/micrometer-docs-generator#documentation for setup example and read the DocumentedObservation javadocs.
- */
-enum TaxObservation implements DocumentedObservation {
-    CALCULATE {
-        @Override
-		public Class<? extends Observation.ObservationConvention<? extends Observation.Context>> getDefaultConvention() {
-			return DefaultTaxObservationConvention.class;
-		}
-
-        @Override
-        public String getContextualName() {
-            return "calculate tax";
-        }
-
-        @Override
-        public String getPrefix() {
-            return "tax";
-        }
-
-        @Override
-        public KeyName[] getLowCardinalityKeyNames() {
-            return TaxLowCardinalityKeyNames.values();
-        }
-
-        @Override
-        public KeyName[] getHighCardinalityKeyNames() {
-            return TaxHighCardinalityKeyNames.values();
-        }
-    };
-
-    enum TaxLowCardinalityKeyNames implements KeyName {
-        TAX_TYPE {
-            @Override
-            public String getKey() {
-                return "tax.type";
-            }
-        }
-    }
-
-    enum TaxHighCardinalityKeyNames implements KeyName {
-        USER_ID {
-            @Override
-            public String getKey() {
-                return "tax.user.id";
-            }
-        }
-    }
-}
-
-// Class that we want to observe
-class TaxCalculator implements Observation.KeyValuesProviderAware<TaxKeyValuesProvider> {
-
-    private final ObservationRegistry observationRegistry;
-
-    private TaxObservationConvention observationConvention;
-
-    TaxCalculator(ObservationRegistry observationRegistry) {
-        this.observationRegistry = observationRegistry;
-    }
-
-    public void calculateTax(String taxType, String userId) {
-        // Create a new context
-        TaxContext taxContext = new TaxContext(taxType, userId);
-        // Create a new observation
-        TaxObservation.CALCULATE.start.observation(this.observationConvention, new DefaultTaxObservationConvention(), taxContext, observationRegistry)
-                // Run the actual logic you want to observe
-                .observe(this::calculateInterest);
-    }
-
-    private void calculateInterest() {
-        // do some work
-    }
-
-    // Use this if you want to override the defaults
-    public void setObservationConvention(TaxObservationConvention observationConvention) {
-        this.observationConvention = observationConvention;
-    }
-}
-
-// Example of user changing the default behaviour
-class CustomTaxObservationConvention extends DefaultTaxObservationConvention {
-    @Override
-    public KeyValues getLowCardinalityKeyValues(TaxContext context) {
-        return super.getLowCardinalityKeyValues(context).and(KeyValue.of("additional.low.cardinality.tag", "value"));
-    }
-
-    @Override
-    public KeyValues getHighCardinalityKeyValues(TaxContext context) {
-        return KeyValues.of("this.would.override.the.default.high.cardinality.tags", "value");
-    }
-
-	@Override
-    public String getName() {
-		return "tax.calculate";
-    }
-}
-
-class CloudUtils {
-
-    static String getZone() {
-        return "...";
-    }
-
-    static String getCloudInstanceId() {
-        return "...";
-    }
-}
-```
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=observation_convention_example,indent=0]
+-----
 
 === Using Annotations With @Observed
 
@@ -317,41 +72,14 @@ If you have turned on Aspect Oriented Programming (e.g. via `org.aspectj:aspectj
 
 Here you can see an `ObservedService` that has an annotation on a method.
 
-```java
-static class ObservedService {
-
-    @Observed(name = "test.call", contextualName = "test#call",
-            lowCardinalityKeyValues = { "abc", "123", "test", "42" })
-    void call() {
-        System.out.println("call");
-    }
-
-}
-```
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=observed_service,indent=0]
+-----
 
 The following test asserts whether when a proxied `ObservedService` instance gets called the proper observation gets created.
 
-```java
-@Test
-    void annotatedCallShouldBeObserved() {
-        // create a test registry
-	    TestObservationRegistry registry = TestObservationRegistry.create();
-		// add a system out printing handler
-        registry.observationConfig().observationHandler(new ObservationTextPublisher());
-
-		// create a proxy around the observed service
-        AspectJProxyFactory pf = new AspectJProxyFactory(new ObservedService());
-        pf.addAspect(new ObservedAspect(registry));
-
-		// make a call
-        ObservedService service = pf.getProxy();
-        service.call();
-
-		// assert that observation has been properly created
-        TestObservationRegistryAssert.assertThat(registry).hasSingleObservationThat().hasBeenStopped()
-                .hasNameEqualTo("test.call").hasContextualNameEqualTo("test#call")
-                .hasLowCardinalityKeyValue("abc", "123").hasLowCardinalityKeyValue("test", "42")
-                .hasLowCardinalityKeyValue("class", ObservedService.class.getName())
-                .hasLowCardinalityKeyValue("method", "call").doesNotHaveError();
-    }
-```
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=observed_aop,indent=0]
+-----
