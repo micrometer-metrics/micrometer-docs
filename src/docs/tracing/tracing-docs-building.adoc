@@ -1,0 +1,73 @@
+== Automated Documentation Building
+
+By using the https://github.com/micrometer-metrics/micrometer-docs-generator[Micrometer Docs Generator] project and by using the `DocumentedObservation`, `DocumentedSpan` or `DocumentedMeter` interfaces we can scan your sources and generate an asciidoctor documentation.
+
+Below you can find an example of a Maven `pom.xml` with the Micrometer Docs Generator project.
+
+.pom.xml
+[source,xml,subs=+attributes]
+-----
+include::../../../samples/src/test/resources/docs-generator-pom.xml[indent=0]
+-----
+
+Below you can find an example of a Gradle `build.gradle` with the Micrometer Docs Generator project.
+
+.build.gradle
+[source,groovy,subs=+attributes]
+-----
+include::../../../samples/src/test/resources/docs-generator-build.gradle[indent=0]
+-----
+
+Running these tasks would lead to generation of adoc files similar to these ones.
+
+._metrics.adoc
+[source,adoc,subs=+attributes]
+-----
+[[observability-metrics]]
+=== Observability - Metrics
+
+Below you can find a list of all samples declared by this project.
+
+[[observability-metrics-task-runner-observation]]
+==== Task Runner Observation
+
+> Observation created when a task runner is executed.
+
+**Metric name** `spring.cloud.task.runner` (defined by convention class `org.springframework.cloud.task.configuration.observation.DefaultTaskObservationConvention`). **Type** `timer` and **base unit** `seconds`.
+
+Fully qualified name of the enclosing class `org.springframework.cloud.task.configuration.observation.TaskDocumentedObservation`.
+
+IMPORTANT: All tags must be prefixed with `spring.cloud.task` prefix!
+
+.Low cardinality Keys
+|===
+|Name | Description
+|`spring.cloud.task.runner.bean-name`|Name of the bean that was executed by Spring Cloud Task.
+|===
+-----
+
+._spans.adoc
+[source,adoc,subs=+attributes]
+-----
+[[observability-spans]]
+=== Observability - Spans
+
+Below you can find a list of all spans declared by this project.
+
+[[observability-spans-task-runner-observation]]
+==== Task Runner Observation Span
+
+> Observation created when a task runner is executed.
+
+**Span name** `spring.cloud.task.runner` (defined by convention class `org.springframework.cloud.task.configuration.observation.DefaultTaskObservationConvention`).
+
+Fully qualified name of the enclosing class `org.springframework.cloud.task.configuration.observation.TaskDocumentedObservation`.
+
+IMPORTANT: All tags and event names must be prefixed with `spring.cloud.task` prefix!
+
+.Tag Keys
+|===
+|Name | Description
+|`spring.cloud.task.runner.bean-name`|Name of the bean that was executed by Spring Cloud Task.
+|===
+-----

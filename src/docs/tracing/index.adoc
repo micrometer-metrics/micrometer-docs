@@ -73,3 +73,7 @@ include::tracing-configuring.adoc[leveloffset=+1]
 == Testing
 
 include::tracing-testing.adoc[leveloffset=+1]
+
+== Documentation Building
+
+include::tracing-docs-building.adoc[leveloffset=+1]

@@ -36,7 +36,7 @@ You need to register the handler to the `ObservationRegistry`.
 include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=register_handler,indent=0]
 -----
 
-You can use the `scoped` method to instrument your codebase.
+You can use the `observe` method to instrument your codebase.
 
 [source,java,subs=+attributes]
 -----

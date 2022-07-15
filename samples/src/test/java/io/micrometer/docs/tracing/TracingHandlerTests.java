@@ -74,7 +74,7 @@ class TracingHandlerTests {
         // tag::instrumenting_code[]
         ObservationRegistry registry = ObservationRegistry.create();
         // using a context is optional, you can call start without it:
-        // Observation.start(name, registry)
+        // Observation.createNotStarted(name, registry)
         Observation.Context context = new Observation.Context().put(String.class, "test");
         Observation.createNotStarted("my.operation", context, registry).observe(this::doSomeWorkHere);
         // end::instrumenting_code[]
