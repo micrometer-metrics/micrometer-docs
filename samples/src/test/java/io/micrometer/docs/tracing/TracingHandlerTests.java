@@ -352,7 +352,7 @@ class TracingHandlerTests {
     /**
      * Our business logic that we want to observe.
      */
-    class TaxCalculator implements Observation.ObservationConventionAware<TaxObservationConvention> {
+    class TaxCalculator {
 
         private final ObservationRegistry observationRegistry;
 
@@ -378,7 +378,6 @@ class TracingHandlerTests {
         }
 
         // Use this if you want to override the defaults
-        @Override
         public void setObservationConvention(TaxObservationConvention observationConvention) {
             this.observationConvention = observationConvention;
         }
