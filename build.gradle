@@ -170,7 +170,6 @@ subprojects {
     description = 'Docs for Micrometer portfolio'
 
     repositories {
-        mavenLocal()
         mavenCentral()
         maven {
             url 'https://repo.spring.io/snapshot/'
@@ -208,7 +207,6 @@ tasks.register('setupYarnRc') {
 }
 
 tasks.register('yarnStart', RunYarn) {
-    dependsOn tasks.named('yarnStop')
     dependsOn tasks.named('installNode')
     dependsOn tasks.named('installFrontend')
     script = 'run start'
@@ -218,7 +216,12 @@ tasks.register('yarnStop', Exec) {
     executable "sh"
     args "-c", '''kill -15 $(ps -efw | grep node | grep scripts/start.js | awk '{print $2}') '''
     ignoreExitValue = true
+    doLast {
+        println 'Stopping running node server.'
+    }
 }
+
+yarnStart.configure { finalizedBy yarnStop }
 
 tasks.register('yarnUpgrade', RunYarn) {
     dependsOn tasks.named('installNode')
