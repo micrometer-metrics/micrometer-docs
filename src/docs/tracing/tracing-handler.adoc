@@ -197,6 +197,11 @@ class DefaultTaxObservationConvention implements TaxObservationConvention {
     public KeyValues getHighCardinalityKeyValues(TaxContext context) {
         return KeyValues.of(TaxObservation.TaxHighCardinalityKeyValues.USER_ID.of(context.getUserId()));
     }
+
+    @Override
+    public String getName() {
+        return "tax.calculate";
+    }
 }
 
 /**
@@ -252,7 +257,7 @@ enum TaxObservation implements DocumentedObservation {
 }
 
 // Class that we want to observe
-class TaxCalculator implements Observation.KeyValuesProviderAware<TaxKeyValuesProvider> {
+class TaxCalculator implements Observation.ObservationConventionAware<TaxObservationConvention> {
 
     private final ObservationRegistry observationRegistry;
 
@@ -276,6 +281,7 @@ class TaxCalculator implements Observation.KeyValuesProviderAware<TaxKeyValuesPr
     }
 
     // Use this if you want to override the defaults
+    @Override
     public void setObservationConvention(TaxObservationConvention observationConvention) {
         this.observationConvention = observationConvention;
     }
@@ -291,11 +297,6 @@ class CustomTaxObservationConvention extends DefaultTaxObservationConvention {
     @Override
     public KeyValues getHighCardinalityKeyValues(TaxContext context) {
         return KeyValues.of("this.would.override.the.default.high.cardinality.tags", "value");
-    }
-
-	@Override
-    public String getName() {
-		return "tax.calculate";
     }
 }
 
@@ -333,25 +334,25 @@ The following test asserts whether when a proxied `ObservedService` instance get
 
 ```java
 @Test
-    void annotatedCallShouldBeObserved() {
-        // create a test registry
-	    TestObservationRegistry registry = TestObservationRegistry.create();
-		// add a system out printing handler
-        registry.observationConfig().observationHandler(new ObservationTextPublisher());
+void annotatedCallShouldBeObserved() {
+    // create a test registry
+    TestObservationRegistry registry = TestObservationRegistry.create();
+    // add a system out printing handler
+    registry.observationConfig().observationHandler(new ObservationTextPublisher());
 
-		// create a proxy around the observed service
-        AspectJProxyFactory pf = new AspectJProxyFactory(new ObservedService());
-        pf.addAspect(new ObservedAspect(registry));
+    // create a proxy around the observed service
+    AspectJProxyFactory pf = new AspectJProxyFactory(new ObservedService());
+    pf.addAspect(new ObservedAspect(registry));
 
-		// make a call
-        ObservedService service = pf.getProxy();
-        service.call();
+    // make a call
+    ObservedService service = pf.getProxy();
+    service.call();
 
-		// assert that observation has been properly created
-        TestObservationRegistryAssert.assertThat(registry).hasSingleObservationThat().hasBeenStopped()
-                .hasNameEqualTo("test.call").hasContextualNameEqualTo("test#call")
-                .hasLowCardinalityKeyValue("abc", "123").hasLowCardinalityKeyValue("test", "42")
-                .hasLowCardinalityKeyValue("class", ObservedService.class.getName())
-                .hasLowCardinalityKeyValue("method", "call").doesNotHaveError();
-    }
+    // assert that observation has been properly created
+    TestObservationRegistryAssert.assertThat(registry).hasSingleObservationThat().hasBeenStopped()
+        .hasNameEqualTo("test.call").hasContextualNameEqualTo("test#call")
+        .hasLowCardinalityKeyValue("abc", "123").hasLowCardinalityKeyValue("test", "42")
+        .hasLowCardinalityKeyValue("class", ObservedService.class.getName())
+        .hasLowCardinalityKeyValue("method", "call").doesNotHaveError();
+}
 ```
