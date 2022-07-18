@@ -174,10 +174,6 @@ frontend {
     publishScript = 'run deploy'
 }
 
-wrapper {
-    gradleVersion = '7.4.2'
-}
-
 tasks.register('setupYarnRc') {
     doLast {
         File file = new File(".yarnrc.yml")
@@ -216,6 +212,14 @@ installYarnGlobally.dependsOn("setupYarnRc")
 
 [assembleFrontend, checkFrontend, yarnStart].each {
     it.dependsOn(":samples:build", ":docs-util:generateCoalescedAdocs")
+}
+
+task deleteLockFiles (type: Delete) {
+    delete fileTree(dir: '.', include: '**/*.lockfile')
+}
+
+wrapper {
+    gradleVersion = '7.4.2'
 }
 
 defaultTasks 'build'
