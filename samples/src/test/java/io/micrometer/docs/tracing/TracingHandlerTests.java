@@ -20,7 +20,7 @@ import io.micrometer.common.KeyValues;
 import io.micrometer.common.docs.KeyName;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
-import io.micrometer.core.instrument.observation.TimerObservationHandler;
+import io.micrometer.core.instrument.observation.DefaultMeterObservationHandler;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationHandler;
@@ -108,7 +108,7 @@ class TracingHandlerTests {
         ObservationRegistry observationRegistry = ObservationRegistry.create();
         // add metrics
         SimpleMeterRegistry registry = new SimpleMeterRegistry();
-        observationRegistry.observationConfig().observationHandler(new TimerObservationHandler(registry));
+        observationRegistry.observationConfig().observationHandler(new DefaultMeterObservationHandler(registry));
         observationRegistry.observationConfig()
                 // these will be applied to all observations
                 .keyValuesProvider(new GlobalKeyValueProvider())

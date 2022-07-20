@@ -16,7 +16,7 @@
 package io.micrometer.docs.tracing;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.observation.TimerObservationHandler;
+import io.micrometer.core.instrument.observation.DefaultMeterObservationHandler;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
@@ -39,7 +39,7 @@ class TracingConfiguringTests {
         ObservationRegistry registry = ObservationRegistry.create();
         registry.observationConfig()
                 // assuming that micrometer-core is on the classpath
-                .observationHandler(new TimerObservationHandler(meterRegistry))
+                .observationHandler(new DefaultMeterObservationHandler(meterRegistry))
                 // we set up a handler that creates spans - it comes from Micrometer
                 // Tracing
                 .observationHandler(new DefaultTracingObservationHandler(tracer));
