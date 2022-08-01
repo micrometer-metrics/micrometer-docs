@@ -34,6 +34,9 @@ import io.micrometer.observation.tck.TestObservationRegistryAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 
+import static io.micrometer.docs.tracing.TracingHandlerTests.TaxObservation.TaxHighCardinalityKeyNames.USER_ID;
+import static io.micrometer.docs.tracing.TracingHandlerTests.TaxObservation.TaxLowCardinalityKeyNames.TAX_TYPE;
+
 /**
  * Sources for tracing-handler.adoc
  */
@@ -110,12 +113,11 @@ class TracingHandlerTests {
         SimpleMeterRegistry registry = new SimpleMeterRegistry();
         observationRegistry.observationConfig().observationHandler(new DefaultMeterObservationHandler(registry));
         observationRegistry.observationConfig()
-                // these will be applied to all observations
-                .keyValuesProvider(new GlobalKeyValueProvider())
+                // this will be applied to all observations
                 .observationConvention(new GlobalTaxObservationConvention());
 
         TaxCalculator taxCalculator = new TaxCalculator(observationRegistry);
-        // you can use a setter to override the default tags provider
+        // you can use a setter to override the default convention
         taxCalculator.setObservationConvention(new CustomTaxObservationConvention());
         // run the logic you want to observe
         taxCalculator.calculateTax("INCOME_TAX", "1234567890");
@@ -179,7 +181,7 @@ class TracingHandlerTests {
         @Override
         public boolean supportsContext(Observation.Context handlerContext) {
             return true; // you can decide if your handler should be invoked for this
-            // context object or not
+                         // context object or not
         }
 
     }
@@ -212,33 +214,9 @@ class TracingHandlerTests {
     }
 
     /**
-     * An example of a {@link Observation.GlobalKeyValuesProvider} that adds cloud related
-     * tags to all contexts. When registered via the
-     * `ObservationRegistry#observationConfig#keyValueProvider` will be applied globally.
-     */
-    class GlobalKeyValueProvider implements Observation.GlobalKeyValuesProvider<Observation.Context> {
-
-        @Override
-        public KeyValues getLowCardinalityKeyValues(Observation.Context context) {
-            return KeyValues.of(KeyValue.of("cloud.zone", CloudUtils.getZone()));
-        }
-
-        @Override
-        public KeyValues getHighCardinalityKeyValues(Observation.Context context) {
-            return KeyValues.of(KeyValue.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
-        }
-
-        @Override
-        public boolean supportsContext(Observation.Context context) {
-            return true;
-        }
-
-    }
-
-    /**
      * An example of a {@link Observation.ObservationConvention} that renames the tax
-     * related observations. When registered via the
-     * `ObservationRegistry#observationConfig#observationConvention` will be applied
+     * related observations adds cloud related tags to all contexts. When registered via
+     * the `ObservationRegistry#observationConfig#observationConvention` will be applied
      * globally.
      */
     class GlobalTaxObservationConvention implements Observation.GlobalObservationConvention<TaxContext> {
@@ -255,6 +233,16 @@ class TracingHandlerTests {
             return "global.tax.calculate";
         }
 
+        @Override
+        public KeyValues getLowCardinalityKeyValues(TaxContext context) {
+            return KeyValues.of(KeyValue.of("cloud.zone", CloudUtils.getZone()));
+        }
+
+        @Override
+        public KeyValues getHighCardinalityKeyValues(TaxContext context) {
+            return KeyValues.of(KeyValue.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
+        }
+
     }
 
     // Interface for a ObservationConvention related to calculating Tax
@@ -268,19 +256,19 @@ class TracingHandlerTests {
     }
 
     /**
-     * Default provider of tags related to calculating tax. If no other will be provided
+     * Default convention of tags related to calculating tax. If no other will be provided
      * either via a setter or global registration then this one will be picked.
      */
     class DefaultTaxObservationConvention implements TaxObservationConvention {
 
         @Override
         public KeyValues getLowCardinalityKeyValues(TaxContext context) {
-            return KeyValues.of(TaxObservation.TaxLowCardinalityKeyNames.TAX_TYPE.of(context.getTaxType()));
+            return KeyValues.of(TAX_TYPE.withValue(context.getTaxType()));
         }
 
         @Override
         public KeyValues getHighCardinalityKeyValues(TaxContext context) {
-            return KeyValues.of(TaxObservation.TaxHighCardinalityKeyNames.USER_ID.of(context.getUserId()));
+            return KeyValues.of(USER_ID.withValue(context.getUserId()));
         }
 
         @Override
@@ -329,7 +317,7 @@ class TracingHandlerTests {
 
             TAX_TYPE {
                 @Override
-                public String getKeyName() {
+                public String asString() {
                     return "tax.type";
                 }
             }
@@ -340,7 +328,7 @@ class TracingHandlerTests {
 
             USER_ID {
                 @Override
-                public String getKeyName() {
+                public String asString() {
                     return "tax.user.id";
                 }
             }
