@@ -50,6 +50,17 @@ You can also take full control of the scoping mechanism.
 include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=manual_scoping,indent=0]
 -----
 
+=== Signaling errors and arbitrary events
+
+When **instrumenting** code we might want to signal that an error happened or signal that an arbitrary event happened. The observation API lets us do it via it `error` and `event` methods.
+
+One use-case for signaling arbitrary event can be attaching annotations to `Span` for Distributed Tracing but you can also process them however you want in your own handler, e.g.: emit log events based off of them.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandlerTests.java[tags=error_and_event,indent=0]
+-----
+
 === Observation.ObservationConvention Example
 
 When **instrumenting** code we want to provide sensible defaults for tags but also we want to allow users to easily change those defaults. A `ObservationConvention` interface is a description of what tags and name we should create for an `Observation.Context`. See the full usage example of an instrumentation together with overriding the default tags.

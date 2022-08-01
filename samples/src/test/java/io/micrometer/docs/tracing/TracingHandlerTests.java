@@ -105,6 +105,25 @@ class TracingHandlerTests {
     }
 
     @Test
+    void error_and_event() {
+        // tag::error_and_event[]
+        ObservationRegistry registry = ObservationRegistry.create();
+        Observation observation = Observation.start("my.operation", registry);
+        try (Observation.Scope scope = observation.openScope()) {
+            observation.event(new Observation.Event("my.event", "look what happened"));
+            doSomeWorkHere();
+        }
+        catch (Exception exception) {
+            observation.error(exception);
+            throw exception;
+        }
+        finally {
+            observation.stop();
+        }
+        // end::error_and_event[]
+    }
+
+    @Test
     void observation_convention_example() {
         // tag::observation_convention_example[]
         // Registry setup
