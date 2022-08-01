@@ -174,6 +174,11 @@ class TracingHandlerTests {
         }
 
         @Override
+        public void onEvent(Observation.Event event, Observation.Context context) {
+            System.out.println("EVENT " + "event: " + event + " data: " + context.get(String.class));
+        }
+
+        @Override
         public void onStop(Observation.Context context) {
             System.out.println("STOP  " + "data: " + context.get(String.class));
         }
