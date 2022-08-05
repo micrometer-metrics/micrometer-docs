@@ -54,7 +54,7 @@ At each publishing interval, the SignalFx `Timer` produces several time series i
 * `${name}.count`: Throughput per second over the publishing interval.
 * `${name}.totalTime`: Total time per second over the publishing interval (used with `count`) to create aggregable means.
 * `${name}.percentiles`: Micrometer calculated percentiles for the publishing interval. One time series is produced for each percentile, with a tag of `phi` in the range of [0,1].
-* `${name}.histogram`: One event is produced for each SLA boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLA boundaries over the publishing interval.
+* `${name}.histogram`: One event is produced for each SLO boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLO boundaries over the publishing interval.
 
 To generate an aggregable view of latency in SignalFx, divide `totalTime` by `count`:
 
@@ -77,9 +77,9 @@ image::img/signalfx-timer-percentiles.png[SignalFx-rendered percentiles]
 
 Note that these percentiles are _not aggregable_. The more dimensions you add to a timer, the less useful these values become.
 
-Finally, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries by using the `${name}.histogram` signal. In this example, we set SLA boundaries at 275 (green), 300 (blue), and 500 (purple) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
+Finally, if you define SLO boundaries with the fluent builder for `Timer`, you can view throughput below certain SLO boundaries by using the `${name}.histogram` signal. In this example, we set SLO boundaries at 275 (green), 300 (blue), and 500 (purple) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLO boundary.
 
-.Timer SLA boundaries.
-image::img/signalfx-timer-sla.png[SignalFx-rendered SLA boundaries]
+.Timer SLO boundaries.
+image::img/signalfx-timer-sla.png[SignalFx-rendered SLO boundaries]
 
-Where the lines converge at various points it is evident that no sample exceeded the 275 ms SLA boundary.
+Where the lines converge at various points it is evident that no sample exceeded the 275 ms SLO boundary.

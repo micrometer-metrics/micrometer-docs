@@ -105,7 +105,7 @@ too high cardinality and starts stressing your monitoring system or costing too 
 
 == Configuring Distribution Statistics
 
-`Timer` and `DistributionSummary` contain a set of optional distribution statistics (in addition to the basics of count, total, and max) that you can configure through filters. These distribution statistics include pre-computed percentiles, SLAs, and histograms.
+`Timer` and `DistributionSummary` contain a set of optional distribution statistics (in addition to the basics of count, total, and max) that you can configure through filters. These distribution statistics include pre-computed percentiles, SLOs, and histograms.
 
 ====
 [source, java]
@@ -125,11 +125,11 @@ new MeterFilter() {
 ----
 ====
 
-Generally, you should create a new `DistributionStatisticConfig` with only the pieces you wish to configure and then `merge` it with the input configuration. This lets you drop down on registry-provided defaults for distribution statistics and to chain multiple filters together, each configuring some part of the distribution statistics (for example, you might want a 100ms SLA for all HTTP requests but only percentile histograms on a few critical endpoints).
+Generally, you should create a new `DistributionStatisticConfig` with only the pieces you wish to configure and then `merge` it with the input configuration. This lets you drop down on registry-provided defaults for distribution statistics and to chain multiple filters together, each configuring some part of the distribution statistics (for example, you might want a 100ms SLO for all HTTP requests but only percentile histograms on a few critical endpoints).
 
 `MeterFilter` provides convenience builders for:
 
 * `maxExpected(Duration/long)`: Governs the upper bound of percentile histogram buckets shipped from a timer or summary.
 * `minExpected(Duration/long)`: Governs the lower bound of percentile histogram buckets shipped from a timer or summary.
 
-Spring Boot offers property-based filters for configuring SLAs, percentiles, and percentile histograms by name prefix.
+Spring Boot offers property-based filters for configuring SLOs, percentiles, and percentile histograms by name prefix.

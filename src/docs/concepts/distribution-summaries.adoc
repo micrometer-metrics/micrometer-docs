@@ -57,7 +57,7 @@ DistributionSummary.builder("my.ratio")
 The total memory footprint of a distribution summary can vary dramatically, depending on which options you choose. The following table of memory consumption is based on the use of various features. These figures assume no tags and a ring buffer length of 3. Adding tags adds somewhat to the total, as does increasing the buffer length. Total storage can also vary somewhat depending on the registry implementation.
 
 * R = Ring buffer length. We assume the default of 3 in all examples. R is set with `DistributionSummary.Builder#distributionStatisticBufferLength`.
-* B = Total histogram buckets. It can be SLA boundaries or percentile histogram buckets. By default, summaries have NO minimum and maximum expected value, so we ship all 276 predetermined histogram buckets. You should always clamp distribution summaries with a `minimumExpectedValue` and `maximumExpectedValue` when you intend to ship percentile histograms.
+* B = Total histogram buckets. It can be SLO boundaries or percentile histogram buckets. By default, summaries have NO minimum and maximum expected value, so we ship all 276 predetermined histogram buckets. You should always clamp distribution summaries with a `minimumExpectedValue` and `maximumExpectedValue` when you intend to ship percentile histograms.
 * M = Time-decaying max. 104 bytes.
 * Fb = Fixed boundary histogram. 8b * B * R.
 * Pp = Percentile precision. By default, it is 1. It is generally in the range of [0, 3]. Pp is set with `DistributionSummary.Builder#percentilePrecision`.
@@ -70,7 +70,7 @@ The total memory footprint of a distribution summary can vary dramatically, depe
 
 [width="80%",options="header"]
 |=========================================================
-|Client-side percentiles |Histogram and/or SLAs |Formula | Example
+|Client-side percentiles |Histogram and/or SLOs |Formula | Example
 
 |No  |No  |M| ~0.1kb
 |No  |Yes |M + Fb|For percentile histogram clamped to 66 buckets, ~6kb

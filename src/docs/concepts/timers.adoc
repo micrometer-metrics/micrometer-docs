@@ -148,7 +148,7 @@ FunctionTimer.builder("cache.gets.latency", cache,
 
 == Pause Detection
 
-Micrometer uses the `LatencyUtils` package to compensate for https://highscalability.com/blog/2015/10/5/your-load-generator-is-probably-lying-to-you-take-the-red-pi.html[coordinated omission] -- extra latency arising from system and VM pauses that skew your latency statistics downward. Distribution statistics, such as percentiles and SLA counts, are influenced by a pause detector implementation that adds additional latency here and there to compensate for pauses.
+Micrometer uses the `LatencyUtils` package to compensate for https://highscalability.com/blog/2015/10/5/your-load-generator-is-probably-lying-to-you-take-the-red-pi.html[coordinated omission] -- extra latency arising from system and VM pauses that skew your latency statistics downward. Distribution statistics, such as percentiles and SLO counts, are influenced by a pause detector implementation that adds additional latency here and there to compensate for pauses.
 
 Micrometer supports two pause detector implementations: a clock-drift based detector and a no-op detector. Before Micrometer 1.0.10/1.1.4/1.2.0, a clock-drift detector was configured by default to report as-accurate-as-possible metrics without further configuration. Since 1.0.10/1.1.4/1.2.0, the no-op detector is configured by default, but the clock-drift detector can be configured as shown in the next example.
 
@@ -169,7 +169,7 @@ In the future, we may provide further detector implementations. Some pauses may 
 Timers are the most memory-consuming meter, and their total footprint can vary dramatically, depending on which options you choose. The following table of memory consumption is based on the use of various features. These figures assume no tags and a ring buffer length of 3. Adding tags adds somewhat to the total, as does increasing the buffer length. Total storage can also vary somewhat depending on the registry implementation.
 
 * R = Ring buffer length. We assume the default of 3 in all examples. R is set with `Timer.Builder#distributionStatisticBufferLength`.
-* B = Total histogram buckets. Can be SLA boundaries or percentile histogram buckets. By default, timers are clamped to a minimum expected value of 1ms and a maximum expected value of 30 seconds, yielding 66 buckets for percentile histograms, when applicable.
+* B = Total histogram buckets. Can be SLO boundaries or percentile histogram buckets. By default, timers are clamped to a minimum expected value of 1ms and a maximum expected value of 30 seconds, yielding 66 buckets for percentile histograms, when applicable.
 * I = Interval estimator for pause compensation. 1.7 kb.
 * M = Time-decaying max. 104 bytes.
 * Fb = Fixed boundary histogram. 8b * B * R.
@@ -182,7 +182,7 @@ Timers are the most memory-consuming meter, and their total footprint can vary d
 
 [width="80%",options="header"]
 |=========================================================
-|Pause detection |Client-side percentiles |Histogram and/or SLAs |Formula | Example
+|Pause detection |Client-side percentiles |Histogram and/or SLOs |Formula | Example
 
 |Yes |No  |No  |I + M| ~1.8kb
 |Yes |No  |Yes |I + M + Fb|For default percentile histogram, ~7.7kb

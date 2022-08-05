@@ -64,10 +64,10 @@ At each publishing interval, the New Relic `Timer` produces a single event with 
 * `count`: Throughput per second over the publishing interval.
 * `totalTime`: Total time per second over the publishing interval (used with `count`) to create aggregable means.
 
-Additionally, if any percentiles or SLA buckets are defined on the timer, additional events are produced:
+Additionally, if any percentiles or SLO buckets are defined on the timer, additional events are produced:
 
 * `${name}.percentiles`: Micrometer calculated percentiles for the publishing interval. One event is produced for each percentile, with a tag of `phi` in the range of [0,1].
-* `${name}.histogram`: One event is produced for each SLA boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLA boundaries over the publishing interval.
+* `${name}.histogram`: One event is produced for each SLO boundary with a tag of 'le', indicating that it represents a cumulative count of events less than or equal to SLO boundaries over the publishing interval.
 
 To generate an aggregable view of latency in New Relic, divide `totalTime` by `count`:
 
@@ -101,14 +101,14 @@ image::img/new-relic-timer-percentiles.png[New Relic-rendered percentiles]
 
 Note how these percentiles are _not aggregable_. We have selected the `latest(value)` function to display this chart (it isn't correct to `average(value)` on a percentile value). The more dimensions you add to a timer, the less useful these values become.
 
-Finally, if you define SLA boundaries with the fluent builder for `Timer`, you can view throughput below certain SLA boundaries. In this example, we set SLA boundaries at 275 (yellow), 300 (red), and 500 (blue) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLA boundary.
+Finally, if you define SLO boundaries with the fluent builder for `Timer`, you can view throughput below certain SLO boundaries. In this example, we set SLO boundaries at 275 (yellow), 300 (red), and 500 (blue) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLO boundary.
 
 [source,sql]
 ----
 SELECT sum(value) from timerHistogram FACET le since 30 minutes ago TIMESERIES auto
 ----
 
-.Timer SLA boundaries.
-image::img/new-relic-timer-sla.png[New Relic-rendered SLA boundaries]
+.Timer SLO boundaries.
+image::img/new-relic-timer-sla.png[New Relic-rendered SLO boundaries]
 
-Where the lines converge at various points, it is evident that no sample exceeded the 275 ms SLA boundary.
+Where the lines converge at various points, it is evident that no sample exceeded the 275 ms SLO boundary.
