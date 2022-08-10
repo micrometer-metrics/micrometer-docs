@@ -7,9 +7,6 @@ Wavefront is a dimensional monitoring system offered as a SaaS with a full UI, c
 
 include::install.adoc[]
 
-NOTE: Wavefront support was updated in Micrometer 1.2.0, so the following assumes that you are
-using at least that version.
-
 == Configuring
 
 This section describes how to configure Wavefront when you send data:

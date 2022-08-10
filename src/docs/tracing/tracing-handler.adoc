@@ -18,7 +18,7 @@ Using this feature lets you add tracing capabilities to your existing metrics in
 
 === Observation.Context
 
-In order to pass information between the instrumented code and the handler (or between handler methods, e.g.: `onStart` and `onStop`), you can utilize a `Observation.Context`. A `Observation.Context` is a `Map`-like container that can store values for you while your handler can access the data inside the context.
+In order to pass information between the instrumented code and the handler (or between handler methods, e.g.: `onStart` and `onStop`), you can utilize an `Observation.Context`. An `Observation.Context` is a `Map`-like container that can store values for you while your handler can access the data inside the context.
 
 === ObservationHandler Example
 
@@ -63,7 +63,7 @@ include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingHandle
 
 === Observation.ObservationConvention Example
 
-When **instrumenting** code we want to provide sensible defaults for tags but also we want to allow users to easily change those defaults. A `ObservationConvention` interface is a description of what tags and name we should create for an `Observation.Context`. See the full usage example of an instrumentation together with overriding the default tags.
+When **instrumenting** code we want to provide sensible defaults for tags but also we want to allow users to easily change those defaults. An `ObservationConvention` interface is a description of what tags and name we should create for an `Observation.Context`. See the full usage example of an instrumentation together with overriding the default tags.
 
 [source,java,subs=+attributes]
 -----

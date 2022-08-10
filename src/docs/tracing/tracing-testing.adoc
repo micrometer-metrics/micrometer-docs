@@ -5,10 +5,10 @@ For unit tests it provides a `SimpleTracer` that is a test implementation of a `
 For the integration tests it provides a `SampleTestRunner` mechanism that you can hook into your samples.
 It will
 
-* Configure a OpenZipkin Brave Tracer
+* Configure an OpenZipkin Brave Tracer
 ** Set it up with Tanzu Observability by Wavefront Reporter
 ** Set it up with OpenZipkin Zipkin Reporter
-* Configure a OpenTelemetry Tracer
+* Configure an OpenTelemetry Tracer
 ** Set it up with Tanzu Observability by Wavefront Exporter
 ** Set it up with OpenZipkin Zipkin Exporter
 * Run all the combinations above against the user code and running infrastructure
