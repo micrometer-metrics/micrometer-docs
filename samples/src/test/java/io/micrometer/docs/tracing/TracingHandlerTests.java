@@ -269,7 +269,7 @@ class TracingHandlerTests {
 
     }
 
-    // Interface for a ObservationConvention related to calculating Tax
+    // Interface for an ObservationConvention related to calculating Tax
     interface TaxObservationConvention extends Observation.ObservationConvention<TaxContext> {
 
         @Override
