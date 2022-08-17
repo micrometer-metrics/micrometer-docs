@@ -12,6 +12,7 @@ include::install.adoc[]
 == Configuring
 
 For setting up new integrations with Dynatrace, it is recommended to use the latest version of the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/[Dynatrace Metrics API] (v2).
+If you are using Micrometer with Spring Boot, please also refer to the https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/ingestion-methods/micrometer/[Dynatrace documentation] and/or https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.metrics.export.dynatrace[the Spring Boot documentation].
 Dynatrace provides different ways of setting up integrations:
 
 === Using Dynatrace auto-configuration (preferred) [[bookmark-auto-configuration]]
@@ -57,7 +58,9 @@ MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTE
 
 `DynatraceConfig` is an interface with a set of default methods.
 Spring Boot's Micrometer support binds properties prefixed with `management.metrics.export.dynatrace` directly to the `DynatraceConfig`.
-This allows configuring the Dynatrace exporter by using the <<bookmark-available-properties, the available properties>>.
+This allows configuring the Dynatrace exporter by using <<bookmark-available-properties, the available properties>>.
+When using Micrometer in Spring Boot, you don't have to instantiate the `DynatraceMeterRegistry` manually, Spring Boot will do it automatically.
+All properties that can be set by overwriting methods can also be set via Spring Boot, and adding a separate MeterRegistry can lead to metrics not being exported as auto-configuration might break.
 
 To use the Dynatrace metrics exporter for Micrometer in your Spring Boot project, it is enough to include the `runtimeOnly 'io.micrometer:micrometer-registry-dynatrace'` dependency.
 In this default configuration, metrics will be exported to the local OneAgent or Kubernetes operator-provided endpoint.
@@ -148,44 +151,6 @@ The entire Metrics v2 API endpoint URI has to be specified including its path, i
 
 When using the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/[Dynatrace metrics API v2], the following properties can be set:
 
-[source,yml]
-----
-management.metrics.export.dynatrace:
-    # Required only if not using the OneAgent endpoint
-    # For SaaS: https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest
-    # For managed deployments: https://{your-domain}/e/{your-environment-id}/api/v2/metrics/ingest
-    uri: YOUR_METRICS_INGEST_URL
-
-    # should be read from a secure source
-    api-token: YOUR_METRICS_INGEST_TOKEN
-
-    # These properties can only be used with the v2 exporter.
-    v2:
-        # Sets a prefix that is prepended to each exported metric key.
-        metric-key-prefix: my.metric.key.prefix
-
-        # If set to true and a local OneAgent or operator is running, retrieves metadata
-        # and adds it as additional dimensions to all data points (default: true)
-        enrich-with-dynatrace-metadata: true
-
-        # Sets an arbitrary number of key-value pairs as default dimensions.
-        # Micrometer tags will overwrite these dimensions, if they have the same key.
-        # Each exported metric will contain these dimensions.
-        default-dimensions:
-            key1: "value1"
-            key2: "value2"
-
-        # (since 1.9.0) Whether or not to use the Dynatrace-specific summary instruments. (default: true)
-        # This should only be disabled if problems with existing instrumentation are discovered after upgrading to 1.9.0.
-        # Set to false, this will restore the previous (1.8.x) behavior for Timers and DistributionSummaries.
-        use-dynatrace-summary-instruments: true
-
-    # The export interval in which metrics are sent to Dynatrace (default: 60s).
-    step: 60s
-----
-
-These properties can also be set in code by overwriting the respective methods of the `DynatraceConfig` class:
-
 [source,java]
 ----
 DynatraceConfig dynatraceConfig = new DynatraceConfig() {
@@ -242,9 +207,50 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 };
 ----
 
+These properties can also be set in Spring Boot configuration files:
+
+[source,yml]
+----
+management.metrics.export.dynatrace:
+    # Required only if not using the OneAgent endpoint
+    # For SaaS: https://{your-environment-id}.live.dynatrace.com/api/v2/metrics/ingest
+    # For managed deployments: https://{your-domain}/e/{your-environment-id}/api/v2/metrics/ingest
+    uri: YOUR_METRICS_INGEST_URL
+
+    # should be read from a secure source
+    api-token: YOUR_METRICS_INGEST_TOKEN
+
+    # These properties can only be used with the v2 exporter.
+    v2:
+        # Sets a prefix that is prepended to each exported metric key.
+        metric-key-prefix: my.metric.key.prefix
+
+        # If set to true and a local OneAgent or operator is running, retrieves metadata
+        # and adds it as additional dimensions to all data points (default: true)
+        enrich-with-dynatrace-metadata: true
+
+        # Sets an arbitrary number of key-value pairs as default dimensions.
+        # Micrometer tags will overwrite these dimensions, if they have the same key.
+        # Each exported metric will contain these dimensions.
+        default-dimensions:
+            key1: "value1"
+            key2: "value2"
+
+        # (since 1.9.0) Whether or not to use the Dynatrace-specific summary instruments. (default: true)
+        # This should only be disabled if problems with existing instrumentation are discovered after upgrading to 1.9.0.
+        # Set to false, this will restore the previous (1.8.x) behavior for Timers and DistributionSummaries.
+        use-dynatrace-summary-instruments: true
+
+    # The export interval in which metrics are sent to Dynatrace (default: 60s).
+    step: 60s
+----
+
 For more information about the metadata picked up by the Dynatrace metadata enrichment feature, see https://www.dynatrace.com/support/help/how-to-use-dynatrace/metrics/metric-ingestion/ingestion-methods/enrich-metrics/[the Dynatrace documentation].
 
-In Micrometer 1.9.0, Dynatrace-specific summary instruments (`DynatraceTimer` and `DynatraceDistributionSummary`) were introduced. These specialized instruments are tailored to the Dynatrace metrics ingest, and prevent the creation of invalid metrics. They are available from version 1.9.0 and are used as a drop-in replacement by default. No action is needed from users upgrading to 1.9.0. If there is a discrepancy in the observed metrics, it is possible to return to the previous behavior by setting the `useDynatraceSummaryInstruments` toggle to `false`.
+In Micrometer 1.9.0, Dynatrace-specific summary instruments (`DynatraceTimer` and `DynatraceDistributionSummary`) were introduced.
+These specialized instruments are tailored to the Dynatrace metrics ingest, and prevent the creation of invalid metrics.
+They are available from version 1.9.0 and are used as a drop-in replacement by default.
+No action is needed from users upgrading to 1.9.0. If there is a discrepancy in the observed metrics, it is possible to return to the previous behavior by setting the `useDynatraceSummaryInstruments` toggle to `false`.
 
 === API v1 (Legacy) [[bookmark-apiv1]]
 
