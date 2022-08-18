@@ -12,7 +12,7 @@ include::install.adoc[]
 == Configuring
 
 For setting up new integrations with Dynatrace, it is recommended to use the latest version of the https://www.dynatrace.com/support/help/dynatrace-api/environment-api/metric-v2/[Dynatrace Metrics API] (v2).
-If you are using Micrometer with Spring Boot, please also refer to the https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/ingestion-methods/micrometer/[Dynatrace documentation] and/or https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.metrics.export.dynatrace[the Spring Boot documentation].
+If you are using Micrometer with Spring Boot, please also refer to the https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/ingestion-methods/micrometer/[Dynatrace documentation] and/or the https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.metrics.export.dynatrace[Spring Boot documentation].
 Dynatrace provides different ways of setting up integrations:
 
 === Using Dynatrace auto-configuration (preferred) [[bookmark-auto-configuration]]
@@ -59,8 +59,8 @@ MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTE
 `DynatraceConfig` is an interface with a set of default methods.
 Spring Boot's Micrometer support binds properties prefixed with `management.metrics.export.dynatrace` directly to the `DynatraceConfig`.
 This allows configuring the Dynatrace exporter by using <<bookmark-available-properties, the available properties>>.
-When using Micrometer in Spring Boot, you don't have to instantiate the `DynatraceMeterRegistry` manually, Spring Boot will do it automatically.
-All properties that can be set by overwriting methods can also be set via Spring Boot, and adding a separate MeterRegistry can lead to metrics not being exported as auto-configuration might break.
+When using Micrometer with Spring Boot, you don't have to instantiate the `DynatraceMeterRegistry` manually, Spring Boot will do it automatically for you.
+All configuration options that can be set by overwriting methods can also be set via Spring Boot properties, and adding a separate MeterRegistry can lead to metrics not being exported as auto-configuration might break.
 
 To use the Dynatrace metrics exporter for Micrometer in your Spring Boot project, it is enough to include the `runtimeOnly 'io.micrometer:micrometer-registry-dynatrace'` dependency.
 In this default configuration, metrics will be exported to the local OneAgent or Kubernetes operator-provided endpoint.
