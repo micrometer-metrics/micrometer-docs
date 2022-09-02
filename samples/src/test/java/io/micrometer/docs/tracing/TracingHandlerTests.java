@@ -110,7 +110,7 @@ class TracingHandlerTests {
         ObservationRegistry registry = ObservationRegistry.create();
         Observation observation = Observation.start("my.operation", registry);
         try (Observation.Scope scope = observation.openScope()) {
-            observation.event(new Observation.Event("my.event", "look what happened"));
+            observation.event(Observation.Event.of("my.event", "look what happened"));
             doSomeWorkHere();
         }
         catch (Exception exception) {
