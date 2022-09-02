@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation 'io.micrometer:micrometer-core'
+    implementation 'io.micrometer:context-propagation'
     implementation 'io.micrometer:micrometer-tracing'
     implementation 'ch.qos.logback:logback-classic'
     implementation 'org.slf4j:slf4j-api'

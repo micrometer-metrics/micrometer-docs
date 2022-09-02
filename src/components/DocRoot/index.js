@@ -166,6 +166,9 @@ export default function DocRoot() {
         <li><NavLink className="doc-section" to="/docs/tracing">Micrometer Tracing</NavLink>. An introduction to
           the abstraction provided by Micrometer Tracing.
         </li>
+        <li><NavLink className="doc-section" to="/docs/contextPropagation">Micrometer Context Propagation</NavLink>. An introduction to
+          the abstraction provided by Micrometer Context Propagation.
+        </li>
         <li>
           <NavLink className="doc-section" to="/docs/support">Support policy</NavLink>. Micrometer's support policy for releases.
         </li>
