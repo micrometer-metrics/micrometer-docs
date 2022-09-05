@@ -38,7 +38,7 @@ class DefaultContextSnapshotTests {
         // When you set a thread local value...
         ObservationThreadLocalHolder.setValue("hello");
         // ... we can capture it using ContextSnapshot
-        ContextSnapshot snapshot = ContextSnapshot.captureAllUsing(registry, key -> true);
+        ContextSnapshot snapshot = ContextSnapshot.captureAllUsing(key -> true, registry);
 
         // After capturing if you change the thread local value again ContextSnapshot will
         // not see it
