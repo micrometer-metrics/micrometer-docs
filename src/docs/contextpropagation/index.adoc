@@ -1,4 +1,4 @@
-= Tracing support
+= Context Propagation support
 :toc:
 :sectnums:
 :dimensional: true
