@@ -26,8 +26,8 @@ import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationHandler;
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.ObservationTextPublisher;
-import io.micrometer.observation.Observation.GlobalObservationConvention;
-import io.micrometer.observation.Observation.ObservationConvention;
+import io.micrometer.observation.GlobalObservationConvention;
+import io.micrometer.observation.ObservationConvention;
 import io.micrometer.observation.annotation.Observed;
 import io.micrometer.observation.aop.ObservedAspect;
 import io.micrometer.observation.docs.DocumentedObservation;
@@ -314,7 +314,7 @@ class TracingHandlerTests {
 
         CALCULATE {
             @Override
-            public Class<? extends Observation.ObservationConvention<? extends Observation.Context>> getDefaultConvention() {
+            public Class<? extends ObservationConvention<? extends Observation.Context>> getDefaultConvention() {
                 return DefaultTaxObservationConvention.class;
             }
 
