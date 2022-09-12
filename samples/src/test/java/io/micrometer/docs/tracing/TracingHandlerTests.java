@@ -26,6 +26,8 @@ import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationHandler;
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.ObservationTextPublisher;
+import io.micrometer.observation.Observation.GlobalObservationConvention;
+import io.micrometer.observation.Observation.ObservationConvention;
 import io.micrometer.observation.annotation.Observed;
 import io.micrometer.observation.aop.ObservedAspect;
 import io.micrometer.observation.docs.DocumentedObservation;
@@ -243,7 +245,7 @@ class TracingHandlerTests {
      * the `ObservationRegistry#observationConfig#observationConvention` will be applied
      * globally.
      */
-    class GlobalTaxObservationConvention implements Observation.GlobalObservationConvention<TaxContext> {
+    class GlobalTaxObservationConvention implements GlobalObservationConvention<TaxContext> {
 
         // this will be applicable for all tax contexts - it will rename all the tax
         // contexts
@@ -270,7 +272,7 @@ class TracingHandlerTests {
     }
 
     // Interface for an ObservationConvention related to calculating Tax
-    interface TaxObservationConvention extends Observation.ObservationConvention<TaxContext> {
+    interface TaxObservationConvention extends ObservationConvention<TaxContext> {
 
         @Override
         default boolean supportsContext(Observation.Context context) {
