@@ -30,7 +30,7 @@ import io.micrometer.observation.GlobalObservationConvention;
 import io.micrometer.observation.ObservationConvention;
 import io.micrometer.observation.annotation.Observed;
 import io.micrometer.observation.aop.ObservedAspect;
-import io.micrometer.observation.docs.DocumentedObservation;
+import io.micrometer.observation.docs.ObservationDocumentation;
 import io.micrometer.observation.tck.TestObservationRegistry;
 import io.micrometer.observation.tck.TestObservationRegistryAssert;
 import org.junit.jupiter.api.Test;
@@ -81,7 +81,7 @@ class TracingHandlerTests {
         // using a context is optional, you can call start without it:
         // Observation.createNotStarted(name, registry)
         Observation.Context context = new Observation.Context().put(String.class, "test");
-        Observation.createNotStarted("my.operation", context, registry).observe(this::doSomeWorkHere);
+        Observation.createNotStarted("my.operation", () -> context, registry).observe(this::doSomeWorkHere);
         // end::instrumenting_code[]
     }
 
@@ -92,7 +92,7 @@ class TracingHandlerTests {
         // Observation.start(name, registry)
         ObservationRegistry registry = ObservationRegistry.create();
         Observation.Context context = new Observation.Context().put(String.class, "test");
-        Observation observation = Observation.start("my.operation", context, registry);
+        Observation observation = Observation.start("my.operation", () -> context, registry);
         try (Observation.Scope scope = observation.openScope()) {
             doSomeWorkHere();
         }
@@ -190,8 +190,7 @@ class TracingHandlerTests {
 
         @Override
         public void onError(Observation.Context context) {
-            System.out
-                    .println("ERROR " + "data: " + context.get(String.class) + ", error: " + context.getError().get());
+            System.out.println("ERROR " + "data: " + context.get(String.class) + ", error: " + context.getError());
         }
 
         @Override
@@ -240,9 +239,9 @@ class TracingHandlerTests {
     }
 
     /**
-     * An example of a {@link Observation.ObservationConvention} that renames the tax
-     * related observations adds cloud related tags to all contexts. When registered via
-     * the `ObservationRegistry#observationConfig#observationConvention` will be applied
+     * An example of a {@link ObservationConvention} that renames the tax related
+     * observations adds cloud related tags to all contexts. When registered via the
+     * `ObservationRegistry#observationConfig#observationConvention` will be applied
      * globally.
      */
     class GlobalTaxObservationConvention implements GlobalObservationConvention<TaxContext> {
@@ -308,9 +307,9 @@ class TracingHandlerTests {
      * If micrometer-docs-generator is used, we will automatically generate documentation
      * for your observations. Check this URL
      * https://github.com/micrometer-metrics/micrometer-docs-generator#documentation for
-     * setup example and read the {@link DocumentedObservation} javadocs.
+     * setup example and read the {@link ObservationDocumentation} javadocs.
      */
-    enum TaxObservation implements DocumentedObservation {
+    enum TaxObservation implements ObservationDocumentation {
 
         CALCULATE {
             @Override
@@ -381,7 +380,7 @@ class TracingHandlerTests {
             TaxContext taxContext = new TaxContext(taxType, userId);
             // Create a new observation
             TaxObservation.CALCULATE
-                    .observation(this.observationConvention, new DefaultTaxObservationConvention(), taxContext,
+                    .observation(this.observationConvention, new DefaultTaxObservationConvention(), () -> taxContext,
                             observationRegistry)
                     // Run the actual logic you want to observe
                     .observe(this::calculateInterest);

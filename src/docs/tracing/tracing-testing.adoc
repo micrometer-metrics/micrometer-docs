@@ -39,24 +39,6 @@ The following example shows the required dependency in Maven (assuming that Micr
 </dependency>
 -----
 
-== Running Observation Unit Tests
-
-In your instrumentation code you will depend on `io.micrometer:micrometer-observation` module only. To run unit tests of `Observation`s, you should just use `io.micrometer:micrometer-observation-test`.
-
-Let's say that you have the following production code. It will create an observation with 2 tags (low and high) and then call `observe` that will start the observation, put it in scope, close the scope and stop the observation.
-
-[source,java,subs=+attributes]
------
-include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingTestingTests.java[tags=example,indent=0]
------
-
-To unit test this code you can use the `TestObservationRegistry` class.
-
-[source,java,subs=+attributes]
------
-include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingTestingTests.java[tags=test,indent=0]
------
-
 == Running Tracing Unit Tests
 
 To run unit tests of your custom handler you may want to use the `SimpleTracer` test `Tracer` implementation. Let's assume the following custom `TracingObservationHandler`.

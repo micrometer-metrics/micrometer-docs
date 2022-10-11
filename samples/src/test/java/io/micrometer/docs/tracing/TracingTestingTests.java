@@ -43,29 +43,6 @@ import java.util.function.BiConsumer;
  */
 class TracingTestingTests {
 
-    // tag::test[]
-    @Test
-    void should_assert_your_observation() {
-        // create a test registry in your tests
-        TestObservationRegistry registry = TestObservationRegistry.create();
-
-        // run your production code with the TestObservationRegistry
-        new Example(registry).run();
-
-        // check your observation
-        // @formatter:off
-        TestObservationRegistryAssert.assertThat(registry)
-                .doesNotHaveAnyRemainingCurrentObservation()
-                .hasObservationWithNameEqualTo("foo")
-                .that()
-                .hasHighCardinalityKeyValue("highTag", "highTagValue")
-                .hasLowCardinalityKeyValue("lowTag", "lowTagValue")
-                .hasBeenStarted()
-                .hasBeenStopped();
-        // @formatter:on
-    }
-    // end::test[]
-
     @Nested
     // tag::handler_test[]
     class SomeComponentThatIsUsingMyTracingObservationHandlerTests {
@@ -179,7 +156,7 @@ class TracingTestingTests {
 
         void doSthThatShouldCreateSpans() {
             try {
-                Observation.createNotStarted("insert user", new CustomContext("mongodb-database"), this.registry)
+                Observation.createNotStarted("insert user", () -> new CustomContext("mongodb-database"), this.registry)
                         .highCardinalityKeyValue("mongodb.command", "insert")
                         .highCardinalityKeyValue("mongodb.collection", "user")
                         .highCardinalityKeyValue("mongodb.cluster_id", "some_id").observe(() -> {
@@ -193,27 +170,6 @@ class TracingTestingTests {
         }
 
     }
-
-    // tag::example[]
-    static class Example {
-
-        private final ObservationRegistry registry;
-
-        Example(ObservationRegistry registry) {
-            this.registry = registry;
-        }
-
-        void run() {
-            // @formatter:off
-            Observation.createNotStarted("foo", registry)
-                    .lowCardinalityKeyValue("lowTag", "lowTagValue")
-                    .highCardinalityKeyValue("highTag", "highTagValue")
-                    .observe(() -> System.out.println("Hello"));
-            // @formatter:on
-        }
-
-    }
-    // end::example[]
 
     // tag::observation_handler[]
     static class MyTracingObservationHandler implements TracingObservationHandler<CustomContext> {
@@ -233,7 +189,7 @@ class TracingTestingTests {
 
         @Override
         public void onError(CustomContext context) {
-            getTracingContext(context).getSpan().error(context.getError().get());
+            getTracingContext(context).getSpan().error(context.getError());
         }
 
         @Override

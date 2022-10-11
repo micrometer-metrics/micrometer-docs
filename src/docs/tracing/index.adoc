@@ -62,10 +62,6 @@ include::tracing-tracers.adoc[leveloffset=+1]
 
 include::tracing-reporters.adoc[leveloffset=+1]
 
-== ObservationHandler
-
-include::tracing-handler.adoc[leveloffset=+1]
-
 == Configuring
 
 include::tracing-configuring.adoc[leveloffset=+1]
@@ -73,7 +69,3 @@ include::tracing-configuring.adoc[leveloffset=+1]
 == Testing
 
 include::tracing-testing.adoc[leveloffset=+1]
-
-== Documentation Building
-
-include::tracing-docs-building.adoc[leveloffset=+1]

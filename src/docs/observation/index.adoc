@@ -1,0 +1,62 @@
+= Micrometer Observation
+:toc:
+:sectnums:
+:dimensional: true
+
+== Purpose
+
+Micrometer Observation is part of the Micrometer project and contains the Observation API. The main idea behind it is that you
+
+> Instrument code once, and get multiple benefits out of it
+
+== Installing
+
+Micrometer comes with a Bill of Materials (BOM) which is a project that contains all the project versions for you.
+
+The following example shows the required dependency for Micrometer Observation in Gradle:
+
+[source,groovy,subs=+attributes]
+----
+implementation platform('io.micrometer:micrometer-bom:latest.release')
+implementation 'io.micrometer:micrometer-observation'
+----
+
+The following example shows the required dependency in Maven:
+
+[source,xml,subs=+attributes]
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-bom</artifactId>
+            <version>${micrometer.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependencies>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-observation</artifactId>
+    </dependency>
+</dependencies>
+----
+
+== Introduction
+
+include::observation-introduction.adoc[leveloffset=+1]
+
+== ObservationHandler
+
+include::observation-handler.adoc[leveloffset=+1]
+
+== Testing
+
+include::observation-testing.adoc[leveloffset=+1]
+
+== Documentation Building
+
+include::observation-docs-building.adoc[leveloffset=+1]

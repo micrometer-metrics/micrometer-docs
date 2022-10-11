@@ -15,6 +15,7 @@ let docsConsoleReporter = require('!asciidoc-loader!../../docs/guide/console-rep
 let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../docs/guide/http-sender-resilience4j-retry.adoc');
 let docsCustomMeterRegistry = require('!asciidoc-loader!../../docs/guide/custom-meter-registry.adoc');
 let docsSupport = require('!asciidoc-loader!../../docs/support/index.adoc');
+let docsObservation = require('!asciidoc-loader!../../generated-docs/observation/index.adoc');
 let docsTracing = require('!asciidoc-loader!../../generated-docs/tracing/index.adoc');
 let docsContextPropagation = require('!asciidoc-loader!../../generated-docs/contextpropagation/index.adoc');
 
@@ -73,6 +74,10 @@ export default function DocRoutes() {
 
       <Route path="/docs/support" render={() =>
         <DocSection title="Micrometer Support Policy" content={docsSupport}/>
+      }/>
+
+      <Route path="/docs/observation" render={() =>
+        <DocSection title="Observation" content={docsObservation}/>
       }/>
 
       <Route path="/docs/tracing" render={() =>

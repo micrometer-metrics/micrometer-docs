@@ -163,6 +163,9 @@ export default function DocRoot() {
             <li><NavLink className="doc-section" to="/docs/guide/customMeterRegistry">Custom meter registry</NavLink></li>
           </ul>
         </li>
+        <li><NavLink className="doc-section" to="/docs/observation">Micrometer Observation</NavLink>. An introduction to
+          the Micrometer Observation API.
+        </li>
         <li><NavLink className="doc-section" to="/docs/tracing">Micrometer Tracing</NavLink>. An introduction to
           the abstraction provided by Micrometer Tracing.
         </li>
