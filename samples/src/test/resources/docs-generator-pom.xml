@@ -43,6 +43,12 @@
 						</goals>
 						<configuration>
 							<mainClass>io.micrometer.docs.DocsGeneratorCommand</mainClass>
+							<includePluginDependencies>true</includePluginDependencies>
+							<arguments>
+								<argument>${micrometer-docs-generator.inputPath}</argument>
+								<argument>${micrometer-docs-generator.inclusionPattern}</argument>
+								<argument>${micrometer-docs-generator.outputPath}</argument>
+							</arguments>
 						</configuration>
 					</execution>
 				</executions>
@@ -54,14 +60,6 @@
 						<type>jar</type>
 					</dependency>
 				</dependencies>
-				<configuration>
-					<includePluginDependencies>true</includePluginDependencies>
-					<arguments>
-						<argument>${micrometer-docs-generator.inputPath}</argument>
-						<argument>${micrometer-docs-generator.inclusionPattern}</argument>
-						<argument>${micrometer-docs-generator.outputPath}</argument>
-					</arguments>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
