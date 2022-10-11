@@ -71,3 +71,44 @@ IMPORTANT: All tags and event names must be prefixed with `spring.cloud.task` pr
 |`spring.cloud.task.runner.bean-name`|Name of the bean that was executed by Spring Cloud Task.
 |===
 -----
+
+=== Options
+
+The main entry class for the docs generation is `DocsGeneratorCommand` class.
+This class takes following options.
+
+.Optional parameters
+[cols="1,1"]
+|===
+| `--metrics`
+| Generate metrics documentation.
+
+| `--spans`
+| Generate spans documentation.
+
+| `--conventions`
+| Generate observation conventions documentation.
+
+| `--metrics-template=<location>`
+| Handlebars template file location. This can be a path in the classpath or file system.  +
+e.g.  `templates/metrics.adoc.hbs`, `/home/foo/bar.hbs`
+
+| `--spans-template=<location>`
+| Handlebars template file location. This can be a path in the classpath or file system.  +
+e.g.  `templates/spans.adoc.hbs`, `/home/foo/bar.hbs`
+
+| `--conventions-template=<location>`
+| Handlebars template file location. This can be a path in the classpath or file system.  +
+e.g.  `templates/conventions.adoc.hbs`, `/home/foo/bar.hbs`
+
+| `--metrics-output=<location>`
+| Generated metrics doc file location. This can be a absolute path or relative path to the output directory.  +
+Default: `_metrics.adoc`
+
+| `--spans-output=<location>`
+| Generated spans doc file location. This can be a absolute path or relative path to the output directory.  +
+Default: `_spans.adoc`
+| `--conventions-output=<location>`
+| Generated observation convention doc file location. This can be a absolute path or relative path to the output directory.  +
+Default: `_conventions.adoc`
+|===
