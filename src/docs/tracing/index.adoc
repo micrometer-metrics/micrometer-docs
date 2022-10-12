@@ -5,7 +5,7 @@
 
 == Purpose
 
-Micrometer Tracing provides a simple facade for the most popular tracer libraries, letting you instrument your JVM-based application code without vendor lock-in.
+https://github.com/micrometer-metrics/tracing[Micrometer Tracing] provides a simple facade for the most popular tracer libraries, letting you instrument your JVM-based application code without vendor lock-in.
 It is designed to add little to no overhead to your tracing collection activity while maximizing the portability of your tracing effort.
 
 It also provides a tracing extension to Micrometer's `ObservationHandler` (from Micrometer 1.10.0).
