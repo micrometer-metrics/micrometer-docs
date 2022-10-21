@@ -25,6 +25,12 @@ implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 implementation 'io.opentelemetry:opentelemetry-exporter-zipkin'
 ----
 
+.An OpenZipkin URL sender dependency to send out spans to Zipkin via a `URLConnectionSender`
+[source,groovy,subs=+attributes]
+----
+implementation 'io.zipkin.reporter2:zipkin-sender-urlconnection'
+----
+
 The following example shows the required dependency in Maven (assuming that Micrometer Tracing BOM has been added):
 
 .Tanzu Observability by Wavefront
@@ -53,3 +59,13 @@ The following example shows the required dependency in Maven (assuming that Micr
     <artifactId>opentelemetry-exporter-zipkin</artifactId>
 </dependency>
 ----
+
+.An OpenZipkin URL sender dependency to send out spans to Zipkin via a `URLConnectionSender`
+[source,xml,subs=+attributes]
+----
+<dependency>
+    <groupId>io.zipkin.reporter2</groupId>
+    <artifactId>zipkin-sender-urlconnection</artifactId>
+</dependency>
+----
+

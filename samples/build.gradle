@@ -9,6 +9,8 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic'
     implementation 'org.slf4j:slf4j-api'
 
+    testImplementation 'io.zipkin.reporter2:zipkin-sender-urlconnection'
+
     testImplementation 'io.micrometer:micrometer-test'
     testImplementation 'io.micrometer:micrometer-observation-test'
     testImplementation 'io.micrometer:micrometer-tracing-test'

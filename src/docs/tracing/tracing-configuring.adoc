@@ -2,7 +2,7 @@
 
 // TODO: We need to separately document that Micrometer provides a TimerObservationHandler
 
-For Micrometer Tracing to work with Micrometer, you need to add a tracing related `ObservationHandler`.
+For Micrometer Tracing to work with Micrometer Observation, you need to add a tracing related `ObservationHandler`.
 Check the example below for an example of adding and using a single, `DefaultTracingObservationHandler`.
 
 [source,java,subs=+attributes]

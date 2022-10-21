@@ -1,0 +1,46 @@
+In this section we will describe how to use the Micrometer Tracing API directly to create and report spans.
+
+== Micrometer Tracing Examples
+
+Below you can see basic operations on a span. Please read the comments in the snippet for details.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=manual_span_creation,indent=0]
+-----
+
+Below you can see how to continue a span in a new thread, that was started in another thread.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=manual_span_continuation,indent=0]
+-----
+
+Below you can see how to create a child span when explicitly knowing who the parent span is.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=manual_span_joining,indent=0]
+-----
+
+== Micrometer Tracing Brave Setup
+
+In this subsection we will set up Micrometer Tracing with Brave.
+
+Below you can see how to create a Micrometer Tracing `Tracer` using Brave components that would send completed spans to Zipkin.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=brave_setup,indent=0]
+-----
+
+== Micrometer Tracing OpenTelemetry Setup
+
+In this subsection we will set up Micrometer Tracing with OpenTelemetry (OTel).
+
+Below you can see how to create a Micrometer Tracing `Tracer` using OTel components that would send completed spans to Zipkin.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=otel_setup,indent=0]
+-----

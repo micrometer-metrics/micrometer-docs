@@ -62,7 +62,11 @@ include::tracing-tracers.adoc[leveloffset=+1]
 
 include::tracing-reporters.adoc[leveloffset=+1]
 
-== Configuring
+== Using Micrometer Tracing Directly
+
+include::tracing-api.adoc[leveloffset=+1]
+
+== Configuring with Micrometer Observation
 
 include::tracing-configuring.adoc[leveloffset=+1]
 
