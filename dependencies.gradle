@@ -25,9 +25,8 @@ subprojects {
           runtimeOnly version
         }
       }
-      implementation platform('io.micrometer:micrometer-bom:1.10.0-SNAPSHOT')
-      implementation platform('io.micrometer:micrometer-tracing-bom:1.0.0-SNAPSHOT')
-      implementation platform('io.micrometer:micrometer-docs-generator-bom:1.0.0-SNAPSHOT')
+      implementation platform('io.micrometer:micrometer-bom:1.10.1-SNAPSHOT')
+      implementation platform('io.micrometer:micrometer-tracing-bom:1.0.1-SNAPSHOT')
     }
   }
 }

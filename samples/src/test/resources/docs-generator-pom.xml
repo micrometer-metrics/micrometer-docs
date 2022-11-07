@@ -24,7 +24,7 @@
 	<name>micrometer-docs-generator-example</name>
 	<description>micrometer-docs-generator-example</description>
 	<properties>
-		<micrometer-docs-generator.version>1.0.0-RC1</micrometer-docs-generator.version>
+		<micrometer-docs-generator.version>1.0.0</micrometer-docs-generator.version>
 		<micrometer-docs-generator.inputPath>${maven.multiModuleProjectDirectory}/folder-with-sources-to-scan/</micrometer-docs-generator.inputPath>
 		<micrometer-docs-generator.inclusionPattern>.*</micrometer-docs-generator.inclusionPattern>
 		<micrometer-docs-generator.outputPath>${maven.multiModuleProjectDirectory}/target/output-folder-with-adocs/'</micrometer-docs-generator.outputPath>

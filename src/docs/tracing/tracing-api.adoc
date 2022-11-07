@@ -44,3 +44,21 @@ Below you can see how to create a Micrometer Tracing `Tracer` using OTel compone
 -----
 include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=otel_setup,indent=0]
 -----
+
+== Micrometer Tracing Baggage API
+
+Traces connect from service to service using header propagation. Besides trace identifiers, other properties (called `Baggage`) can also be passed along with the request.
+
+Below you can find an example on how to use the Tracer API to create and extract baggage.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=baggage_api,indent=0]
+-----
+
+IMPORTANT: For Brave, remember to set up the `PropagationFactory` so that it contains the baggage fields that you will be using in your code. Check the example below for details.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=baggage_brave_setup,indent=0]
+-----
