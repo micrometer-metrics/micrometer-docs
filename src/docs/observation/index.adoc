@@ -53,6 +53,10 @@ include::observation-introduction.adoc[leveloffset=+1]
 
 include::observation-handler.adoc[leveloffset=+1]
 
+== Instrumenting
+
+include::observation-instrumenting.adoc[leveloffset=+1]
+
 == Testing
 
 include::observation-testing.adoc[leveloffset=+1]

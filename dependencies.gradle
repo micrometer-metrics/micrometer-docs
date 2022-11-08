@@ -1,5 +1,10 @@
 def VERSIONS = [
         'io.micrometer:context-propagation:1.0.+',
+        'com.github.tomakehurst:wiremock-jre8-standalone:2.33.+',
+        'org.apache.httpcomponents.client5:httpclient5:5.1.+',
+        'io.javalin:javalin:5.1.+',
+        'io.projectreactor:reactor-core:latest.release',
+        'io.projectreactor:reactor-test:latest.release',
         'ch.qos.logback:logback-classic:1.2.+',
         'org.asciidoctor:asciidoctorj:latest.release',
         'org.springframework:spring-context:5.+',
