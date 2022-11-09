@@ -75,4 +75,4 @@ include::../../../samples/src/test/java/io/micrometer/docs/observation/Observati
 
 == Instrumentation of Messaging Communication
 
-To instrument messaging components you should proceed in the same way as you would with <<instrumentation_of_http_communication,HTTP based communication>>, however instead of `RequestReplySenderContext` and `RequestReplyReceiverContext` you would use `SenderContext` and `ReceiverContext`.
+To instrument messaging components you should proceed in the same way as you would with <<instrumentation_of_http_communication,HTTP based communication>>, however instead of `RequestReplySenderContext` and `RequestReplyReceiverContext` you would use `SenderContext` and `ReceiverContext`. You can also set the `remoteServiceName` on a context to suggest the name of the broker (e.g. `kafka` or `rabbitmq`).

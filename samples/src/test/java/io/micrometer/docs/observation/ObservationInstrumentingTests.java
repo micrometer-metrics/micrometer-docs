@@ -267,10 +267,10 @@ class ObservationInstrumentingTests {
             // We're starting an Observation with the context
             Observation observation = Observation
                     .createNotStarted("http.server.requests", () -> receiverContext, registry)
-                    .contextualName("HTTP " + ctx.method().name() + " " + ctx.matchedPath())
+                    .contextualName("HTTP " + ctx.method() + " " + ctx.matchedPath())
                     .lowCardinalityKeyValue("http.url", ctx.scheme() + "://" + ctx.host() + ctx.matchedPath())
                     .highCardinalityKeyValue("http.full-url", ctx.scheme() + "://" + ctx.host() + ctx.path())
-                    .lowCardinalityKeyValue("http.method", ctx.method().name()).start();
+                    .lowCardinalityKeyValue("http.method", ctx.method()).start();
             // Let's be consistent and always set the Observation related objects under
             // the same key
             ctx.attribute(ObservationThreadLocalAccessor.KEY, observation);
