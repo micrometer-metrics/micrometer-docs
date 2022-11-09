@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micrometer.docs.tracing;
+package io.micrometer.docs.observation;
 
 import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
@@ -36,13 +36,13 @@ import io.micrometer.observation.tck.TestObservationRegistryAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 
-import static io.micrometer.docs.tracing.TracingHandlerTests.TaxObservation.TaxHighCardinalityKeyNames.USER_ID;
-import static io.micrometer.docs.tracing.TracingHandlerTests.TaxObservation.TaxLowCardinalityKeyNames.TAX_TYPE;
+import static io.micrometer.docs.observation.ObservationHandlerTests.TaxObservation.TaxHighCardinalityKeyNames.USER_ID;
+import static io.micrometer.docs.observation.ObservationHandlerTests.TaxObservation.TaxLowCardinalityKeyNames.TAX_TYPE;
 
 /**
- * Sources for tracing-handler.adoc
+ * Sources for observation-handler.adoc
  */
-class TracingHandlerTests {
+class ObservationHandlerTests {
 
     @Test
     void timer() {

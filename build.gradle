@@ -153,7 +153,6 @@ subprojects {
     description = 'Docs for Micrometer portfolio'
 
     repositories {
-        mavenLocal()
         mavenCentral()
         maven {
             url 'https://repo.spring.io/snapshot/'
