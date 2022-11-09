@@ -1,13 +1,15 @@
 In this section we will see some common examples of reusing existing Micrometer and Micrometer Tracing handlers and context types to do instrumentation.
 
+IMPORTANT: Before you decide to instrument a project yourself, please double-check whether it hasn't already been instrumented!
+
 To better understand how you can do instrumentation we need to distinguish two concepts.
 
 - Context propagation
 - Creation of Observations
 
-Context propagation - we propagate existing context through the threads. We're using the https://micrometer.io/docs/contextPropagation[Micrometer Context Propagation] library to define the context and to propagate it through threads.
+*Context propagation* - we propagate existing context through threads or network. We're using the https://micrometer.io/docs/contextPropagation[Micrometer Context Propagation] library to define the context and to propagate it through threads. We're using dedicated `SenderContext` and `ReceiverContext` objects, together with Micrometer Tracing handlers, to create Observations that will propagate context over the wire.
 
-Creation of Observations - we want to wrap an operation in an Observation to get measurements. We need to know if there previously has been a parent Observation to maintain the parent-child relationship of Observations.
+*Creation of Observations* - we want to wrap an operation in an Observation to get measurements. We need to know if there previously has been a parent Observation to maintain the parent-child relationship of Observations.
 
 [[instrumentation_of_thread_switching_components]]
 == Instrumentation of Thread Switching Components
@@ -43,7 +45,7 @@ include::../../../samples/src/test/java/io/micrometer/docs/observation/Observati
 
 In order to instrument an HTTP based communication we need to use the `RequestReplySenderContext` and `RequestReplyReceiverContext` for the client and server side respectively.
 
-As an example for the client side we will use a handler that instruments the HTTP request by adding a `foo:bar` header. Let's look at the example of such a handler.
+As an example for the client side we will use a handler that instruments the HTTP request by adding a `foo:bar` header (if you have Micrometer Tracing on the classpath you could reuse the `PropagatingSenderTracingObservationHandler` and `PropagatingReceiverTracingObservationHandler` to propagate tracing context over the wire). Let's look at the example of such a handler.
 
 [source,java,subs=+attributes]
 -----

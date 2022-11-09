@@ -21,9 +21,6 @@ import io.micrometer.core.instrument.observation.DefaultMeterObservationHandler;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
-import io.micrometer.tracing.Tracer;
-import io.micrometer.tracing.handler.DefaultTracingObservationHandler;
-import io.micrometer.tracing.test.simple.SimpleTracer;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -47,7 +44,8 @@ class ObservationConfiguringTests {
         ObservationRegistry registry = ObservationRegistry.create();
         // Add predicates and filter to the registry
         registry.observationConfig()
-                // ObservationPredicate can decide whether an observation should be ignored or not
+                // ObservationPredicate can decide whether an observation should be
+                // ignored or not
                 .observationPredicate((observationName, context) -> {
                     // Creates a noop observation if observation name is of given name
                     if ("to.ignore".equals(observationName)) {
@@ -80,7 +78,8 @@ class ObservationConfiguringTests {
         // Observation will be ignored because of the name
         then(Observation.start("to.ignore", () -> new MyContext("don't ignore"), registry)).isSameAs(Observation.NOOP);
         // Observation will be ignored because of the entries in MyContext
-        then(Observation.start("not.to.ignore", () -> new MyContext("user to ignore"), registry)).isSameAs(Observation.NOOP);
+        then(Observation.start("not.to.ignore", () -> new MyContext("user to ignore"), registry))
+                .isSameAs(Observation.NOOP);
 
         // Observation will not be ignored...
         MyContext myContext = new MyContext("user not to ignore");
@@ -89,12 +88,13 @@ class ObservationConfiguringTests {
         // ...and will have the context mutated
         then(myContext.getLowCardinalityKeyValue("low.cardinality.key").getValue()).isEqualTo("low cardinality value");
         then(myContext.getUsername()).isEqualTo("some username");
-        then(myContext.getHighCardinalityKeyValues()).doesNotContain(KeyValue.of("high.cardinality.key.to.ignore", "some value"));
+        then(myContext.getHighCardinalityKeyValues())
+                .doesNotContain(KeyValue.of("high.cardinality.key.to.ignore", "some value"));
         // end::predicate_and_filter[]
     }
 
-
     static class MyContext extends Observation.Context {
+
         String username;
 
         MyContext(String username) {
@@ -108,5 +108,7 @@ class ObservationConfiguringTests {
         void setUsername(String username) {
             this.username = username;
         }
+
     }
+
 }
