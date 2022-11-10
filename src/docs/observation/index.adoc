@@ -11,7 +11,7 @@ Micrometer Observation is part of the https://github.com/micrometer-metrics/micr
 
 == Installing
 
-Micrometer comes with a Bill of Materials (BOM) which is a project that contains all the project versions for you.
+Micrometer comes with a Bill of Materials (BOM) which is a project that manages all the project versions for consistency.
 
 The following example shows the required dependency for Micrometer Observation in Gradle:
 
@@ -61,6 +61,6 @@ include::observation-instrumenting.adoc[leveloffset=+1]
 
 include::observation-testing.adoc[leveloffset=+1]
 
-== Documentation Building
+== Documentation Generation
 
-include::observation-docs-building.adoc[leveloffset=+1]
+include::observation-docs-gen.adoc[leveloffset=+1]
