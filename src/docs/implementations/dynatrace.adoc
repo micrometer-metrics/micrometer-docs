@@ -41,8 +41,7 @@ If you are using Micrometer 1.10.0 or above, you can also use the DEFAULT config
 
 [source,java]
 ----
-DynatraceConfig dynatraceConfig = DynatraceConfig.DEFAULT;
-MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTEM);
+MeterRegistry registry = new DynatraceMeterRegistry(DynatraceConfig.DEFAULT, Clock.SYSTEM);
 ----
 
 It is also possible to change other properties by creating an instance of the `DynatraceConfig` and overwriting the respective methods.
