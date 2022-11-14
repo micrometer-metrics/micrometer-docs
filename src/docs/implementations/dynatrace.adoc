@@ -37,7 +37,15 @@ DynatraceConfig dynatraceConfig = new DynatraceConfig() {
 MeterRegistry registry = new DynatraceMeterRegistry(dynatraceConfig, Clock.SYSTEM);
 ----
 
-It is also possible to specify the exporter version explicitly, which defaults to `v2` unless a deviceId is set:
+If you are using Micrometer 1.10.0 or above, you can also use the DEFAULT config to achieve the same with less code:
+
+[source,java]
+----
+MeterRegistry registry = new DynatraceMeterRegistry(DynatraceConfig.DEFAULT, Clock.SYSTEM);
+----
+
+It is also possible to change other properties by creating an instance of the `DynatraceConfig` and overwriting the respective methods.
+For example, you can specify the exporter version, which defaults to `v2` unless a deviceId is set:
 
 [source,java]
 ----
