@@ -22,12 +22,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.observation.DefaultMeterObservationHandler;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import io.micrometer.observation.Observation;
-import io.micrometer.observation.ObservationHandler;
-import io.micrometer.observation.ObservationRegistry;
-import io.micrometer.observation.ObservationTextPublisher;
-import io.micrometer.observation.GlobalObservationConvention;
-import io.micrometer.observation.ObservationConvention;
+import io.micrometer.observation.*;
 import io.micrometer.observation.annotation.Observed;
 import io.micrometer.observation.aop.ObservedAspect;
 import io.micrometer.observation.docs.ObservationDocumentation;
@@ -35,6 +30,7 @@ import io.micrometer.observation.tck.TestObservationRegistry;
 import io.micrometer.observation.tck.TestObservationRegistryAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+import org.springframework.lang.Nullable;
 
 import static io.micrometer.docs.observation.ObservationHandlerTests.TaxObservation.TaxHighCardinalityKeyNames.USER_ID;
 import static io.micrometer.docs.observation.ObservationHandlerTests.TaxObservation.TaxLowCardinalityKeyNames.TAX_TYPE;
@@ -133,13 +129,12 @@ class ObservationHandlerTests {
         // add metrics
         SimpleMeterRegistry registry = new SimpleMeterRegistry();
         observationRegistry.observationConfig().observationHandler(new DefaultMeterObservationHandler(registry));
-        observationRegistry.observationConfig()
-                // this will be applied to all observations
-                .observationConvention(new GlobalTaxObservationConvention());
+        observationRegistry.observationConfig().observationConvention(new GlobalTaxObservationConvention());
+        // This will be applied to all observations
+        observationRegistry.observationConfig().observationFilter(new CloudObservationFilter());
 
-        TaxCalculator taxCalculator = new TaxCalculator(observationRegistry);
-        // you can use a setter to override the default convention
-        taxCalculator.setObservationConvention(new CustomTaxObservationConvention());
+        // In this case we're overriding the default convention by passing the custom one
+        TaxCalculator taxCalculator = new TaxCalculator(observationRegistry, new CustomTaxObservationConvention());
         // run the logic you want to observe
         taxCalculator.calculateTax("INCOME_TAX", "1234567890");
         // end::observation_convention_example[]
@@ -239,10 +234,36 @@ class ObservationHandlerTests {
     }
 
     /**
+     * An example of a {@link ObservationFilter} that will add the key-values to all
+     * observations.
+     */
+    class CloudObservationFilter implements ObservationFilter {
+
+        @Override
+        public Observation.Context map(Observation.Context context) {
+            return context.addLowCardinalityKeyValue(KeyValue.of("cloud.zone", CloudUtils.getZone()))
+                    .addHighCardinalityKeyValue(KeyValue.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
+        }
+
+    }
+
+    /**
      * An example of a {@link ObservationConvention} that renames the tax related
      * observations adds cloud related tags to all contexts. When registered via the
-     * `ObservationRegistry#observationConfig#observationConvention` will be applied
-     * globally.
+     * `ObservationRegistry#observationConfig#observationConvention` will override the
+     * default {@link TaxObservationConvention}. If the user provides a custom
+     * implementation of the {@link TaxObservationConvention} and passes it to the
+     * instrumentation, the custom implementation wins.
+     *
+     * In other words
+     *
+     * 1) Custom {@link ObservationConvention} has precedence 2) If no custom convention
+     * was passed and there's a matching {@link GlobalObservationConvention} it will be
+     * picked 3) If there's no custom, nor matching global convention, the default
+     * {@link ObservationConvention} will be used
+     *
+     * If you need to add some key-values regardless of the used
+     * {@link ObservationConvention} you should use an {@link ObservationFilter}.
      */
     class GlobalTaxObservationConvention implements GlobalObservationConvention<TaxContext> {
 
@@ -258,16 +279,6 @@ class ObservationHandlerTests {
             return "global.tax.calculate";
         }
 
-        @Override
-        public KeyValues getLowCardinalityKeyValues(TaxContext context) {
-            return KeyValues.of(KeyValue.of("cloud.zone", CloudUtils.getZone()));
-        }
-
-        @Override
-        public KeyValues getHighCardinalityKeyValues(TaxContext context) {
-            return KeyValues.of(KeyValue.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
-        }
-
     }
 
     // Interface for an ObservationConvention related to calculating Tax
@@ -281,8 +292,8 @@ class ObservationHandlerTests {
     }
 
     /**
-     * Default convention of tags related to calculating tax. If no other will be provided
-     * either via a setter or global registration then this one will be picked.
+     * Default convention of tags related to calculating tax. If no user one or global
+     * convention will be provided then this one will be picked.
      */
     class DefaultTaxObservationConvention implements TaxObservationConvention {
 
@@ -369,10 +380,15 @@ class ObservationHandlerTests {
 
         private final ObservationRegistry observationRegistry;
 
-        private TaxObservationConvention observationConvention;
+        // If the user wants to override the default - they can override this. Otherwise
+        // it will be {@code null}.
+        @Nullable
+        private final TaxObservationConvention observationConvention;
 
-        TaxCalculator(ObservationRegistry observationRegistry) {
+        TaxCalculator(ObservationRegistry observationRegistry,
+                @Nullable TaxObservationConvention observationConvention) {
             this.observationRegistry = observationRegistry;
+            this.observationConvention = observationConvention;
         }
 
         public void calculateTax(String taxType, String userId) {
@@ -381,18 +397,13 @@ class ObservationHandlerTests {
             // Create a new observation
             TaxObservation.CALCULATE
                     .observation(this.observationConvention, new DefaultTaxObservationConvention(), () -> taxContext,
-                            observationRegistry)
+                            this.observationRegistry)
                     // Run the actual logic you want to observe
                     .observe(this::calculateInterest);
         }
 
         private void calculateInterest() {
             // do some work
-        }
-
-        // Use this if you want to override the defaults
-        public void setObservationConvention(TaxObservationConvention observationConvention) {
-            this.observationConvention = observationConvention;
         }
 
     }
