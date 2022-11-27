@@ -1,4 +1,4 @@
-== Thread Local Population
+== `ThreadLocal` Population
 
 Below you can find a holder for `ThreadLocal` values.
 

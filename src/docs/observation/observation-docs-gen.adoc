@@ -1,6 +1,6 @@
 == Automated Documentation Generation
 
-By using the https://github.com/micrometer-metrics/micrometer-docs-generator[Micrometer Docs Generator] project and by implementing the `ObservationDocumentation`, `SpanDocumentation` or `MeterDocumentation` interfaces as an `enum` we can scan your sources and generate asciidoctor documentation. This allows you to maintain the docuemntation for your observability instrumentation in code, and as long as you use the `enum` implementation in your instrumentation, it will ensure that your documentation stays in-sync with the instrumentation.
+By using the https://github.com/micrometer-metrics/micrometer-docs-generator[Micrometer Docs Generator] project and by implementing the `ObservationDocumentation`, `SpanDocumentation` or `MeterDocumentation` interfaces as an `enum` we can scan your sources and generate Asciidoctor documentation. This allows you to maintain the docuemntation for your observability instrumentation in code, and as long as you use the `enum` implementation in your instrumentation, it will ensure that your documentation stays in-sync with the instrumentation.
 
 Below you can find an example of a Maven `pom.xml` with the Micrometer Docs Generator project.
 
@@ -15,7 +15,7 @@ Below you can find an example of a Gradle `build.gradle` with the Micrometer Doc
 .build.gradle
 [source,groovy,subs=+attributes]
 -----
-include::../../../samples/src/test/resources/docs-generator-build.gradle[indent=0]
+include::../../../samples/src/test/resources/docs-generator-build.gradle[indent=0,tag=main]
 -----
 
 Running these tasks would lead to generation of adoc files similar to these ones.
@@ -102,13 +102,13 @@ e.g.  `templates/spans.adoc.hbs`, `/home/foo/bar.hbs`
 e.g.  `templates/conventions.adoc.hbs`, `/home/foo/bar.hbs`
 
 | `--metrics-output=<location>`
-| Generated metrics doc file location. This can be a absolute path or relative path to the output directory.  +
+| Generated metrics doc file location. This can be an absolute path or relative path to the output directory.  +
 Default: `_metrics.adoc`
 
 | `--spans-output=<location>`
-| Generated spans doc file location. This can be a absolute path or relative path to the output directory.  +
+| Generated spans doc file location. This can be an absolute path or relative path to the output directory.  +
 Default: `_spans.adoc`
 | `--conventions-output=<location>`
-| Generated observation convention doc file location. This can be a absolute path or relative path to the output directory.  +
+| Generated observation convention doc file location. This can be an absolute path or relative path to the output directory.  +
 Default: `_conventions.adoc`
 |===

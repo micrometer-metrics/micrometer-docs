@@ -37,5 +37,5 @@ image::img/zipkin.jpg[Trace Info propagation]
 === Ordered Handler Configuration
 
 Micrometer Tracing comes with multiple `ObservationHandler` implementations.
-To introduce ordering, you can use the `ObservationHandler.AllMatchingCompositeObservationHandler` to run logic for all `ObservationHandler` that are matching the given predicate and `ObservationHandler.FirstMatchingCompositeObservationHandler` to run logic only for the first `ObservationHandler` that matches the predicate.
-The former can group or handlers and the latter can be chosen to e.g. run only one matching `TracingObservationHandler`.
+To introduce ordering, you can use the `ObservationHandler.AllMatchingCompositeObservationHandler` to run logic for all ``ObservationHandler``s that are matching the given predicate and `ObservationHandler.FirstMatchingCompositeObservationHandler` to run logic only for the first `ObservationHandler` that matches the predicate.
+The former can group handlers and the latter can be chosen to e.g. run only one matching `TracingObservationHandler`.

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
  */
 class ObservationTestingTests {
 
+    // @formatter:off
     // tag::test[]
     @Test
     void should_assert_your_observation() {
@@ -36,7 +37,6 @@ class ObservationTestingTests {
         new Example(registry).run();
 
         // check your observation
-        // @formatter:off
         TestObservationRegistryAssert.assertThat(registry)
                 .doesNotHaveAnyRemainingCurrentObservation()
                 .hasObservationWithNameEqualTo("foo")
@@ -45,9 +45,9 @@ class ObservationTestingTests {
                 .hasLowCardinalityKeyValue("lowTag", "lowTagValue")
                 .hasBeenStarted()
                 .hasBeenStopped();
-        // @formatter:on
     }
     // end::test[]
+    // @formatter:on
 
     class SomeComponent {
 
@@ -74,6 +74,7 @@ class ObservationTestingTests {
 
     }
 
+    // @formatter:off
     // tag::example[]
     static class Example {
 
@@ -84,16 +85,15 @@ class ObservationTestingTests {
         }
 
         void run() {
-            // @formatter:off
             Observation.createNotStarted("foo", registry)
                     .lowCardinalityKeyValue("lowTag", "lowTagValue")
                     .highCardinalityKeyValue("highTag", "highTagValue")
                     .observe(() -> System.out.println("Hello"));
-            // @formatter:on
         }
 
     }
     // end::example[]
+    // @formatter:on
 
     static class CustomContext extends Observation.Context {
 

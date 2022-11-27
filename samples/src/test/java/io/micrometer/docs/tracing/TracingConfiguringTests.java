@@ -45,7 +45,7 @@ class TracingConfiguringTests {
                 .observationHandler(new DefaultTracingObservationHandler(tracer));
 
         // Creating and starting a new observation
-        // Via the `DefaultTracingObservationHandler` that will create a new Span and
+        // via the `DefaultTracingObservationHandler` that will create a new Span and
         // start it
         Observation observation = Observation.start("my.operation", registry)
                 .contextualName("This name is more readable - we can reuse it for e.g. spans")

@@ -151,7 +151,7 @@ class ObservationInstrumentingTests {
                         then(registry.getCurrentObservation()).isNotNull();
                     }
                 }).flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
-                // Example of retrieving ThreadLocal entris via ReactorContext
+                // Example of retrieving ThreadLocal entries via ReactorContext
                 .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
                     try (ContextSnapshot.Scope scope = ContextSnapshot.setAllThreadLocalsFrom(contextView)) {
                         log.info(
@@ -213,16 +213,16 @@ class ObservationInstrumentingTests {
         // We're instrumenting the Apache HTTPClient
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             // The HttpGet is our carrier (we can mutate it to instrument the headers)
-            HttpGet httpget = new HttpGet("http://localhost:" + info.getHttpPort() + "/foo");
+            HttpGet httpget = new HttpGet(info.getHttpBaseUrl() + "/foo");
             // We must set the carrier BEFORE we run <Observation#start>
             context.setCarrier(httpget);
             // You can set the remote service address to provide more debugging
             // information
-            context.setRemoteServiceAddress(info.getHttpBaseUrl() + ":" + info.getHttpPort());
+            context.setRemoteServiceAddress(info.getHttpBaseUrl());
             // Examples of setting key values from the request
             Observation observation = Observation.createNotStarted("http.client.requests", () -> context, registry)
                     .contextualName("HTTP " + httpget.getMethod())
-                    .lowCardinalityKeyValue("http.url", info.getHttpBaseUrl() + ":" + info.getHttpPort() + "/{name}")
+                    .lowCardinalityKeyValue("http.url", info.getHttpBaseUrl() + "/{name}")
                     .highCardinalityKeyValue("http.full-url", httpget.getRequestUri());
             observation.observeChecked(() -> {
                 String response = httpclient.execute(httpget, classicHttpResponse -> {
@@ -257,19 +257,20 @@ class ObservationInstrumentingTests {
         registry.observationConfig().observationHandler(new HeaderReadingHandler());
 
         try (Javalin javalin = Javalin.create().before("/hello/{name}", ctx -> {
-            // We're creating the special RequestReplyReceiver context that will reuse the
+            // We're creating the special RequestReplyReceiverContext that will reuse the
             // information from the HTTP headers
             RequestReplyReceiverContext<Context, Context> receiverContext = new RequestReplyReceiverContext<>(
                     Context::header);
             // Remember to set the carrier!!!
             receiverContext.setCarrier(ctx);
-            receiverContext.setRemoteServiceAddress(ctx.scheme() + "://" + ctx.host());
+            String remoteServiceAddress = ctx.scheme() + "://" + ctx.host();
+            receiverContext.setRemoteServiceAddress(remoteServiceAddress);
             // We're starting an Observation with the context
             Observation observation = Observation
                     .createNotStarted("http.server.requests", () -> receiverContext, registry)
                     .contextualName("HTTP " + ctx.method() + " " + ctx.matchedPath())
-                    .lowCardinalityKeyValue("http.url", ctx.scheme() + "://" + ctx.host() + ctx.matchedPath())
-                    .highCardinalityKeyValue("http.full-url", ctx.scheme() + "://" + ctx.host() + ctx.path())
+                    .lowCardinalityKeyValue("http.url", remoteServiceAddress + ctx.matchedPath())
+                    .highCardinalityKeyValue("http.full-url", remoteServiceAddress + ctx.path())
                     .lowCardinalityKeyValue("http.method", ctx.method()).start();
             // Let's be consistent and always set the Observation related objects under
             // the same key
@@ -291,7 +292,6 @@ class ObservationInstrumentingTests {
             Observation observation = ctx.attribute(ObservationThreadLocalAccessor.KEY);
             observation.stop();
         }).start()) {
-
             // We're sending an HTTP request with a <foo:bar> header. We're expecting that
             // it will be reused in the response
             String response = sendRequestToHelloEndpointWithHeader(javalin.port(), "foo", "bar");

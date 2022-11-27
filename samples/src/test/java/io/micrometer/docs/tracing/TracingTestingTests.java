@@ -42,6 +42,7 @@ import java.util.function.BiConsumer;
 class TracingTestingTests {
 
     @Nested
+    // @formatter:off
     // tag::handler_test[]
     class SomeComponentThatIsUsingMyTracingObservationHandlerTests {
 
@@ -60,10 +61,9 @@ class TracingTestingTests {
 
         @Test
         void should_store_a_span() {
-            someComponent.doSthThatShouldCreateSpans(); // this code will call actual
-                                                        // Observation API
+            // this code will call actual Observation API
+            someComponent.doSthThatShouldCreateSpans();
 
-            // @formatter:off
             TracerAssert.assertThat(simpleTracer)
                     .onlySpan()
                     .hasNameEqualTo("insert user")
@@ -77,20 +77,21 @@ class TracingTestingTests {
                     .backToSpan()
                     .hasIpThatIsBlank()
                     .hasPortThatIsNotSet();
-            // @formatter:on
         }
 
     }
     // end::handler_test[]
+    // @formatter:on
 
+    // @formatter:off
     // tag::observability_smoke_test[]
     class ObservabilitySmokeTest extends SampleTestRunner {
 
         ObservabilitySmokeTest() {
             super(SampleRunnerConfig.builder().wavefrontApplicationName("my-app").wavefrontServiceName("my-service")
-                    .wavefrontToken("...").wavefrontUrl("...").zipkinUrl("...") // defaults
-                                                                                // to
-                                                                                // localhost:9411
+                    .wavefrontToken("...")
+                    .wavefrontUrl("...")
+                    .zipkinUrl("...") // defaults to localhost:9411
                     .build());
         }
 
@@ -109,7 +110,6 @@ class TracingTestingTests {
                 // here you would be running your code
                 yourCode();
 
-                // @formatter:off
                 SpansAssert.assertThat(bb.getFinishedSpans())
                         .haveSameTraceId()
                         .hasNumberOfSpansEqualTo(8)
@@ -137,12 +137,12 @@ class TracingTestingTests {
                         .hasTimerWithNameAndTags("rsocket.request", Tags.of(Tag.of("error", "none"), Tag.of("rsocket.request-type", "REQUEST_RESPONSE")))
                         .hasTimerWithNameAndTags("rsocket.channel", Tags.of(Tag.of("error", "none"), Tag.of("rsocket.request-type", "REQUEST_CHANNEL")))
                         .hasTimerWithNameAndTags("rsocket.stream", Tags.of(Tag.of("error", "none"), Tag.of("rsocket.request-type", "REQUEST_STREAM")));
-                // @formatter:on
             };
         }
 
     }
     // end::observability_smoke_test[]
+    // @formatter:on
 
     class SomeComponent {
 
@@ -174,7 +174,7 @@ class TracingTestingTests {
 
         private final Tracer tracer;
 
-        public MyTracingObservationHandler(Tracer tracer) {
+        MyTracingObservationHandler(Tracer tracer) {
             this.tracer = tracer;
         }
 

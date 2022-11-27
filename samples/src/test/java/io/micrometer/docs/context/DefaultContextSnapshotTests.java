@@ -30,7 +30,7 @@ class DefaultContextSnapshotTests {
     @Test
     void should_propagate_thread_local() {
         // tag::simple[]
-        // Create new Context Registry (you can use a global too)
+        // Create a new Context Registry (you can use a global too)
         ContextRegistry registry = new ContextRegistry();
         // Register thread local accessors (you can use SPI too)
         registry.registerThreadLocalAccessor(new ObservationThreadLocalAccessor());

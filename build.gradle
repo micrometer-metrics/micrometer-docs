@@ -133,6 +133,7 @@ subprojects {
         ext.year = Calendar.getInstance().get(Calendar.YEAR)
         skipExistingHeaders = true
         exclude '**/*.json' // comments not supported
+        exclude '**/*.xml' // for samples without a license header
     }
 
     dependencyLocking {
