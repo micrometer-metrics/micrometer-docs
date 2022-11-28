@@ -7,7 +7,7 @@ For any Observation to happen, you need to register `ObservationHandler` objects
 * `scope started` - Observation opens a Scope. The Scope must be closed when no longer used. Handlers can create thread local variables on start that are cleared upon closing of the scope. Happens when the `Observation#openScope()` method gets called.
 * `scope stopped` - Observation stops a Scope. Happens when the `Observation.Scope#close()` method gets called.
 
-Whenever any of these methods is called, an `ObservationHandler` method (such as `onStart(T extends Observation.Context ctx)`, `onStop(T extends Observation.Context ctx)`, and so on) are called. To pass state between the handler methods, you can use the `Observation.Context`.
+Whenever any of these methods is called, an `ObservationHandler` method (such as `onStart(T extends Observation.Context ctx)`, `onStop(T extends Observation.Context ctx)`, and so on) is called. To pass state between the handler methods, you can use the `Observation.Context`.
 
 This is how Observation state diagram looks like:
 

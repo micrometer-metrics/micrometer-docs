@@ -1,4 +1,4 @@
-A popular way to record them is storing the start state in a `Timer.Sample` instance and stop it when the event has ended.
+A popular way to record them is storing the start state in a `Timer.Sample` instance and stopping it when the event has ended.
 Recording such measurements could look like this:
 
 [source,java,subs=+attributes]
@@ -13,7 +13,7 @@ If you want to have more observation options (such as metrics and tracing out of
 include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationHandlerTests.java[tags=observation,indent=0]
 -----
 
-One of the new features in Micrometer 1.10 is the ability to register "handlers" (`ObservationHandler`) that are notified about the lifecycle event of an observation (e.g.: you can run custom code when an observation is stopped/started).
+One of the new features in Micrometer 1.10 is the ability to register "handlers" (`ObservationHandler`) that are notified about the lifecycle event of an observation (e.g.: you can run custom code when an observation is started/stopped).
 Using this feature lets you add tracing capabilities to your existing metrics instrumentation (see: `DefaultTracingObservationHandler`). The implementation of these handlers does not need to be tracing related, it is completely up to you how you are going to implement them (e.g.: you can add logging capabilities) if you want.
 
 === Observation.Context
@@ -54,7 +54,7 @@ include::../../../samples/src/test/java/io/micrometer/docs/observation/Observati
 
 When **instrumenting** code we might want to signal that an error happened or signal that an arbitrary event happened. The observation API lets us do it via it `error` and `event` methods.
 
-One use-case for signaling arbitrary event can be attaching annotations to `Span` for Distributed Tracing but you can also process them however you want in your own handler, e.g.: emit log events based off of them.
+One use-case for signaling arbitrary event can be attaching annotations to `Span` for Distributed Tracing but you can also process them however you want in your own handler, e.g.: emit log events based on them.
 
 [source,java,subs=+attributes]
 -----
@@ -101,7 +101,7 @@ Here you can see an `ObservedService` that has an annotation on a method.
 include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationHandlerTests.java[tags=observed_service,indent=0]
 -----
 
-The following test asserts whether when a proxied `ObservedService` instance gets called the proper observation gets created.
+The following test asserts whether the proper observation gets created when a proxied `ObservedService` instance gets called.
 
 [source,java,subs=+attributes]
 -----

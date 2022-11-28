@@ -31,7 +31,7 @@ include::../../../samples/src/test/java/io/micrometer/docs/observation/Observati
 
 In this section we'll discuss how to wrap Reactive libraries in Observations and how to use Reactor Context to safely propagate Observations between threads.
 
-The preferred way of propagating elements through the Flux using Reactor is not via Thread Locals but through Reactor Context. Reactor however gives you two operators, `tap()` and `handle()` where, if https://micrometer.io/docs/contextPropagation[Micrometer Context Propagation] library is on the classpath, it will set thread local values for you.
+The preferred way of propagating elements through the Flux using Reactor is not via ``ThreadLocal``s but through Reactor Context. Reactor however gives you two operators, `tap()` and `handle()` where, if https://micrometer.io/docs/contextPropagation[Micrometer Context Propagation] library is on the classpath, it will set thread local values for you.
 
 Let's look at the following example.
 
@@ -43,7 +43,7 @@ include::../../../samples/src/test/java/io/micrometer/docs/observation/Observati
 [[instrumentation_of_http_communication]]
 == Instrumentation of HTTP Communication
 
-In order to instrument an HTTP based communication we need to use the `RequestReplySenderContext` and `RequestReplyReceiverContext` for the client and server side respectively.
+In order to instrument an HTTP-based communication we need to use the `RequestReplySenderContext` and `RequestReplyReceiverContext` for the client and server side respectively.
 
 As an example for the client side we will use a handler that instruments the HTTP request by adding a `foo:bar` header (if you have Micrometer Tracing on the classpath you could reuse the `PropagatingSenderTracingObservationHandler` and `PropagatingReceiverTracingObservationHandler` to propagate tracing context over the wire). Let's look at the example of such a handler.
 
@@ -75,4 +75,4 @@ include::../../../samples/src/test/java/io/micrometer/docs/observation/Observati
 
 == Instrumentation of Messaging Communication
 
-To instrument messaging components you should proceed in the same way as you would with <<instrumentation_of_http_communication,HTTP based communication>>, however instead of `RequestReplySenderContext` and `RequestReplyReceiverContext` you would use `SenderContext` and `ReceiverContext`. You can also set the `remoteServiceName` on a context to suggest the name of the broker (e.g. `kafka` or `rabbitmq`).
+To instrument messaging components you should proceed in the same way as you would with <<instrumentation_of_http_communication,HTTP-based communication>>, however instead of `RequestReplySenderContext` and `RequestReplyReceiverContext` you would use `SenderContext` and `ReceiverContext`. You can also set the `remoteServiceName` on a context to suggest the name of the broker (e.g. `kafka` or `rabbitmq`).

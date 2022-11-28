@@ -32,8 +32,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.lang.Nullable;
 
-import static io.micrometer.docs.observation.ObservationHandlerTests.TaxObservation.TaxHighCardinalityKeyNames.USER_ID;
-import static io.micrometer.docs.observation.ObservationHandlerTests.TaxObservation.TaxLowCardinalityKeyNames.TAX_TYPE;
+import static io.micrometer.docs.observation.ObservationHandlerTests.TaxObservationDocumentation.TaxHighCardinalityKeyNames.USER_ID;
+import static io.micrometer.docs.observation.ObservationHandlerTests.TaxObservationDocumentation.TaxLowCardinalityKeyNames.TAX_TYPE;
 
 /**
  * Sources for observation-handler.adoc
@@ -74,9 +74,9 @@ class ObservationHandlerTests {
     void instrumenting_code() {
         // tag::instrumenting_code[]
         ObservationRegistry registry = ObservationRegistry.create();
-        // using a context is optional, you can call start without it:
-        // Observation.createNotStarted(name, registry)
         Observation.Context context = new Observation.Context().put(String.class, "test");
+        // using a context is optional, so you can call createNotStarted without it:
+        // Observation.createNotStarted(name, registry)
         Observation.createNotStarted("my.operation", () -> context, registry).observe(this::doSomeWorkHere);
         // end::instrumenting_code[]
     }
@@ -84,10 +84,10 @@ class ObservationHandlerTests {
     @Test
     void manual_scoping() {
         // tag::manual_scoping[]
-        // using a context is optional, you can call start without it:
-        // Observation.start(name, registry)
         ObservationRegistry registry = ObservationRegistry.create();
         Observation.Context context = new Observation.Context().put(String.class, "test");
+        // using a context is optional, so you can call start without it:
+        // Observation.start(name, registry)
         Observation observation = Observation.start("my.operation", () -> context, registry);
         try (Observation.Scope scope = observation.openScope()) {
             doSomeWorkHere();
@@ -142,6 +142,7 @@ class ObservationHandlerTests {
 
     @Test
     void annotatedCallShouldBeObserved() {
+        // @formatter:off
         // tag::observed_aop[]
         // create a test registry
         TestObservationRegistry registry = TestObservationRegistry.create();
@@ -157,7 +158,6 @@ class ObservationHandlerTests {
         service.call();
 
         // assert that observation has been properly created
-        // @formatter:off
         TestObservationRegistryAssert.assertThat(registry)
                 .hasSingleObservationThat()
                 .hasBeenStopped()
@@ -167,8 +167,8 @@ class ObservationHandlerTests {
                 .hasLowCardinalityKeyValue("test", "42")
                 .hasLowCardinalityKeyValue("class", ObservedService.class.getName())
                 .hasLowCardinalityKeyValue("method", "call").doesNotHaveError();
-        // @formatter:on
         // end::observed_aop[]
+        // @formatter:on
     }
 
     private void doSomeWorkHere() {
@@ -200,8 +200,9 @@ class ObservationHandlerTests {
 
         @Override
         public boolean supportsContext(Observation.Context handlerContext) {
-            return true; // you can decide if your handler should be invoked for this
-                         // context object or not
+            // you can decide if your handler should be invoked for this context object or
+            // not
+            return true;
         }
 
     }
@@ -223,18 +224,18 @@ class ObservationHandlerTests {
             this.userId = userId;
         }
 
-        public String getTaxType() {
+        String getTaxType() {
             return taxType;
         }
 
-        public String getUserId() {
+        String getUserId() {
             return userId;
         }
 
     }
 
     /**
-     * An example of a {@link ObservationFilter} that will add the key-values to all
+     * An example of an {@link ObservationFilter} that will add the key-values to all
      * observations.
      */
     class CloudObservationFilter implements ObservationFilter {
@@ -248,8 +249,8 @@ class ObservationHandlerTests {
     }
 
     /**
-     * An example of a {@link ObservationConvention} that renames the tax related
-     * observations adds cloud related tags to all contexts. When registered via the
+     * An example of an {@link ObservationConvention} that renames the tax related
+     * observations and adds cloud related tags to all contexts. When registered via the
      * `ObservationRegistry#observationConfig#observationConvention` will override the
      * default {@link TaxObservationConvention}. If the user provides a custom
      * implementation of the {@link TaxObservationConvention} and passes it to the
@@ -320,7 +321,7 @@ class ObservationHandlerTests {
      * https://github.com/micrometer-metrics/micrometer-docs-generator#documentation for
      * setup example and read the {@link ObservationDocumentation} javadocs.
      */
-    enum TaxObservation implements ObservationDocumentation {
+    enum TaxObservationDocumentation implements ObservationDocumentation {
 
         CALCULATE {
             @Override
@@ -380,7 +381,7 @@ class ObservationHandlerTests {
 
         private final ObservationRegistry observationRegistry;
 
-        // If the user wants to override the default - they can override this. Otherwise
+        // If the user wants to override the default they can override this. Otherwise,
         // it will be {@code null}.
         @Nullable
         private final TaxObservationConvention observationConvention;
@@ -391,11 +392,11 @@ class ObservationHandlerTests {
             this.observationConvention = observationConvention;
         }
 
-        public void calculateTax(String taxType, String userId) {
+        void calculateTax(String taxType, String userId) {
             // Create a new context
             TaxContext taxContext = new TaxContext(taxType, userId);
             // Create a new observation
-            TaxObservation.CALCULATE
+            TaxObservationDocumentation.CALCULATE
                     .observation(this.observationConvention, new DefaultTaxObservationConvention(), () -> taxContext,
                             this.observationRegistry)
                     // Run the actual logic you want to observe

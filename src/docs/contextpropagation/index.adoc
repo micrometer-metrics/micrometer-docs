@@ -44,9 +44,9 @@ registered `ContextAccesor` instance.
 
 == Installing
 
-Snapshots are published to `repo.spring.io` for every successful build on the `main` branch and maintenance branches.
+Snapshots are published to https://repo.spring.io/snapshot for every successful build on the `main` branch and maintenance branches.
 
-Milestone releases are published to https://repo.spring.io/milestone. Include that as a maven repository in your build
+Milestone releases are published to https://repo.spring.io/milestone. Include that as a Maven repository in your build
 configuration to use milestone releases. Note that milestone releases are for testing purposes and are not intended for
 production use.
 
@@ -61,18 +61,6 @@ The following example shows the required dependency in Maven:
 
 [source,xml,subs=+attributes]
 ----
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>context-propagation</artifactId>
-            <version>${micrometer-context-propagation.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-
 <dependencies>
     <dependency>
         <groupId>io.micrometer</groupId>

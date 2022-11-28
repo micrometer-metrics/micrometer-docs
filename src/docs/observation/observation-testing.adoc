@@ -1,4 +1,4 @@
-Micrometer Observation comes with `micrometer-observation-test` module that allows you to unit test your Observations.
+Micrometer Observation comes with `micrometer-observation-test` module that allows you to unit-test your Observations.
 
 == Installing
 
@@ -29,7 +29,7 @@ Let's say that you have the following production code. It will create an observa
 include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationTestingTests.java[tags=example,indent=0]
 -----
 
-To unit test this code you can use the `TestObservationRegistry` class.
+To unit-test this code you can use the `TestObservationRegistry` class.
 
 [source,java,subs=+attributes]
 -----

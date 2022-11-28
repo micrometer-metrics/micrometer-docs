@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// tag::main[]
 repositories {
 	maven { url 'https://repo.spring.io/snapshot' } // for snapshots
 	maven { url 'https://repo.spring.io/milestone' } // for milestones
@@ -37,3 +38,4 @@ task generateObservabilityDocs() {
 	// input folder, inclusion pattern, output folder
 	args project.rootDir.getAbsolutePath(), ".*", project.rootProject.buildDir.getAbsolutePath()
 }
+// end::main[]
