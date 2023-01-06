@@ -291,7 +291,7 @@ class ObservationInstrumentingTests {
             // After sending the response we want to stop the Observation
             Observation observation = ctx.attribute(ObservationThreadLocalAccessor.KEY);
             observation.stop();
-        }).start()) {
+        }).start(0)) {
             // We're sending an HTTP request with a <foo:bar> header. We're expecting that
             // it will be reused in the response
             String response = sendRequestToHelloEndpointWithHeader(javalin.port(), "foo", "bar");
