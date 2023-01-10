@@ -4,7 +4,7 @@ Micrometer's open source support policy is defined as follows for different type
 * *Minor release lines* (such as 1.1.x or 1.2.x) are supported with patch releases for a minimum of 12 months from the date the minor release (such as `1.1.0` or `1.2.0`) was made available for download.
 * Any confirmed security vulnerabilities on supported release lines should result in a patch release to Maven Central.
 
-Commercial support that extends beyond the OSS support period described above is https://tanzu.vmware.com/spring-runtime[available from VMware].
+Commercial support that extends beyond the OSS support period described on this page is https://tanzu.vmware.com/spring-runtime[available from VMware].
 
 We generally plan to release a new major or minor version every 6 months (in May and November).
 
@@ -18,7 +18,6 @@ The following releases are actively maintained:
 | Minor release | OSS Support Until
 | 1.10.x        | November 2023
 | 1.9.x         | May 2023
-| 1.8.x         | November 2022
 |===========
 
 The following releases are out of OSS support:
@@ -27,6 +26,7 @@ The following releases are out of OSS support:
 [width="35%",options="header"]
 |===========
 | Minor release | Final patch
+| 1.8.x         | `1.8.13`
 | 1.7.x         | `1.7.12`
 | 1.6.x         | `1.6.13`
 | 1.5.x         | `1.5.17`
