@@ -1,5 +1,4 @@
 = Concepts
-Jon Schneider <jschneider@pivotal.io>
 :toc:
 :sectnums:
 :dimensional: true
