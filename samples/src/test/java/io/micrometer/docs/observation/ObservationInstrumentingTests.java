@@ -20,7 +20,9 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.micrometer.common.KeyValue;
+import io.micrometer.context.ContextAccessor;
 import io.micrometer.context.ContextExecutorService;
+import io.micrometer.context.ContextRegistry;
 import io.micrometer.context.ContextSnapshot;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.observation.DefaultMeterObservationHandler;
@@ -49,12 +51,15 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.SynchronousSink;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -187,6 +192,98 @@ class ObservationInstrumentingTests {
 
         then(block).isEqualTo(2);
         // end::reactor[]
+    }
+
+    @Test
+    void should_instrument_reactor_with_thread_local_entry_in_thread_1() {
+        ContextRegistry.getInstance().registerContextAccessor(new ContextAccessor<Map, Map>() {
+            @Override
+            public Class<? extends Map> readableType() {
+                return Map.class;
+            }
+
+            @Override
+            public void readValues(Map source, Predicate<Object> keyPredicate, Map<Object, Object> target) {
+                source.forEach((k, v) -> {
+                    if (keyPredicate.test(k)) {
+                        target.put(k, v);
+                    }
+                });
+            }
+
+            @Override
+            public <T> T readValue(Map sourceContext, Object key) {
+                return (T) sourceContext.getOrDefault(key, null);
+            }
+
+            @Override
+            public Class<? extends Map> writeableType() {
+                return Map.class;
+            }
+
+            @Override
+            public Map writeValues(Map<Object, Object> valuesToWrite, Map target) {
+                target.putAll(valuesToWrite);
+                return target;
+            }
+        });
+
+        Observation mvc = Observation.start("mvc", registry);
+
+        try (Observation.Scope scope = mvc.openScope()) { // MVC - TL
+
+            Observation graphqlRequest = Observation.createNotStarted("graphql", registry) // THREAD 1
+                    .parentObservation(mvc)
+                    .start();
+
+            // registry.getCurrentObservation(); // MVC
+
+            Observation dataFetcher = Observation.createNotStarted("dataFetcher", registry)
+                    .parentObservation(graphqlRequest)
+                    .start();
+
+            // registry.getCurrentObservation(); // MVC
+
+            Map<String, Object> graphqlContext = new HashMap<>();
+            graphqlContext.put(ObservationThreadLocalAccessor.KEY, dataFetcher);
+
+            ContextSnapshot contextSnapshot = ContextSnapshot.captureFrom(graphqlContext);
+
+            System.out.println("PRE-HELLO");
+
+            contextSnapshot.wrap(() -> {
+                Integer block = Mono.just(1)
+                        .flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
+                        .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
+                            System.out.println("HELLO 0");
+                            try (ContextSnapshot.Scope s = ContextSnapshot.setAllThreadLocalsFrom(contextView)) {
+                                System.out.println("HELLO 1");
+                                then(registry.getCurrentObservation()).isSameAs(dataFetcher);
+                                System.out.println("HELLO 2");
+                                then(registry.getCurrentObservation().getContextView().getParentObservation()).isSameAs(graphqlRequest);
+                                System.out.println("HELLO 3");
+                                then(graphqlRequest.getContextView().getParentObservation()).isSameAs(mvc);
+                                System.out.println("HELLO 4");
+                            }
+                        }))
+                        .contextCapture()
+                        .doFinally(signalType -> graphqlRequest.stop())
+                        .block();
+
+                then(block).isEqualTo(2);
+            })
+                    .run();
+
+            dataFetcher.stop();
+
+            then(registry.getCurrentObservation()).isSameAs(mvc);
+            then(mvc.getContextView().getParentObservation()).isSameAs(null);
+
+            graphqlRequest.stop();
+
+        }
+
+        mvc.stop();
     }
 
     @Test

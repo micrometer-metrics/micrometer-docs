@@ -30,8 +30,8 @@ subprojects {
           runtimeOnly version
         }
       }
-      implementation platform('io.micrometer:micrometer-bom:1.10.1-SNAPSHOT')
-      implementation platform('io.micrometer:micrometer-tracing-bom:1.0.1-SNAPSHOT')
+      implementation platform('io.micrometer:micrometer-bom:1.10.2-SNAPSHOT')
+      implementation platform('io.micrometer:micrometer-tracing-bom:1.0.2-SNAPSHOT')
     }
   }
 }
