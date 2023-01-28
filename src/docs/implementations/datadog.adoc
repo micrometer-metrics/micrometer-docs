@@ -71,7 +71,7 @@ You can set the tag by using common tags, as follows:
 registry.config().commonTags("host", "my-host");
 ----
 
-`management.metrics.export.datadog.uri` is an important property to configure.
+`uri` is an important property to configure.
 The default value is `https://api.datadoghq.com`.
 Depending on the Datadog site (region), the api endpoint will be different.
 To find your the correct `uri` for your account, do the following.
