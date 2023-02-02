@@ -15,24 +15,38 @@
  */
 package io.micrometer.docs.observation;
 
+import brave.Tracing;
+import brave.handler.SpanHandler;
+import brave.propagation.StrictCurrentTraceContext;
+import brave.sampler.Sampler;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.micrometer.common.KeyValue;
+import io.micrometer.context.ContextAccessor;
 import io.micrometer.context.ContextExecutorService;
+import io.micrometer.context.ContextRegistry;
 import io.micrometer.context.ContextSnapshot;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.observation.DefaultMeterObservationHandler;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import io.micrometer.docs.context.ObservationThreadLocalAccessor;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationHandler;
 import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.contextpropagation.ObservationThreadLocalAccessor;
 import io.micrometer.observation.transport.ReceiverContext;
 import io.micrometer.observation.transport.RequestReplyReceiverContext;
 import io.micrometer.observation.transport.RequestReplySenderContext;
 import io.micrometer.observation.transport.SenderContext;
+import io.micrometer.tracing.CurrentTraceContext;
+import io.micrometer.tracing.TraceContext;
+import io.micrometer.tracing.Tracer;
+import io.micrometer.tracing.brave.bridge.BraveBaggageManager;
+import io.micrometer.tracing.brave.bridge.BraveCurrentTraceContext;
+import io.micrometer.tracing.brave.bridge.BraveTracer;
+import io.micrometer.tracing.handler.DefaultTracingObservationHandler;
+import io.micrometer.tracing.handler.TracingObservationHandler;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -47,14 +61,20 @@ import org.slf4j.LoggerFactory;
 import reactor.core.observability.DefaultSignalListener;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.SynchronousSink;
+import zipkin2.reporter.AsyncReporter;
+import zipkin2.reporter.brave.ZipkinSpanHandler;
+import zipkin2.reporter.urlconnection.URLConnectionSender;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -75,6 +95,30 @@ class ObservationInstrumentingTests {
 
     MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
+    SpanHandler spanHandler = ZipkinSpanHandler
+            .create(AsyncReporter.create(URLConnectionSender.create("http://localhost:9411/api/v2/spans")));
+
+    // [Brave component] CurrentTraceContext is a Brave component that allows you to
+    // retrieve the current TraceContext.
+    StrictCurrentTraceContext braveCurrentTraceContext = StrictCurrentTraceContext.create();
+
+    // [Micrometer Tracing component] A Micrometer Tracing wrapper for Brave's
+    // CurrentTraceContext
+    CurrentTraceContext bridgeContext = new BraveCurrentTraceContext(braveCurrentTraceContext);
+
+    // [Brave component] Tracing is the root component that allows to configure the
+    // tracer, handlers, context propagation etc.
+    Tracing tracing = Tracing.newBuilder().currentTraceContext(braveCurrentTraceContext).sampler(Sampler.ALWAYS_SAMPLE)
+            .addSpanHandler(spanHandler).build();
+
+    // [Brave component] Tracer is a component that handles the life-cycle of a span
+    brave.Tracer braveTracer = tracing.tracer();
+
+    BraveBaggageManager braveBaggageManager = new BraveBaggageManager();
+
+    // [Micrometer Tracing component] A Micrometer Tracing wrapper for Brave's Tracer
+    Tracer tracer = new BraveTracer(braveTracer, bridgeContext, braveBaggageManager);
+
     ObservationRegistry registry;
 
     @BeforeEach
@@ -83,8 +127,17 @@ class ObservationInstrumentingTests {
         ObservationRegistry registry = ObservationRegistry.create();
         registry.observationConfig().observationHandler(new DefaultMeterObservationHandler(meterRegistry));
         // end::setup[]
+        registry.observationConfig().observationHandler(new ObservationHandler.FirstMatchingCompositeObservationHandler(
+                new DefaultTracingObservationHandler(tracer)));
 
         this.registry = registry;
+    }
+
+    @AfterEach
+    void cleanup() {
+        this.tracing.close();
+        this.braveCurrentTraceContext.close();
+        this.braveBaggageManager.close();
     }
 
     @AfterEach
@@ -187,6 +240,130 @@ class ObservationInstrumentingTests {
 
         then(block).isEqualTo(2);
         // end::reactor[]
+    }
+
+    @Test
+    void should_instrument_reactor_with_by_using_context_propagation_and_reusing_the_same_thread() {
+        ContextRegistry.getInstance().registerContextAccessor(testContextAccessor());
+
+        Observation mvc = Observation.start("mvc", registry);
+        TracingObservationHandler.TracingContext tracingContext = mvc.getContextView()
+                .get(TracingObservationHandler.TracingContext.class);
+
+        try (Observation.Scope scope = mvc.openScope()) {
+            Map<String, Object> graphqlContext = new HashMap<>();
+            graphqlContext.put(ObservationThreadLocalAccessor.KEY, mvc);
+
+            Observation graphqlRequest = Observation.createNotStarted("graphql", registry).parentObservation(mvc)
+                    .start();
+            graphqlContext.put(ObservationThreadLocalAccessor.KEY, graphqlRequest);
+
+            Observation dataFetcher = Observation.createNotStarted("dataFetcher", registry)
+                    .parentObservation(graphqlRequest).start();
+
+            graphqlContext.put(ObservationThreadLocalAccessor.KEY, dataFetcher);
+
+            ContextSnapshot contextSnapshot = ContextSnapshot.captureFrom(graphqlContext);
+
+            System.out.println("PRE-HELLO - MVC SPAN [" + tracer.currentSpan() + "]");
+
+            contextSnapshot.wrap(() -> {
+                Integer block = Mono.just(1).flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
+                        .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
+                            System.out.println(
+                                    "IN REACTOR BEFORE SCOPE - DATA FETCHER SPAN [" + tracer.currentSpan() + "]");
+                            thenCurrentObservationAndSpanAreSameAs(dataFetcher);
+                            try (ContextSnapshot.Scope s = ContextSnapshot.setAllThreadLocalsFrom(contextView)) {
+                                thenCurrentObservationAndSpanAreSameAs(dataFetcher);
+                                thenCurrentObservationAndSpanIsDataFetcher(mvc, graphqlRequest, dataFetcher);
+                            }
+                            System.out.println(
+                                    "IN REACTOR AFTER MANUAL THREAD LOCAL SCOPE [" + tracer.currentSpan() + "]");
+                            thenCurrentObservationAndSpanAreSameAs(dataFetcher);
+                            thenCurrentObservationAndSpanIsDataFetcher(mvc, graphqlRequest, dataFetcher);
+                        })).contextWrite(contextSnapshot::updateContext).doFinally(signalType -> graphqlRequest.stop())
+                        .block();
+
+                System.out.println("IN WRAP AFTER REACTOR [" + tracer.currentSpan() + "]");
+                then(tracer.currentSpan().context()).isEqualTo(spanContextFromObservation(dataFetcher));
+
+                then(block).isEqualTo(2);
+            }).run();
+
+            System.out.println("AFTER WRAP [" + tracer.currentSpan() + "]");
+            then(tracer.currentSpan().context()).isEqualTo(spanContextFromObservation(mvc));
+
+            dataFetcher.stop();
+            graphqlRequest.stop();
+
+            thenCurrentObservationAndSpanIsMvc(mvc, tracingContext);
+        }
+
+        mvc.stop();
+        then(tracer.currentSpan()).isNull();
+    }
+
+    private static ContextAccessor<Map, Map> testContextAccessor() {
+        return new ContextAccessor<Map, Map>() {
+            @Override
+            public Class<? extends Map> readableType() {
+                return Map.class;
+            }
+
+            @Override
+            public void readValues(Map source, Predicate<Object> keyPredicate, Map<Object, Object> target) {
+                source.forEach((k, v) -> {
+                    if (keyPredicate.test(k)) {
+                        target.put(k, v);
+                    }
+                });
+            }
+
+            @Override
+            public <T> T readValue(Map sourceContext, Object key) {
+                return (T) sourceContext.getOrDefault(key, null);
+            }
+
+            @Override
+            public Class<? extends Map> writeableType() {
+                return Map.class;
+            }
+
+            @Override
+            public Map writeValues(Map<Object, Object> valuesToWrite, Map target) {
+                target.putAll(valuesToWrite);
+                return target;
+            }
+        };
+    }
+
+    private void thenCurrentObservationAndSpanIsMvc(Observation mvc,
+            TracingObservationHandler.TracingContext tracingContext) {
+        then(registry.getCurrentObservation()).isSameAs(mvc);
+        then(tracer.currentSpan().context()).isEqualTo(tracingContext.getSpan().context());
+        then(mvc.getContextView().getParentObservation()).isSameAs(null);
+    }
+
+    private void thenCurrentObservationAndSpanAreSameAs(Observation dataFetcher) {
+        then(registry.getCurrentObservation()).isSameAs(dataFetcher);
+        then(tracer.currentSpan().context()).isEqualTo(spanContextFromObservation(dataFetcher));
+    }
+
+    private void thenCurrentObservationAndSpanIsDataFetcher(Observation mvc, Observation graphqlRequest,
+            Observation dataFetcher) {
+        System.out.println("HELLO AGAIN 1 [" + tracer.currentSpan() + "]");
+        then(registry.getCurrentObservation()).isSameAs(dataFetcher);
+        System.out.println("HELLO AGAIN  2 [" + tracer.currentSpan() + "]");
+        then(registry.getCurrentObservation().getContextView().getParentObservation()).isSameAs(graphqlRequest);
+        System.out.println("HELLO AGAIN  3 [" + tracer.currentSpan() + "]");
+        then(graphqlRequest.getContextView().getParentObservation()).isSameAs(mvc);
+        System.out.println("HELLO AGAIN  4 [" + tracer.currentSpan() + "]");
+    }
+
+    private TraceContext spanContextFromObservation(Observation observation) {
+        TracingObservationHandler.TracingContext tracingContext = observation.getContextView().getOrDefault(
+                TracingObservationHandler.TracingContext.class, new TracingObservationHandler.TracingContext());
+        return tracingContext.getSpan() != null ? tracingContext.getSpan().context() : null;
     }
 
     @Test
