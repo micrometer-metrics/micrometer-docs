@@ -9,12 +9,12 @@ export default function Home() {
         <div className="container">
           <img src={logoNoTitle} className="img-fluid" alt="" />
           <h1 className="jumbotron-heading mt-3" style={{ color: 'white', background: 'rgba(52, 48, 45, 0.8)' }}>
-            Vendor-neutral application metrics facade
+            Vendor-neutral application observability facade
           </h1>
           <p className="lead" style={{ padding: 8, color: 'white', background: 'rgba(52, 48, 45, 0.8)' }}>Micrometer
-            provides a simple facade over the instrumentation clients for the most popular monitoring systems,
+            provides a simple facade over the instrumentation clients for the most popular observability systems,
             allowing you to instrument your JVM-based application code without vendor lock-in. Think SLF4J, but for
-            metrics.
+            observability.
           </p>
         </div>
       </div>
@@ -36,20 +36,18 @@ export default function Home() {
             <i className="fa fa-4x fa-leaf" aria-hidden="true" />
             <h2>Integrated into Spring</h2>
             <p>Micrometer is the instrumentation library powering
-              the delivery of application metrics from Spring Boot applications.</p>
+              the delivery of application observability from Spring Boot applications.</p>
           </div>
         </div>
         <div className="row justify-content-center" style={{ padding: 30 }}>
           <div className="col-lg-6 col-md-12">
-            <h2>Support for popular monitoring systems</h2>
+            <h2>Support for popular observability systems</h2>
             <p>As an instrumentation facade, Micrometer allows you to instrument your code with dimensional metrics with
-              a
-              vendor-neutral interface and decide on the monitoring system as a last step. Instrumenting your core
-              library
-              code with Micrometer allows the libraries to be included in applications that ship metrics to different
-              backends.</p>
+              a vendor-neutral interface and decide on the observability system as a last step. Instrumenting your core library
+              code with Micrometer allows the libraries to be included in applications that ship data to different backends.
+            </p>
             <p>
-              Contains built-in support for <strong>AppOptics</strong>, <strong>Azure Monitor</strong>, Netflix <strong>Atlas</strong>, <strong>CloudWatch</strong>, <strong>Datadog</strong>, <strong>Dynatrace</strong>, <strong>Elastic</strong>, <strong>Ganglia</strong>, <strong>Graphite</strong>, <strong>Humio</strong>, <strong>Influx/Telegraf</strong>, <strong>JMX</strong>, <strong>KairosDB</strong>, <strong>New Relic</strong>, <strong>Prometheus</strong>, <strong>SignalFx</strong>, Google <strong>Stackdriver</strong>, <strong>StatsD</strong>, and <strong>Wavefront</strong>.
+              Contains built-in support for <strong>AppOptics</strong>, <strong>Azure Monitor</strong>, Netflix <strong>Atlas</strong>, <strong>CloudWatch</strong>, <strong>Datadog</strong>, <strong>Dynatrace</strong>, <strong>Elastic</strong>, <strong>Ganglia</strong>, <strong>Graphite</strong>, <strong>Humio</strong>, <strong>Influx/Telegraf</strong>, <strong>JMX</strong>, <strong>KairosDB</strong>, <strong>New Relic</strong>, <strong>OpenTelemetry</strong>, <strong>Prometheus</strong>, <strong>SignalFx</strong>, Google <strong>Stackdriver</strong>, <strong>StatsD</strong>, and <strong>Wavefront</strong>.
             </p>
           </div>
         </div>

@@ -9,9 +9,9 @@ export default function DocRoot() {
       <h1>Micrometer Documentation</h1>
 
       <p>
-        Micrometer provides a simple facade over the instrumentation clients for the most popular monitoring systems,
+        Micrometer provides a simple facade over the instrumentation clients for the most popular observability systems,
         allowing you to instrument your JVM-based application code without vendor lock-in. Think SLF4J, but for
-        application metrics! Application metrics recorded by Micrometer are intended to be used to observe, alert, and
+        application observability! Data recorded by Micrometer are intended to be used to observe, alert, and
         react to the current/recent operational state of your environment.
       </p>
 
