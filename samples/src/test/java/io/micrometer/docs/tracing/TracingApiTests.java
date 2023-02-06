@@ -267,7 +267,7 @@ class TracingApiTests {
         SpanExporter spanExporter = new ZipkinSpanExporterBuilder()
                 .setSender(URLConnectionSender.create("http://localhost:9411/api/v2/spans")).build();
 
-        // [OTel component] SdkTracerProvider is a SDK implementation for TracerProvider
+        // [OTel component] SdkTracerProvider is an SDK implementation for TracerProvider
         SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder().setSampler(alwaysOn())
                 .addSpanProcessor(BatchSpanProcessor.builder(spanExporter).build()).build();
 
