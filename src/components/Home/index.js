@@ -47,7 +47,7 @@ export default function Home() {
               code with Micrometer allows the libraries to be included in applications that ship data to different backends.
             </p>
             <p>
-              Contains built-in support for <strong>AppOptics</strong>, <strong>Azure Monitor</strong>, Netflix <strong>Atlas</strong>, <strong>CloudWatch</strong>, <strong>Datadog</strong>, <strong>Dynatrace</strong>, <strong>Elastic</strong>, <strong>Ganglia</strong>, <strong>Graphite</strong>, <strong>Humio</strong>, <strong>Influx/Telegraf</strong>, <strong>JMX</strong>, <strong>KairosDB</strong>, <strong>New Relic</strong>, <strong>OpenTelemetry</strong>, <strong>Prometheus</strong>, <strong>SignalFx</strong>, Google <strong>Stackdriver</strong>, <strong>StatsD</strong>, and <strong>Wavefront</strong>.
+              Contains built-in support for <strong>AppOptics</strong>, <strong>Azure Monitor</strong>, Netflix <strong>Atlas</strong>, <strong>CloudWatch</strong>, <strong>Datadog</strong>, <strong>Dynatrace</strong>, <strong>Elastic</strong>, <strong>Ganglia</strong>, <strong>Graphite</strong>, <strong>Humio</strong>, <strong>Influx/Telegraf</strong>, <strong>JMX</strong>, <strong>KairosDB</strong>, <strong>New Relic</strong>, <strong>OpenTelemetry</strong> Protocol (OTLP), <strong>Prometheus</strong>, <strong>SignalFx</strong>, Google <strong>Stackdriver</strong>, <strong>StatsD</strong>, and <strong>Wavefront</strong>.
             </p>
           </div>
         </div>
