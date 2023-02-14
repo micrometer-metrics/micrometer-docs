@@ -25,11 +25,41 @@ include::../../../samples/src/test/java/io/micrometer/docs/observation/Observati
 include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=thread_switching,indent=0]
 -----
 
-
 [[instrumentation_of_reactive_libraries]]
 == Instrumentation of Reactive Libraries
 
 In this section we'll discuss how to wrap Reactive libraries in Observations and how to use Reactor Context to safely propagate Observations between threads.
+
+[[instrumentation_of_reactive_libraries_after_reactor_3_5_3]]
+=== For Reactor 3.5.3 and After
+
+In Reactor 3.5.3 release (through this https://github.com/reactor/reactor-core/pull/3335[PR]) an option to turn on automated context propagation was added. To use this, please ensure that you're using the following projects at minimum in the following versions:
+
+- Reactor https://github.com/reactor/reactor-core/releases/tag/v3.5.3[3.5.3]
+- Micrometer Context-Propagation https://github.com/micrometer-metrics/context-propagation/releases/tag/v1.0.2[1.0.2]
+- Micrometer https://github.com/micrometer-metrics/micrometer/releases/tag/v1.10.4[1.10.4]
+- Micrometer Tracing https://github.com/micrometer-metrics/tracing/releases/tag/v1.0.2[1.0.2]
+
+To use the feature call the new Reactor's Hook method (e.g. in your `public static void main` method) like this
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=reactor_hook,indent=0]
+-----
+
+This will automatically wrap Reactor internal mechanisms to propagate context between operators, threads etc. Usage of `tap` and `handle` or Context Propagation API is not required.
+
+Let's look at the following example.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=reactor_with_hook,indent=0]
+-----
+
+If performance of this approach is not satisfactory, please verify whether disabling the hook and explicitly using `handle` or `tap` operators improves the performance.
+
+[[instrumentation_of_reactive_libraries_before_reactor_3_5_3]]
+=== Before Reactor 3.5.3
 
 The preferred way of propagating elements through the Flux using Reactor is not via ``ThreadLocal``s but through Reactor Context. Reactor however gives you two operators, `tap()` and `handle()` where, if https://micrometer.io/docs/contextPropagation[Micrometer Context Propagation] library is on the classpath, it will set thread local values for you.
 

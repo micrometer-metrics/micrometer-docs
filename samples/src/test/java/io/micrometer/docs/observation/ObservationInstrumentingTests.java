@@ -59,8 +59,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.observability.DefaultSignalListener;
+import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.SynchronousSink;
+import reactor.core.scheduler.Schedulers;
 import zipkin2.reporter.AsyncReporter;
 import zipkin2.reporter.brave.ZipkinSpanHandler;
 import zipkin2.reporter.urlconnection.URLConnectionSender;
@@ -138,6 +140,7 @@ class ObservationInstrumentingTests {
         this.tracing.close();
         this.braveCurrentTraceContext.close();
         this.braveBaggageManager.close();
+        Hooks.disableAutomaticContextPropagation();
     }
 
     @AfterEach
@@ -301,6 +304,97 @@ class ObservationInstrumentingTests {
 
         mvc.stop();
         then(tracer.currentSpan()).isNull();
+    }
+
+    private void enableContextPropagationForDocsSnippet() {
+        // tag::reactor_hook[]
+        Hooks.enableAutomaticContextPropagation();
+        // end::reactor_hook[]
+    }
+
+    @Test
+    void should_instrument_reactor_with_hook() {
+        // tag::reactor_with_hook[]
+        // This snippet shows an example of how to use the new Hook API with Reactor
+        Hooks.enableAutomaticContextPropagation();
+
+        // Let's assume that we have a parent observation
+        Observation parent = Observation.start("parent", registry);
+        // Now we put it in thread local
+        parent.scoped(() -> {
+
+            // Example of propagating whatever there was in thread local
+            Integer block = Mono.just(1).publishOn(Schedulers.boundedElastic()).doOnNext(integer -> {
+                log.info("Context Propagation happens - the <parent> observation gets propagated ["
+                        + registry.getCurrentObservation() + "]");
+                then(registry.getCurrentObservation()).isSameAs(parent);
+            }).flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
+                    .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
+                        log.info("Context Propagation happens - the <parent> observation gets propagated ["
+                                + registry.getCurrentObservation() + "]");
+                        then(registry.getCurrentObservation()).isSameAs(parent);
+                    }))
+                    // Let's assume that we're modifying the context
+                    .contextWrite(context -> context.put("foo", "bar"))
+                    // Since we are NOT part of the Reactive Chain (e.g. this is not a
+                    // WebFlux application)
+                    // you MUST call <contextCapture> to capture all ThreadLocal values
+                    // and store them in a Reactor Context.
+                    // ----------------------
+                    // If you were part of the
+                    // Reactive Chain (e.g. returning Mono from endpoint)
+                    // there is NO NEED to call <contextCapture>. If you need to propagate
+                    // your e.g. Observation
+                    // to the Publisher you just created (e.g. Mono or Flux) please
+                    // consider adding it
+                    // to the Reactor Context directly instead of opening an Observation
+                    // scope and calling <contextCapture> (see example below).
+                    .contextCapture().block();
+
+            // We're still using <parent> as current observation
+            then(registry.getCurrentObservation()).isSameAs(parent);
+
+            then(block).isEqualTo(2);
+
+            // Now, we want to create a child observation for a Reactor stream and put it
+            // to Reactor Context
+            // Automatically its parent will be <parent> observation since <parent> is in
+            // Thread Local
+            Observation child = Observation.start("child", registry);
+            block = Mono.just(1).publishOn(Schedulers.boundedElastic()).doOnNext(integer -> {
+                log.info(
+                        "Context Propagation happens - the <child> observation from Reactor Context takes precedence over thread local <parent> observation ["
+                                + registry.getCurrentObservation() + "]");
+                then(registry.getCurrentObservation()).isSameAs(child);
+            }).flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
+                    .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
+                        log.info(
+                                "Context Propagation happens - the <child> observation from Reactor Context takes precedence over thread local <parent> observation ["
+                                        + registry.getCurrentObservation() + "]");
+                        then(registry.getCurrentObservation()).isSameAs(child);
+                    }))
+                    // Remember to stop the child Observation!
+                    .doFinally(signalType -> child.stop())
+                    // When using Reactor we ALWAYS search for
+                    // ObservationThreadLocalAccessor.KEY entry in the Reactor Context to
+                    // search for an Observation. You DON'T have to use <contextCapture>
+                    // because
+                    // you have manually provided the ThreadLocalAccessor key
+                    .contextWrite(context -> context.put(ObservationThreadLocalAccessor.KEY, child)).block();
+
+            // We're back to having <parent> as current observation
+            then(registry.getCurrentObservation()).isSameAs(parent);
+
+            then(block).isEqualTo(2);
+        });
+
+        // There should be no remaining observation
+        then(registry.getCurrentObservation()).isNull();
+
+        // We need to stop the parent
+        parent.stop();
+        // end::reactor_with_hook[]
+
     }
 
     private static ContextAccessor<Map, Map> testContextAccessor() {

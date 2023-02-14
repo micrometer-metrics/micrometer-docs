@@ -1,10 +1,10 @@
 def VERSIONS = [
-        'io.micrometer:context-propagation:1.0.1-SNAPSHOT',
+        'io.micrometer:context-propagation:1.0.3-SNAPSHOT',
         'com.github.tomakehurst:wiremock-jre8-standalone:2.33.+',
         'org.apache.httpcomponents.client5:httpclient5:5.1.+',
         'io.javalin:javalin:4.+',
-        'io.projectreactor:reactor-core:latest.release',
-        'io.projectreactor:reactor-test:latest.release',
+        'io.projectreactor:reactor-core:3.5.3',
+        'io.projectreactor:reactor-test:3.5.3',
         'ch.qos.logback:logback-classic:1.2.+',
         'org.asciidoctor:asciidoctorj:latest.release',
         'org.springframework:spring-context:5.+',
@@ -30,7 +30,7 @@ subprojects {
           runtimeOnly version
         }
       }
-      implementation platform('io.micrometer:micrometer-bom:1.10.4-SNAPSHOT')
+      implementation platform('io.micrometer:micrometer-bom:1.10.5-SNAPSHOT')
       implementation platform('io.micrometer:micrometer-tracing-bom:1.0.2-SNAPSHOT')
     }
   }
