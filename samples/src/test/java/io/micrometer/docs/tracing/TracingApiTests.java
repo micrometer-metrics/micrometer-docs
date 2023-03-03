@@ -15,17 +15,14 @@
  */
 package io.micrometer.docs.tracing;
 
-import java.util.Collections;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import brave.Tracing;
 import brave.baggage.BaggageField;
 import brave.baggage.BaggagePropagation;
 import brave.baggage.BaggagePropagationConfig;
+import brave.context.slf4j.MDCScopeDecorator;
 import brave.handler.SpanHandler;
 import brave.propagation.B3Propagation;
-import brave.propagation.StrictCurrentTraceContext;
+import brave.propagation.ThreadLocalCurrentTraceContext;
 import brave.sampler.Sampler;
 import io.micrometer.tracing.*;
 import io.micrometer.tracing.brave.bridge.BraveBaggageManager;
@@ -46,6 +43,10 @@ import org.junit.jupiter.api.Test;
 import zipkin2.reporter.AsyncReporter;
 import zipkin2.reporter.brave.ZipkinSpanHandler;
 import zipkin2.reporter.urlconnection.URLConnectionSender;
+
+import java.util.Collections;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static io.opentelemetry.sdk.trace.samplers.Sampler.alwaysOn;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -70,7 +71,10 @@ class TracingApiTests {
 
         // [Brave component] CurrentTraceContext is a Brave component that allows you to
         // retrieve the current TraceContext.
-        StrictCurrentTraceContext braveCurrentTraceContext = StrictCurrentTraceContext.create();
+        ThreadLocalCurrentTraceContext braveCurrentTraceContext = ThreadLocalCurrentTraceContext.newBuilder()
+                .addScopeDecorator(MDCScopeDecorator.get()) // Example of Brave's
+                                                            // automatic MDC setup
+                .build();
 
         // [Micrometer Tracing component] A Micrometer Tracing wrapper for Brave's
         // CurrentTraceContext
@@ -104,7 +108,6 @@ class TracingApiTests {
         @AfterEach
         void close() {
             this.tracing.close();
-            this.braveCurrentTraceContext.close();
             ((ZipkinSpanHandler) this.spanHandler).close();
         }
 
