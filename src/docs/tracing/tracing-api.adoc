@@ -77,7 +77,9 @@ IMPORTANT: For Brave, remember to set up the `PropagationFactory` so that it con
 include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=baggage_brave_setup,indent=0]
 -----
 
-== Aspect Oriented Programming
+== Aspect Oriented Programming (starting from Micrometer Tracing 1.1.0)
+
+IMPORTANT: This section is applicable from Micrometer Tracing 1.1.0.
 
 Micrometer Tracing contains a `@NewSpan`, `@ContinueSpan` and `@SpanTag` annotations that frameworks can use to create or customize spans for either specific types of methods such as those serving web request endpoints or, more generally, to all methods.
 
