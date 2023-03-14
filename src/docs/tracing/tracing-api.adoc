@@ -49,11 +49,25 @@ include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTes
 
 Traces connect from service to service using header propagation. Besides trace identifiers, other properties (called `Baggage`) can also be passed along with the request.
 
-Below you can find an example on how to use the Tracer API to create and extract baggage.
+Below you can find an example on how to use the Tracer API (version `1.0.x`) to create and extract baggage.
 
 [source,java,subs=+attributes]
 -----
+// ---------------------------------------------------------------------------
+//                         Example for Tracing 1.0.x
+// ---------------------------------------------------------------------------
 include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=baggage_api,indent=0]
+-----
+
+Below you can find an example on how to use the Tracer API (version `1.1.x`) to create and extract baggage.
+
+[source,java,subs=+attributes]
+-----
+// ---------------------------------------------------------------------------
+//                         Example for Tracing 1.1.x
+// ---------------------------------------------------------------------------
+
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=baggage_api_1_11_0,indent=0]
 -----
 
 IMPORTANT: For Brave, remember to set up the `PropagationFactory` so that it contains the baggage fields that you will be using in your code. Check the example below for details.
@@ -62,3 +76,31 @@ IMPORTANT: For Brave, remember to set up the `PropagationFactory` so that it con
 -----
 include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingApiTests.java[tags=baggage_brave_setup,indent=0]
 -----
+
+== Aspect Oriented Programming
+
+Micrometer Tracing contains a `@NewSpan`, `@ContinueSpan` and `@SpanTag` annotations that frameworks can use to create or customize spans for either specific types of methods such as those serving web request endpoints or, more generally, to all methods.
+
+WARNING: Micrometer's Spring Boot configuration does _not_ recognize these aspects on arbitrary methods.
+
+An incubating AspectJ aspect is included. You can use it in your application either through compile/load time AspectJ weaving or through framework facilities that interpret AspectJ aspects and proxy targeted methods in some other way, such as Spring AOP. Here is a sample Spring AOP configuration:
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingSpanAspectTests.java[tags=spring_config,indent=0]
+-----
+
+Applying `SpanAspect` makes `@NewSpan` and `@ContinueSpan` usable on any arbitrary method in an AspectJ proxied instance, as the following example shows:
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingSpanAspectTests.java[tags=example,indent=0]
+
+// --------------------------
+// ----- USAGE EXAMPLE ------
+// --------------------------
+
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingSpanAspectTests.java[tags=usage_example,indent=0]
+
+-----
+

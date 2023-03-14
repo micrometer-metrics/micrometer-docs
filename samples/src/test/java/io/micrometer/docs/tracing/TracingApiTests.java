@@ -193,7 +193,7 @@ class TracingApiTests {
         }
 
         @Test
-        void should_work_with_baggage() {
+        void should_work_with_legacy_baggage_api() {
             // tag::baggage_api[]
             Span span = tracer.nextSpan().name("parent").start();
 
@@ -202,31 +202,28 @@ class TracingApiTests {
 
                 // Not passing a TraceContext explicitly will bind the baggage to the
                 // current TraceContext
-                Baggage baggageForSpanInScopeOne = tracer.createBaggage("from_span_in_scope 1", "value 1");
-                Baggage baggageForSpanInScopeTwo = tracer.createBaggage("from_span_in_scope 2").set("value 2");
-
                 // If you want to retrieve the baggage value you should make it current
                 // first
-                try (BaggageInScope baggage = baggageForSpanInScopeOne.makeCurrent()) {
+                try (BaggageInScope baggage = tracer.createBaggage("from_span_in_scope 1", "value 1").makeCurrent()) {
                     // This is how you retrieve the baggage
-                    String baggageValue = baggageForSpanInScopeOne.get();
+                    String baggageValue = baggage.get();
                     then(baggageValue).as("[In scope] Baggage 1").isEqualTo("value 1");
 
                     String baggageValueViaTracer = tracer.getBaggage("from_span_in_scope 1").get();
                     then(baggageValueViaTracer).as("[In scope] Baggage 1").isEqualTo("value 1");
                 }
 
-                try (BaggageInScope baggage = baggageForSpanInScopeTwo.makeCurrent()) {
-                    then(baggageForSpanInScopeTwo.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
+                try (BaggageInScope baggage = tracer.createBaggage("from_span_in_scope 2", "value 2").makeCurrent()) {
+                    then(baggage.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
                     then(tracer.getBaggage("from_span_in_scope 2").get()).as("[In scope] Baggage 2")
                             .isEqualTo("value 2");
                 }
             }
 
             // Assuming that you have a handle to the span
-            Baggage baggageForExplicitSpan = tracer.createBaggage("from_span").set(span.context(), "value 3");
-            try (BaggageInScope baggage = baggageForExplicitSpan.makeCurrent()) {
-                String baggageValueFromATraceContext = baggageForExplicitSpan.get(span.context());
+            try (BaggageInScope baggage = tracer.createBaggage("from_span").set(span.context(), "value 3")
+                    .makeCurrent()) {
+                String baggageValueFromATraceContext = baggage.get(span.context());
                 then(baggageValueFromATraceContext).as("[Span passed explicitly] Baggage 3").isEqualTo("value 3");
 
                 String baggageValueFromATraceContextThroughTracer = tracer.getBaggage("from_span").get(span.context());
@@ -235,12 +232,10 @@ class TracingApiTests {
             }
 
             // Assuming that there's no span in scope
-            Baggage baggageFour = tracer.createBaggage("from_span_in_scope 1", "value 1");
-
             // When there's no span in scope, there will never be any baggage - even if
             // you make it current
-            try (BaggageInScope baggage = baggageFour.makeCurrent()) {
-                then(baggageFour.get()).as("[Out of span scope] Baggage 1").isNull();
+            try (BaggageInScope baggage = tracer.createBaggage("from_span_in_scope 1", "value 1").makeCurrent()) {
+                then(baggage.get()).as("[Out of span scope] Baggage 1").isNull();
                 then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of span scope] Baggage 1").isNull();
             }
             then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of scope] Baggage 1").isNull();
@@ -252,6 +247,60 @@ class TracingApiTests {
             then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
                     .isEqualTo("value 3");
             // end::baggage_api[]
+        }
+
+        @Test
+        void should_work_with_baggage_with_1_11_api() {
+            // tag::baggage_api_1_11_0[]
+            Span span = tracer.nextSpan().name("parent").start();
+
+            // Assuming that there's a span in scope...
+            try (Tracer.SpanInScope ws = tracer.withSpan(span)) {
+
+                // Not passing a TraceContext explicitly will bind the baggage to the
+                // current TraceContext
+                try (BaggageInScope baggage = tracer.createBaggageInScope("from_span_in_scope 1", "value 1")) {
+                    // This is how you retrieve the baggage
+                    String baggageValue = baggage.get();
+                    then(baggageValue).as("[In scope] Baggage 1").isEqualTo("value 1");
+
+                    String baggageValueViaTracer = tracer.getBaggage("from_span_in_scope 1").get();
+                    then(baggageValueViaTracer).as("[In scope] Baggage 1").isEqualTo("value 1");
+                }
+
+                try (BaggageInScope baggage = tracer.createBaggageInScope("from_span_in_scope 2", "value 2")) {
+                    then(baggage.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
+                    then(tracer.getBaggage("from_span_in_scope 2").get()).as("[In scope] Baggage 2")
+                            .isEqualTo("value 2");
+                }
+            }
+
+            // Assuming that you have a handle to the span
+            try (BaggageInScope baggage = tracer.createBaggageInScope(span.context(), "from_span", "value 3")) {
+                String baggageValueFromATraceContext = baggage.get(span.context());
+                then(baggageValueFromATraceContext).as("[Span passed explicitly] Baggage 3").isEqualTo("value 3");
+
+                String baggageValueFromATraceContextThroughTracer = tracer.getBaggage("from_span").get(span.context());
+                then(baggageValueFromATraceContextThroughTracer).as("[Span passed explicitly] Baggage 3")
+                        .isEqualTo("value 3");
+            }
+
+            // Assuming that there's no span in scope
+            // When there's no span in scope, there will never be any baggage - even if
+            // you make it current
+            try (BaggageInScope baggage = tracer.createBaggageInScope("from_span_in_scope 1", "value 1")) {
+                then(baggage.get()).as("[Out of span scope] Baggage 1").isNull();
+                then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of span scope] Baggage 1").isNull();
+            }
+            then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of scope] Baggage 1").isNull();
+            then(tracer.getBaggage("from_span_in_scope 2").get()).as("[Out of scope] Baggage 2").isNull();
+            then(tracer.getBaggage("from_span").get()).as("[Out of scope] Baggage 3").isNull();
+
+            // You will retrieve the baggage value ALWAYS when you pass the context
+            // explicitly
+            then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
+                    .isEqualTo("value 3");
+            // end::baggage_api_1_11_0[]
         }
 
     }
@@ -390,7 +439,7 @@ class TracingApiTests {
         }
 
         @Test
-        void should_work_with_baggage() {
+        void should_work_with_legacy_baggage_api() {
             Span span = tracer.nextSpan().name("parent").start();
 
             // Assuming that there's a span in scope...
@@ -398,31 +447,28 @@ class TracingApiTests {
 
                 // Not passing a TraceContext explicitly will bind the baggage to the
                 // current TraceContext
-                Baggage baggageForSpanInScopeOne = tracer.createBaggage("from_span_in_scope 1", "value 1");
-                Baggage baggageForSpanInScopeTwo = tracer.createBaggage("from_span_in_scope 2").set("value 2");
-
                 // If you want to retrieve the baggage value you should make it current
                 // first
-                try (BaggageInScope baggage = baggageForSpanInScopeOne.makeCurrent()) {
+                try (BaggageInScope baggage = tracer.createBaggage("from_span_in_scope 1", "value 1").makeCurrent()) {
                     // This is how you retrieve the baggage
-                    String baggageValue = baggageForSpanInScopeOne.get();
+                    String baggageValue = baggage.get();
                     then(baggageValue).as("[In scope] Baggage 1").isEqualTo("value 1");
 
                     String baggageValueViaTracer = tracer.getBaggage("from_span_in_scope 1").get();
                     then(baggageValueViaTracer).as("[In scope] Baggage 1").isEqualTo("value 1");
                 }
 
-                try (BaggageInScope baggage = baggageForSpanInScopeTwo.makeCurrent()) {
-                    then(baggageForSpanInScopeTwo.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
+                try (BaggageInScope baggage = tracer.createBaggage("from_span_in_scope 2", "value 2").makeCurrent()) {
+                    then(baggage.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
                     then(tracer.getBaggage("from_span_in_scope 2").get()).as("[In scope] Baggage 2")
                             .isEqualTo("value 2");
                 }
             }
 
             // Assuming that you have a handle to the span
-            Baggage baggageForExplicitSpan = tracer.createBaggage("from_span").set(span.context(), "value 3");
-            try (BaggageInScope baggage = baggageForExplicitSpan.makeCurrent()) {
-                String baggageValueFromATraceContext = baggageForExplicitSpan.get(span.context());
+            try (BaggageInScope baggage = tracer.createBaggage("from_span").set(span.context(), "value 3")
+                    .makeCurrent()) {
+                String baggageValueFromATraceContext = baggage.get(span.context());
                 then(baggageValueFromATraceContext).as("[Span passed explicitly] Baggage 3").isEqualTo("value 3");
 
                 String baggageValueFromATraceContextThroughTracer = tracer.getBaggage("from_span").get(span.context());
@@ -431,13 +477,61 @@ class TracingApiTests {
             }
 
             // Assuming that there's no span in scope
-            Baggage baggageFour = tracer.createBaggage("from_span_in_scope 1", "value 1");
+            // When there's no span in scope for OTel there will be baggage
+            try (BaggageInScope baggage = tracer.createBaggage("from_span_in_scope 1", "value 1").makeCurrent()) {
+                then(baggage.get()).as("[Out of span scope] Baggage 1").isNotNull();
+                then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of span scope] Baggage 1").isNotNull();
+            }
+            then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of scope] Baggage 1").isNull();
+            then(tracer.getBaggage("from_span_in_scope 2").get()).as("[Out of scope] Baggage 2").isNull();
+            then(tracer.getBaggage("from_span").get()).as("[Out of scope] Baggage 3").isNull();
 
-            // When there's no span in scope, there will never be any baggage - even if
-            // you make it current
-            try (BaggageInScope baggage = baggageFour.makeCurrent()) {
-                then(baggageFour.get()).as("[Out of span scope] Baggage 1").isNull();
-                then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of span scope] Baggage 1").isNull();
+            // You will retrieve the baggage value ALWAYS when you pass the context
+            // explicitly
+            then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
+                    .isEqualTo("value 3");
+        }
+
+        @Test
+        void should_work_with_baggage_with_1_11_api() {
+            Span span = tracer.nextSpan().name("parent").start();
+
+            // Assuming that there's a span in scope...
+            try (Tracer.SpanInScope ws = tracer.withSpan(span)) {
+
+                // Not passing a TraceContext explicitly will bind the baggage to the
+                // current TraceContext
+                try (BaggageInScope baggage = tracer.createBaggageInScope("from_span_in_scope 1", "value 1")) {
+                    // This is how you retrieve the baggage
+                    String baggageValue = baggage.get();
+                    then(baggageValue).as("[In scope] Baggage 1").isEqualTo("value 1");
+
+                    String baggageValueViaTracer = tracer.getBaggage("from_span_in_scope 1").get();
+                    then(baggageValueViaTracer).as("[In scope] Baggage 1").isEqualTo("value 1");
+                }
+
+                try (BaggageInScope baggage = tracer.createBaggageInScope("from_span_in_scope 2", "value 2")) {
+                    then(baggage.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
+                    then(tracer.getBaggage("from_span_in_scope 2").get()).as("[In scope] Baggage 2")
+                            .isEqualTo("value 2");
+                }
+            }
+
+            // Assuming that you have a handle to the span
+            try (BaggageInScope baggage = tracer.createBaggageInScope(span.context(), "from_span", "value 3")) {
+                String baggageValueFromATraceContext = baggage.get(span.context());
+                then(baggageValueFromATraceContext).as("[Span passed explicitly] Baggage 3").isEqualTo("value 3");
+
+                String baggageValueFromATraceContextThroughTracer = tracer.getBaggage("from_span").get(span.context());
+                then(baggageValueFromATraceContextThroughTracer).as("[Span passed explicitly] Baggage 3")
+                        .isEqualTo("value 3");
+            }
+
+            // Assuming that there's no span in scope
+            // When there's no span in scope for OTel there will be baggage
+            try (BaggageInScope baggage = tracer.createBaggageInScope("from_span_in_scope 1", "value 1")) {
+                then(baggage.get()).as("[Out of span scope] Baggage 1").isNotNull();
+                then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of span scope] Baggage 1").isNotNull();
             }
             then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of scope] Baggage 1").isNull();
             then(tracer.getBaggage("from_span_in_scope 2").get()).as("[Out of scope] Baggage 2").isNull();

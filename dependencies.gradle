@@ -1,5 +1,5 @@
 def VERSIONS = [
-        'io.micrometer:context-propagation:1.0.3-SNAPSHOT',
+        'io.micrometer:context-propagation:1.1.0-SNAPSHOT',
         'com.github.tomakehurst:wiremock-jre8-standalone:2.33.+',
         'org.apache.httpcomponents.client5:httpclient5:5.1.+',
         'io.javalin:javalin:4.+',
@@ -30,8 +30,8 @@ subprojects {
           runtimeOnly version
         }
       }
-      implementation platform('io.micrometer:micrometer-bom:1.10.5-SNAPSHOT')
-      implementation platform('io.micrometer:micrometer-tracing-bom:1.0.2-SNAPSHOT')
+      implementation platform('io.micrometer:micrometer-bom:1.11.0-SNAPSHOT')
+      implementation platform('io.micrometer:micrometer-tracing-bom:1.1.0-SNAPSHOT')
     }
   }
 }
