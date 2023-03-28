@@ -15,13 +15,19 @@
  */
 package io.micrometer.docs.tracing;
 
+import io.micrometer.context.ContextRegistry;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.observation.DefaultMeterObservationHandler;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationHandler;
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.tracing.Tracer;
+import io.micrometer.tracing.contextpropagation.ObservationAwareSpanThreadLocalAccessor;
 import io.micrometer.tracing.handler.DefaultTracingObservationHandler;
+import io.micrometer.tracing.handler.PropagatingReceiverTracingObservationHandler;
+import io.micrometer.tracing.handler.PropagatingSenderTracingObservationHandler;
+import io.micrometer.tracing.propagation.Propagator;
 import io.micrometer.tracing.test.simple.SimpleTracer;
 import org.junit.jupiter.api.Test;
 
@@ -33,16 +39,26 @@ class TracingConfiguringTests {
     @Test
     void handler_configuration() {
         // tag::handler_configuration[]
-        Tracer tracer = new SimpleTracer(); // SimpleTracer is used for tests only
+        Tracer tracer = Tracer.NOOP; // The real tracer will come from your tracer
+                                     // implementation (Brave /
+        // OTel)
+        Propagator propagator = Propagator.NOOP; // The real propagator will come from
+                                                 // your tracer implementation (Brave /
+                                                 // OTel)
         MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
         ObservationRegistry registry = ObservationRegistry.create();
         registry.observationConfig()
                 // assuming that micrometer-core is on the classpath
                 .observationHandler(new DefaultMeterObservationHandler(meterRegistry))
-                // we set up a handler that creates spans - it comes from Micrometer
-                // Tracing
-                .observationHandler(new DefaultTracingObservationHandler(tracer));
+                // we set up a first matching handler that creates spans - it comes from
+                // Micrometer
+                // Tracing. We set up spans for sending and receiving data over the wire
+                // and a default one
+                .observationHandler(new ObservationHandler.FirstMatchingCompositeObservationHandler(
+                        new PropagatingSenderTracingObservationHandler<>(tracer, propagator),
+                        new PropagatingReceiverTracingObservationHandler<>(tracer, propagator),
+                        new DefaultTracingObservationHandler(tracer)));
 
         // Creating and starting a new observation
         // via the `DefaultTracingObservationHandler` that will create a new Span and
@@ -87,6 +103,16 @@ class TracingConfiguringTests {
 
     void yourCodeToMeasure() {
 
+    }
+
+    void exampleOfSettingObservationAwareSpanThreadLocalAccessor() {
+        Tracer tracer = null;
+
+        // tag::span_thread_local_accessor[]
+        ContextRegistry.getInstance().registerThreadLocalAccessor(new ObservationAwareSpanThreadLocalAccessor(tracer));
+        // end::span_thread_local_accessor[]
+
+        ContextRegistry.getInstance().removeThreadLocalAccessor(ObservationAwareSpanThreadLocalAccessor.KEY);
     }
 
 }
