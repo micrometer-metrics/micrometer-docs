@@ -48,3 +48,12 @@ In order to make https://micrometer.io/docs/contextPropagation[Context Propagati
 -----
 include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingConfiguringTests.java[tags=span_thread_local_accessor,indent=0]
 -----
+
+== Exemplars
+
+To add support for https://grafana.com/docs/grafana/latest/fundamentals/exemplars/[exemplars] instead of using the `DefaultMeterObservationHandler` you should use the `TracingAwareMeterObservationHandler` like presented below.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingConfiguringTests.java[tags=exemplars,indent=0]
+-----

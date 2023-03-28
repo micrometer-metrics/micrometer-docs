@@ -27,6 +27,7 @@ import io.micrometer.tracing.contextpropagation.ObservationAwareSpanThreadLocalA
 import io.micrometer.tracing.handler.DefaultTracingObservationHandler;
 import io.micrometer.tracing.handler.PropagatingReceiverTracingObservationHandler;
 import io.micrometer.tracing.handler.PropagatingSenderTracingObservationHandler;
+import io.micrometer.tracing.handler.TracingAwareMeterObservationHandler;
 import io.micrometer.tracing.propagation.Propagator;
 import io.micrometer.tracing.test.simple.SimpleTracer;
 import org.junit.jupiter.api.Test;
@@ -105,7 +106,7 @@ class TracingConfiguringTests {
 
     }
 
-    void exampleOfSettingObservationAwareSpanThreadLocalAccessor() {
+    void example_of_setting_ObservationAwareSpanThreadLocalAccessor() {
         Tracer tracer = null;
 
         // tag::span_thread_local_accessor[]
@@ -113,6 +114,21 @@ class TracingConfiguringTests {
         // end::span_thread_local_accessor[]
 
         ContextRegistry.getInstance().removeThreadLocalAccessor(ObservationAwareSpanThreadLocalAccessor.KEY);
+    }
+
+    void example_of_exemplars() {
+        Tracer tracer = Tracer.NOOP;
+        MeterRegistry meterRegistry = new SimpleMeterRegistry();
+
+        // tag::exemplars[]
+        ObservationRegistry registry = ObservationRegistry.create();
+        registry.observationConfig()
+                // Don't register the DefaultMeterObservationHandler...
+                // .observationHandler(new DefaultMeterObservationHandler(meterRegistry))
+                // ...instead register the tracing aware version
+                .observationHandler(new TracingAwareMeterObservationHandler<>(
+                        new DefaultMeterObservationHandler(meterRegistry), tracer));
+        // end::exemplars[]
     }
 
 }
