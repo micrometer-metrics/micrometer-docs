@@ -5,7 +5,7 @@
     "main.js.map": "/static/js/main.8ad5db0b.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.a024820b.js",
     "runtime-main.js.map": "/static/js/runtime-main.a024820b.js.map",
-    "static/css/2.86c02505.chunk.css": "/static/css/2.86c02505.chunk.css",
+    "static/css/2.1c8e5216.chunk.css": "/static/css/2.1c8e5216.chunk.css",
     "static/js/2.c6c3d3d2.chunk.js": "/static/js/2.c6c3d3d2.chunk.js",
     "static/js/2.c6c3d3d2.chunk.js.map": "/static/js/2.c6c3d3d2.chunk.js.map",
     "atlas-long-task-timer.png": "/01093efa2acafe9591966b47300356fa.png",
@@ -42,7 +42,7 @@
     "prometheus-counter.png": "/f12ca6e6f2bed6fa80c9fe9d2af1a9a5.png",
     "humio-timer.png": "/fd75b777f28b78310f3dca87aa1efd79.png",
     "index.html": "/index.html",
-    "static/css/2.86c02505.chunk.css.map": "/static/css/2.86c02505.chunk.css.map",
+    "static/css/2.1c8e5216.chunk.css.map": "/static/css/2.1c8e5216.chunk.css.map",
     "static/css/main.6901d5e3.chunk.css.map": "/static/css/main.6901d5e3.chunk.css.map",
     "static/js/2.c6c3d3d2.chunk.js.LICENSE.txt": "/static/js/2.c6c3d3d2.chunk.js.LICENSE.txt",
     "static/media/font-awesome.min.css": "/static/media/fontawesome-webfont.f691f37e.woff",
@@ -52,7 +52,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.a024820b.js",
-    "static/css/2.86c02505.chunk.css",
+    "static/css/2.1c8e5216.chunk.css",
     "static/js/2.c6c3d3d2.chunk.js",
     "static/css/main.6901d5e3.chunk.css",
     "static/js/main.8ad5db0b.chunk.js"
