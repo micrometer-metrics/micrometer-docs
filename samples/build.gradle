@@ -22,6 +22,7 @@ dependencies {
     testImplementation 'org.springframework:spring-context'
     testImplementation 'io.projectreactor:reactor-core'
     testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'io.netty:netty-transport'
     testImplementation 'org.apache.httpcomponents.client5:httpclient5'
     testImplementation 'io.javalin:javalin'
 }

@@ -5,6 +5,7 @@ def VERSIONS = [
         'io.javalin:javalin:4.+',
         'io.projectreactor:reactor-core:3.5.3',
         'io.projectreactor:reactor-test:3.5.3',
+        'io.netty:netty-transport:4.1.+',
         'ch.qos.logback:logback-classic:1.2.+',
         'org.asciidoctor:asciidoctorj:latest.release',
         'org.springframework:spring-context:5.+',
