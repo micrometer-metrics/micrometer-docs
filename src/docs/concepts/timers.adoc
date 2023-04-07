@@ -110,6 +110,38 @@ public class ExampleService {
 }
 ----
 
+=== @MeterTag on Method Parameters
+
+To support `@MeterTag` annotation on method parameters you need to configure the `@TimedAspect` to add the `MeterAnnotationHandler`.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=resolvers,indent=0]
+
+include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=metrics_tag_annotation_handler,indent=0]
+-----
+
+Let's assume that we have the following interface.
+
+[source,java,subs=+attributes]
+-----
+include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=interface,indent=0]
+-----
+
+When its implementations would be called with different arguments (remember that the implementation needs to be annotated with `@Timed` annotation too) the following timers would be created
+
+[source,java,subs=+attributes]
+-----
+// Example for returning <toString()> on the parameter
+include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=example_value_to_string,indent=0]
+
+// Example for calling the provided <ValueResolver> on the parameter
+include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=example_value_resolver,indent=0]
+
+// Example for calling the provided <ValueExpressionResolver>
+include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=example_value_spel,indent=0]
+-----
+
 == Function-tracking Timers
 
 Micrometer also provides a more infrequently used timer pattern that tracks two monotonically increasing functions (a function that stays the same or increases over time but never decreases): a count function and a total time function. Some monitoring systems, such as Prometheus, push cumulative values for counters (which apply to both the count and total time functions in this case) to the backend, but others publish the rate at which a counter increments over the push interval. By employing this pattern, you let the Micrometer implementation for your monitoring system choose whether to rate normalize the timer, and your timer remains portable across different types of monitoring systems.
