@@ -150,6 +150,8 @@ export default function DocRoot() {
             </li>
             <li><NavLink className="doc-section" to="/docs/ref/jetty">Jetty and Jersey</NavLink>. Instrumentation for Jetty and Jersey.
             </li>
+            <li><NavLink className="doc-section" to="/docs/ref/netty">Netty</NavLink>. Instrumentation for Netty.
+            </li>
           </ul>
         </li>
         <li><span className="doc-section">Guides</span>.

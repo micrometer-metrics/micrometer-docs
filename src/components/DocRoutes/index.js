@@ -11,6 +11,7 @@ let docsJvm = require('!asciidoc-loader!../../generated-docs/jvm/index.adoc');
 let docsCache = require('!asciidoc-loader!../../generated-docs/cache/index.adoc');
 let docsOkHttpClient = require('!asciidoc-loader!../../generated-docs/okhttpclient/index.adoc');
 let docsJetty = require('!asciidoc-loader!../../generated-docs/jetty/index.adoc');
+let docsNetty = require('!asciidoc-loader!../../generated-docs/netty/index.adoc');
 let docsConsoleReporter = require('!asciidoc-loader!../../generated-docs/guide/console-reporter.adoc');
 let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../generated-docs/guide/http-sender-resilience4j-retry.adoc');
 let docsCustomMeterRegistry = require('!asciidoc-loader!../../generated-docs/guide/custom-meter-registry.adoc');
@@ -58,6 +59,10 @@ export default function DocRoutes() {
 
       <Route path="/docs/ref/jetty" render={() =>
         <DocSection title="Jetty and Jersey Metrics" content={docsJetty}/>
+      }/>
+
+      <Route path="/docs/ref/netty" render={() =>
+        <DocSection title="Netty Metrics" content={docsNetty}/>
       }/>
 
       <Route path="/docs/guide/consoleReporter" render={() =>
