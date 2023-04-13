@@ -5,17 +5,17 @@ import DocRoot from '../DocRoot';
 import DocSection from '../DocSection';
 
 /* eslint import/no-webpack-loader-syntax: off */
-let docsInstalling = require('!asciidoc-loader!../../docs/installing/index.adoc');
-let docsConcepts = require('!asciidoc-loader!../../docs/concepts/index.adoc');
-let docsJvm = require('!asciidoc-loader!../../docs/jvm/index.adoc');
-let docsCache = require('!asciidoc-loader!../../docs/cache/index.adoc');
-let docsOkHttpClient = require('!asciidoc-loader!../../docs/okhttpclient/index.adoc');
-let docsJetty = require('!asciidoc-loader!../../docs/jetty/index.adoc');
+let docsInstalling = require('!asciidoc-loader!../../generated-docs/installing/index.adoc');
+let docsConcepts = require('!asciidoc-loader!../../generated-docs/concepts/index.adoc');
+let docsJvm = require('!asciidoc-loader!../../generated-docs/jvm/index.adoc');
+let docsCache = require('!asciidoc-loader!../../generated-docs/cache/index.adoc');
+let docsOkHttpClient = require('!asciidoc-loader!../../generated-docs/okhttpclient/index.adoc');
+let docsJetty = require('!asciidoc-loader!../../generated-docs/jetty/index.adoc');
 let docsNetty = require('!asciidoc-loader!../../generated-docs/netty/index.adoc');
-let docsConsoleReporter = require('!asciidoc-loader!../../docs/guide/console-reporter.adoc');
-let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../docs/guide/http-sender-resilience4j-retry.adoc');
-let docsCustomMeterRegistry = require('!asciidoc-loader!../../docs/guide/custom-meter-registry.adoc');
-let docsSupport = require('!asciidoc-loader!../../docs/support/index.adoc');
+let docsConsoleReporter = require('!asciidoc-loader!../../generated-docs/guide/console-reporter.adoc');
+let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../generated-docs/guide/http-sender-resilience4j-retry.adoc');
+let docsCustomMeterRegistry = require('!asciidoc-loader!../../generated-docs/guide/custom-meter-registry.adoc');
+let docsSupport = require('!asciidoc-loader!../../generated-docs/support/index.adoc');
 let docsObservation = require('!asciidoc-loader!../../generated-docs/observation/index.adoc');
 let docsTracing = require('!asciidoc-loader!../../generated-docs/tracing/index.adoc');
 let docsContextPropagation = require('!asciidoc-loader!../../generated-docs/contextpropagation/index.adoc');
@@ -23,7 +23,7 @@ let docsContextPropagation = require('!asciidoc-loader!../../generated-docs/cont
 const systems = ['appOptics', 'atlas', 'azure-monitor', 'cloudwatch', 'datadog', 'dynatrace', 'elastic', 'ganglia', 'graphite', 'humio', 'influx', 'instana', 'jmx', 'kairos', 'new-relic', 'prometheus', 'signalFx', 'stackdriver', 'statsD', 'wavefront'];
 
 let docsBySystem = {};
-systems.forEach(sys => docsBySystem[sys] = require(`!asciidoc-loader!../../docs/implementations/${sys}.adoc`));
+systems.forEach(sys => docsBySystem[sys] = require(`!asciidoc-loader!../../generated-docs/implementations/${sys}.adoc`));
 
 export default function DocRoutes() {
   return (

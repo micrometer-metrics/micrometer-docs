@@ -15,6 +15,9 @@
  */
 package io.micrometer.docs.tracing;
 
+import io.micrometer.common.annotation.NoOpValueResolver;
+import io.micrometer.common.annotation.ValueExpressionResolver;
+import io.micrometer.common.annotation.ValueResolver;
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
 import io.micrometer.tracing.annotation.*;
@@ -242,13 +245,13 @@ class TracingSpanAspectTests {
 
         // You can provide your own resolvers - here we go with a noop example.
         @Bean
-        TagValueResolver tagValueResolver() {
-            return new NoOpTagValueResolver();
+        ValueResolver tagValueResolver() {
+            return new NoOpValueResolver();
         }
 
         // Example of a SPel resolver
         @Bean
-        TagValueExpressionResolver tagValueExpressionResolver() {
+        ValueExpressionResolver tagValueExpressionResolver() {
             return new SpelTagValueExpressionResolver();
         }
 
@@ -267,7 +270,7 @@ class TracingSpanAspectTests {
     }
 
     // Example of using SPel to resolve expressions in @SpanTag
-    static class SpelTagValueExpressionResolver implements TagValueExpressionResolver {
+    static class SpelTagValueExpressionResolver implements ValueExpressionResolver {
 
         private static final Log log = LogFactory.getLog(SpelTagValueExpressionResolver.class);
 
