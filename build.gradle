@@ -12,7 +12,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.16.1'
-        classpath 'io.spring.nohttp:nohttp-gradle:0.0.10'
+        classpath 'io.spring.nohttp:nohttp-gradle:0.0.11'
         classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.34'
         classpath 'org.siouan:frontend-gradle-plugin-jdk8:6.0.0'
 
@@ -221,7 +221,7 @@ task deleteLockFiles (type: Delete) {
 }
 
 wrapper {
-    gradleVersion = '7.6'
+    gradleVersion = '8.1'
 }
 
 defaultTasks 'build'
