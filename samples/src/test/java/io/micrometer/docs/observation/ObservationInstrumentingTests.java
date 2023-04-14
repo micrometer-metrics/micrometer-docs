@@ -98,7 +98,7 @@ class ObservationInstrumentingTests {
     MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
     SpanHandler spanHandler = ZipkinSpanHandler
-            .create(AsyncReporter.create(URLConnectionSender.create("http://localhost:9411/api/v2/spans")));
+        .create(AsyncReporter.create(URLConnectionSender.create("http://localhost:9411/api/v2/spans")));
 
     // [Brave component] CurrentTraceContext is a Brave component that allows you to
     // retrieve the current TraceContext.
@@ -110,8 +110,11 @@ class ObservationInstrumentingTests {
 
     // [Brave component] Tracing is the root component that allows to configure the
     // tracer, handlers, context propagation etc.
-    Tracing tracing = Tracing.newBuilder().currentTraceContext(braveCurrentTraceContext).sampler(Sampler.ALWAYS_SAMPLE)
-            .addSpanHandler(spanHandler).build();
+    Tracing tracing = Tracing.newBuilder()
+        .currentTraceContext(braveCurrentTraceContext)
+        .sampler(Sampler.ALWAYS_SAMPLE)
+        .addSpanHandler(spanHandler)
+        .build();
 
     // [Brave component] Tracer is a component that handles the life-cycle of a span
     brave.Tracer braveTracer = tracing.tracer();
@@ -129,8 +132,9 @@ class ObservationInstrumentingTests {
         ObservationRegistry registry = ObservationRegistry.create();
         registry.observationConfig().observationHandler(new DefaultMeterObservationHandler(meterRegistry));
         // end::setup[]
-        registry.observationConfig().observationHandler(new ObservationHandler.FirstMatchingCompositeObservationHandler(
-                new DefaultTracingObservationHandler(tracer)));
+        registry.observationConfig()
+            .observationHandler(new ObservationHandler.FirstMatchingCompositeObservationHandler(
+                    new DefaultTracingObservationHandler(tracer)));
 
         this.registry = registry;
     }
@@ -185,55 +189,57 @@ class ObservationInstrumentingTests {
 
         // We want to create a child observation for a Reactor stream
         Observation child = Observation.start("child", registry)
-                // There's no thread local entry, so we will pass parent observation
-                // manually. If we put the Observation in scope we could then call
-                // <.contextCapture()> method from Reactor to capture all thread locals
-                // and store them in Reactor Context.
-                .parentObservation(parent);
+            // There's no thread local entry, so we will pass parent observation
+            // manually. If we put the Observation in scope we could then call
+            // <.contextCapture()> method from Reactor to capture all thread locals
+            // and store them in Reactor Context.
+            .parentObservation(parent);
         Integer block = Mono.just(1)
-                // Example of not propagating context by default
-                .doOnNext(integer -> {
-                    log.info(
-                            "No context propagation happens by default in Reactor - there will be no Observation in thread local here ["
-                                    + registry.getCurrentObservation() + "]");
-                    then(registry.getCurrentObservation()).isNull();
-                })
-                // Example of having entries in thread local for <tap()> operator
-                .tap(() -> new DefaultSignalListener<Integer>() {
-                    @Override
-                    public void doFirst() throws Throwable {
-                        log.info("We're using tap() -> there will be Observation in thread local here ["
+            // Example of not propagating context by default
+            .doOnNext(integer -> {
+                log.info(
+                        "No context propagation happens by default in Reactor - there will be no Observation in thread local here ["
                                 + registry.getCurrentObservation() + "]");
-                        then(registry.getCurrentObservation()).isNotNull();
-                    }
-                }).flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
-                // Example of retrieving ThreadLocal entries via ReactorContext
-                .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
-                    try (ContextSnapshot.Scope scope = ContextSnapshot.setAllThreadLocalsFrom(contextView)) {
-                        log.info(
-                                "We're retrieving thread locals from Reactor Context - there will be Observation in thread local here ["
-                                        + registry.getCurrentObservation() + "]");
-                        then(registry.getCurrentObservation()).isNotNull();
-                    }
-                }))
-                // Example of having entries in thread local for <handle()> operator
-                .handle((BiConsumer<Integer, SynchronousSink<Integer>>) (integer, synchronousSink) -> {
-                    log.info("We're using handle() -> There will be Observation in thread local here ["
+                then(registry.getCurrentObservation()).isNull();
+            })
+            // Example of having entries in thread local for <tap()> operator
+            .tap(() -> new DefaultSignalListener<Integer>() {
+                @Override
+                public void doFirst() throws Throwable {
+                    log.info("We're using tap() -> there will be Observation in thread local here ["
                             + registry.getCurrentObservation() + "]");
                     then(registry.getCurrentObservation()).isNotNull();
-                    synchronousSink.next(integer);
-                })
-                // Remember to stop the child Observation!
-                .doFinally(signalType -> child.stop())
-                // When using Reactor we ALWAYS search for
-                // ObservationThreadLocalAccessor.KEY entry in the Reactor Context to
-                // search for an Observation
-                .contextWrite(context -> context.put(ObservationThreadLocalAccessor.KEY, child))
-                // If there were ThreadLocal entries that are using Micrometer Context
-                // Propagation they would be caught here. All implementations of
-                // <ThreadLocalAccessor> will store their thread local entries under their
-                // keys in Reactor Context
-                .contextCapture().block();
+                }
+            })
+            .flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
+            // Example of retrieving ThreadLocal entries via ReactorContext
+            .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
+                try (ContextSnapshot.Scope scope = ContextSnapshot.setAllThreadLocalsFrom(contextView)) {
+                    log.info(
+                            "We're retrieving thread locals from Reactor Context - there will be Observation in thread local here ["
+                                    + registry.getCurrentObservation() + "]");
+                    then(registry.getCurrentObservation()).isNotNull();
+                }
+            }))
+            // Example of having entries in thread local for <handle()> operator
+            .handle((BiConsumer<Integer, SynchronousSink<Integer>>) (integer, synchronousSink) -> {
+                log.info("We're using handle() -> There will be Observation in thread local here ["
+                        + registry.getCurrentObservation() + "]");
+                then(registry.getCurrentObservation()).isNotNull();
+                synchronousSink.next(integer);
+            })
+            // Remember to stop the child Observation!
+            .doFinally(signalType -> child.stop())
+            // When using Reactor we ALWAYS search for
+            // ObservationThreadLocalAccessor.KEY entry in the Reactor Context to
+            // search for an Observation
+            .contextWrite(context -> context.put(ObservationThreadLocalAccessor.KEY, child))
+            // If there were ThreadLocal entries that are using Micrometer Context
+            // Propagation they would be caught here. All implementations of
+            // <ThreadLocalAccessor> will store their thread local entries under their
+            // keys in Reactor Context
+            .contextCapture()
+            .block();
 
         // We didn't have any observations in thread local
         then(registry.getCurrentObservation()).isNull();
@@ -251,18 +257,20 @@ class ObservationInstrumentingTests {
 
         Observation mvc = Observation.start("mvc", registry);
         TracingObservationHandler.TracingContext tracingContext = mvc.getContextView()
-                .get(TracingObservationHandler.TracingContext.class);
+            .get(TracingObservationHandler.TracingContext.class);
 
         try (Observation.Scope scope = mvc.openScope()) {
             Map<String, Object> graphqlContext = new HashMap<>();
             graphqlContext.put(ObservationThreadLocalAccessor.KEY, mvc);
 
-            Observation graphqlRequest = Observation.createNotStarted("graphql", registry).parentObservation(mvc)
-                    .start();
+            Observation graphqlRequest = Observation.createNotStarted("graphql", registry)
+                .parentObservation(mvc)
+                .start();
             graphqlContext.put(ObservationThreadLocalAccessor.KEY, graphqlRequest);
 
             Observation dataFetcher = Observation.createNotStarted("dataFetcher", registry)
-                    .parentObservation(graphqlRequest).start();
+                .parentObservation(graphqlRequest)
+                .start();
 
             graphqlContext.put(ObservationThreadLocalAccessor.KEY, dataFetcher);
 
@@ -271,21 +279,23 @@ class ObservationInstrumentingTests {
             System.out.println("PRE-HELLO - MVC SPAN [" + tracer.currentSpan() + "]");
 
             contextSnapshot.wrap(() -> {
-                Integer block = Mono.just(1).flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
-                        .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
-                            System.out.println(
-                                    "IN REACTOR BEFORE SCOPE - DATA FETCHER SPAN [" + tracer.currentSpan() + "]");
-                            thenCurrentObservationAndSpanAreSameAs(dataFetcher);
-                            try (ContextSnapshot.Scope s = ContextSnapshot.setAllThreadLocalsFrom(contextView)) {
-                                thenCurrentObservationAndSpanAreSameAs(dataFetcher);
-                                thenCurrentObservationAndSpanIsDataFetcher(mvc, graphqlRequest, dataFetcher);
-                            }
-                            System.out.println(
-                                    "IN REACTOR AFTER MANUAL THREAD LOCAL SCOPE [" + tracer.currentSpan() + "]");
+                Integer block = Mono.just(1)
+                    .flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
+                    .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
+                        System.out
+                            .println("IN REACTOR BEFORE SCOPE - DATA FETCHER SPAN [" + tracer.currentSpan() + "]");
+                        thenCurrentObservationAndSpanAreSameAs(dataFetcher);
+                        try (ContextSnapshot.Scope s = ContextSnapshot.setAllThreadLocalsFrom(contextView)) {
                             thenCurrentObservationAndSpanAreSameAs(dataFetcher);
                             thenCurrentObservationAndSpanIsDataFetcher(mvc, graphqlRequest, dataFetcher);
-                        })).contextWrite(contextSnapshot::updateContext).doFinally(signalType -> graphqlRequest.stop())
-                        .block();
+                        }
+                        System.out.println("IN REACTOR AFTER MANUAL THREAD LOCAL SCOPE [" + tracer.currentSpan() + "]");
+                        thenCurrentObservationAndSpanAreSameAs(dataFetcher);
+                        thenCurrentObservationAndSpanIsDataFetcher(mvc, graphqlRequest, dataFetcher);
+                    }))
+                    .contextWrite(contextSnapshot::updateContext)
+                    .doFinally(signalType -> graphqlRequest.stop())
+                    .block();
 
                 System.out.println("IN WRAP AFTER REACTOR [" + tracer.currentSpan() + "]");
                 then(tracer.currentSpan().context()).isEqualTo(spanContextFromObservation(dataFetcher));
@@ -328,28 +338,30 @@ class ObservationInstrumentingTests {
                 log.info("Context Propagation happens - the <parent> observation gets propagated ["
                         + registry.getCurrentObservation() + "]");
                 then(registry.getCurrentObservation()).isSameAs(parent);
-            }).flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
-                    .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
-                        log.info("Context Propagation happens - the <parent> observation gets propagated ["
-                                + registry.getCurrentObservation() + "]");
-                        then(registry.getCurrentObservation()).isSameAs(parent);
-                    }))
-                    // Let's assume that we're modifying the context
-                    .contextWrite(context -> context.put("foo", "bar"))
-                    // Since we are NOT part of the Reactive Chain (e.g. this is not a
-                    // WebFlux application)
-                    // you MUST call <contextCapture> to capture all ThreadLocal values
-                    // and store them in a Reactor Context.
-                    // ----------------------
-                    // If you were part of the
-                    // Reactive Chain (e.g. returning Mono from endpoint)
-                    // there is NO NEED to call <contextCapture>. If you need to propagate
-                    // your e.g. Observation
-                    // to the Publisher you just created (e.g. Mono or Flux) please
-                    // consider adding it
-                    // to the Reactor Context directly instead of opening an Observation
-                    // scope and calling <contextCapture> (see example below).
-                    .contextCapture().block();
+            })
+                .flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
+                .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
+                    log.info("Context Propagation happens - the <parent> observation gets propagated ["
+                            + registry.getCurrentObservation() + "]");
+                    then(registry.getCurrentObservation()).isSameAs(parent);
+                }))
+                // Let's assume that we're modifying the context
+                .contextWrite(context -> context.put("foo", "bar"))
+                // Since we are NOT part of the Reactive Chain (e.g. this is not a
+                // WebFlux application)
+                // you MUST call <contextCapture> to capture all ThreadLocal values
+                // and store them in a Reactor Context.
+                // ----------------------
+                // If you were part of the
+                // Reactive Chain (e.g. returning Mono from endpoint)
+                // there is NO NEED to call <contextCapture>. If you need to propagate
+                // your e.g. Observation
+                // to the Publisher you just created (e.g. Mono or Flux) please
+                // consider adding it
+                // to the Reactor Context directly instead of opening an Observation
+                // scope and calling <contextCapture> (see example below).
+                .contextCapture()
+                .block();
 
             // We're still using <parent> as current observation
             then(registry.getCurrentObservation()).isSameAs(parent);
@@ -366,21 +378,23 @@ class ObservationInstrumentingTests {
                         "Context Propagation happens - the <child> observation from Reactor Context takes precedence over thread local <parent> observation ["
                                 + registry.getCurrentObservation() + "]");
                 then(registry.getCurrentObservation()).isSameAs(child);
-            }).flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
-                    .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
-                        log.info(
-                                "Context Propagation happens - the <child> observation from Reactor Context takes precedence over thread local <parent> observation ["
-                                        + registry.getCurrentObservation() + "]");
-                        then(registry.getCurrentObservation()).isSameAs(child);
-                    }))
-                    // Remember to stop the child Observation!
-                    .doFinally(signalType -> child.stop())
-                    // When using Reactor we ALWAYS search for
-                    // ObservationThreadLocalAccessor.KEY entry in the Reactor Context to
-                    // search for an Observation. You DON'T have to use <contextCapture>
-                    // because
-                    // you have manually provided the ThreadLocalAccessor key
-                    .contextWrite(context -> context.put(ObservationThreadLocalAccessor.KEY, child)).block();
+            })
+                .flatMap(integer -> Mono.just(integer).map(monoInteger -> monoInteger + 1))
+                .transformDeferredContextual((integerMono, contextView) -> integerMono.doOnNext(integer -> {
+                    log.info(
+                            "Context Propagation happens - the <child> observation from Reactor Context takes precedence over thread local <parent> observation ["
+                                    + registry.getCurrentObservation() + "]");
+                    then(registry.getCurrentObservation()).isSameAs(child);
+                }))
+                // Remember to stop the child Observation!
+                .doFinally(signalType -> child.stop())
+                // When using Reactor we ALWAYS search for
+                // ObservationThreadLocalAccessor.KEY entry in the Reactor Context to
+                // search for an Observation. You DON'T have to use <contextCapture>
+                // because
+                // you have manually provided the ThreadLocalAccessor key
+                .contextWrite(context -> context.put(ObservationThreadLocalAccessor.KEY, child))
+                .block();
 
             // We're back to having <parent> as current observation
             then(registry.getCurrentObservation()).isSameAs(parent);
@@ -455,8 +469,9 @@ class ObservationInstrumentingTests {
     }
 
     private TraceContext spanContextFromObservation(Observation observation) {
-        TracingObservationHandler.TracingContext tracingContext = observation.getContextView().getOrDefault(
-                TracingObservationHandler.TracingContext.class, new TracingObservationHandler.TracingContext());
+        TracingObservationHandler.TracingContext tracingContext = observation.getContextView()
+            .getOrDefault(TracingObservationHandler.TracingContext.class,
+                    new TracingObservationHandler.TracingContext());
         return tracingContext.getSpan() != null ? tracingContext.getSpan().context() : null;
     }
 
@@ -492,9 +507,9 @@ class ObservationInstrumentingTests {
             context.setRemoteServiceAddress(info.getHttpBaseUrl());
             // Examples of setting key values from the request
             Observation observation = Observation.createNotStarted("http.client.requests", () -> context, registry)
-                    .contextualName("HTTP " + httpget.getMethod())
-                    .lowCardinalityKeyValue("http.url", info.getHttpBaseUrl() + "/{name}")
-                    .highCardinalityKeyValue("http.full-url", httpget.getRequestUri());
+                .contextualName("HTTP " + httpget.getMethod())
+                .lowCardinalityKeyValue("http.url", info.getHttpBaseUrl() + "/{name}")
+                .highCardinalityKeyValue("http.full-url", httpget.getRequestUri());
             observation.observeChecked(() -> {
                 String response = httpclient.execute(httpget, classicHttpResponse -> {
                     // We should set the response before we stop the observation
@@ -538,11 +553,12 @@ class ObservationInstrumentingTests {
             receiverContext.setRemoteServiceAddress(remoteServiceAddress);
             // We're starting an Observation with the context
             Observation observation = Observation
-                    .createNotStarted("http.server.requests", () -> receiverContext, registry)
-                    .contextualName("HTTP " + ctx.method() + " " + ctx.matchedPath())
-                    .lowCardinalityKeyValue("http.url", remoteServiceAddress + ctx.matchedPath())
-                    .highCardinalityKeyValue("http.full-url", remoteServiceAddress + ctx.path())
-                    .lowCardinalityKeyValue("http.method", ctx.method()).start();
+                .createNotStarted("http.server.requests", () -> receiverContext, registry)
+                .contextualName("HTTP " + ctx.method() + " " + ctx.matchedPath())
+                .lowCardinalityKeyValue("http.url", remoteServiceAddress + ctx.matchedPath())
+                .highCardinalityKeyValue("http.full-url", remoteServiceAddress + ctx.path())
+                .lowCardinalityKeyValue("http.method", ctx.method())
+                .start();
             // Let's be consistent and always set the Observation related objects under
             // the same key
             ctx.attribute(ObservationThreadLocalAccessor.KEY, observation);

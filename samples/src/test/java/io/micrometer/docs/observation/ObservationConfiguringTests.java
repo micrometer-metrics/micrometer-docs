@@ -44,42 +44,42 @@ class ObservationConfiguringTests {
         ObservationRegistry registry = ObservationRegistry.create();
         // Add predicates and filter to the registry
         registry.observationConfig()
-                // ObservationPredicate can decide whether an observation should be
-                // ignored or not
-                .observationPredicate((observationName, context) -> {
-                    // Creates a noop observation if observation name is of given name
-                    if ("to.ignore".equals(observationName)) {
-                        // Will be ignored
-                        return false;
-                    }
-                    if (context instanceof MyContext) {
-                        // For the custom context will ignore a user with a given name
-                        return !"user to ignore".equals(((MyContext) context).getUsername());
-                    }
-                    // Will proceed for all other types of context
-                    return true;
-                })
-                // ObservationFilter can modify a context
-                .observationFilter(context -> {
-                    // We're adding a low cardinality key to all contexts
-                    context.addLowCardinalityKeyValue(KeyValue.of("low.cardinality.key", "low cardinality value"));
-                    if (context instanceof MyContext) {
-                        // We're mutating a specific type of a context
-                        MyContext myContext = (MyContext) context;
-                        myContext.setUsername("some username");
-                        // We want to remove a high cardinality key value
-                        return myContext.removeHighCardinalityKeyValue("high.cardinality.key.to.ignore");
-                    }
-                    return context;
-                })
-                // Example of using metrics
-                .observationHandler(new DefaultMeterObservationHandler(meterRegistry));
+            // ObservationPredicate can decide whether an observation should be
+            // ignored or not
+            .observationPredicate((observationName, context) -> {
+                // Creates a noop observation if observation name is of given name
+                if ("to.ignore".equals(observationName)) {
+                    // Will be ignored
+                    return false;
+                }
+                if (context instanceof MyContext) {
+                    // For the custom context will ignore a user with a given name
+                    return !"user to ignore".equals(((MyContext) context).getUsername());
+                }
+                // Will proceed for all other types of context
+                return true;
+            })
+            // ObservationFilter can modify a context
+            .observationFilter(context -> {
+                // We're adding a low cardinality key to all contexts
+                context.addLowCardinalityKeyValue(KeyValue.of("low.cardinality.key", "low cardinality value"));
+                if (context instanceof MyContext) {
+                    // We're mutating a specific type of a context
+                    MyContext myContext = (MyContext) context;
+                    myContext.setUsername("some username");
+                    // We want to remove a high cardinality key value
+                    return myContext.removeHighCardinalityKeyValue("high.cardinality.key.to.ignore");
+                }
+                return context;
+            })
+            // Example of using metrics
+            .observationHandler(new DefaultMeterObservationHandler(meterRegistry));
 
         // Observation will be ignored because of the name
         then(Observation.start("to.ignore", () -> new MyContext("don't ignore"), registry)).isSameAs(Observation.NOOP);
         // Observation will be ignored because of the entries in MyContext
         then(Observation.start("not.to.ignore", () -> new MyContext("user to ignore"), registry))
-                .isSameAs(Observation.NOOP);
+            .isSameAs(Observation.NOOP);
 
         // Observation will not be ignored...
         MyContext myContext = new MyContext("user not to ignore");
@@ -89,7 +89,7 @@ class ObservationConfiguringTests {
         then(myContext.getLowCardinalityKeyValue("low.cardinality.key").getValue()).isEqualTo("low cardinality value");
         then(myContext.getUsername()).isEqualTo("some username");
         then(myContext.getHighCardinalityKeyValues())
-                .doesNotContain(KeyValue.of("high.cardinality.key.to.ignore", "some value"));
+            .doesNotContain(KeyValue.of("high.cardinality.key.to.ignore", "some value"));
         // end::predicate_and_filter[]
     }
 

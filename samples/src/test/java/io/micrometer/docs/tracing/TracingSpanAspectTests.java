@@ -97,7 +97,7 @@ class TracingSpanAspectTests {
         then(this.spans.peek().getName()).isEqualTo("foo");
         then(this.spans.peek().getTags()).containsEntry("customTestTag10", "test");
         then(this.spans.peek().getEvents().stream().map(Map.Entry::getValue).collect(Collectors.toList()))
-                .contains("customTest.before", "customTest.after");
+            .contains("customTest.before", "customTest.after");
         then(this.spans.peek().getEndTimestamp().toEpochMilli()).isNotZero();
         then(this.tracer.currentSpan()).isNull();
     }
@@ -110,7 +110,7 @@ class TracingSpanAspectTests {
         then(this.spans.peek().getName()).isEqualTo("test-method10");
         then(this.spans.peek().getTags()).containsEntry("customTestTag10", "test");
         then(this.spans.peek().getEvents().stream().map(Map.Entry::getValue).collect(Collectors.toList()))
-                .contains("customTest.before", "customTest.after");
+            .contains("customTest.before", "customTest.after");
         then(this.spans.peek().getEndTimestamp().toEpochMilli()).isNotZero();
         then(this.tracer.currentSpan()).isNull();
     }
@@ -130,7 +130,7 @@ class TracingSpanAspectTests {
         then(this.spans.peek().getName()).isEqualTo("foo");
         then(this.spans.peek().getTags()).containsEntry("testTag10", "test");
         then(this.spans.peek().getEvents().stream().map(Map.Entry::getValue).collect(Collectors.toList()))
-                .contains("customTest.before", "customTest.after");
+            .contains("customTest.before", "customTest.after");
         then(this.spans.peek().getEndTimestamp().toEpochMilli()).isNotZero();
         then(this.tracer.currentSpan()).isNull();
     }

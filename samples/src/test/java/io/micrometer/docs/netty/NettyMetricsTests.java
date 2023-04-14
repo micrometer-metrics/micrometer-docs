@@ -67,8 +67,10 @@ public class NettyMetricsTests {
             }
         });
         names.forEach(name -> {
-            assertThat(this.registry.get(NettyMeters.EVENT_EXECUTOR_TASKS_PENDING.getName()).tags(Tags.of("name", name))
-                    .gauge().value()).isZero();
+            assertThat(this.registry.get(NettyMeters.EVENT_EXECUTOR_TASKS_PENDING.getName())
+                .tags(Tags.of("name", name))
+                .gauge()
+                .value()).isZero();
         });
         eventExecutors.shutdownGracefully().get(5, TimeUnit.SECONDS);
 
@@ -76,7 +78,7 @@ public class NettyMetricsTests {
         Tags tags = Tags.of("id", String.valueOf(unpooledByteBufAllocator.hashCode()), "allocator.type",
                 "UnpooledByteBufAllocator", "memory.type", "heap");
         assertThat(this.registry.get(NettyMeters.ALLOCATOR_MEMORY_USED.getName()).tags(tags).gauge().value())
-                .isPositive();
+            .isPositive();
         buffer.release();
     }
 
@@ -88,12 +90,14 @@ public class NettyMetricsTests {
         eventExecutors.register(channel).await();
         channelInitializer.initChannel(channel);
         assertThat(this.registry.get(NettyMeters.EVENT_EXECUTOR_TASKS_PENDING.getName())
-                .tags(Tags.of("name", channel.eventLoop().threadProperties().name())).gauge().value()).isZero();
+            .tags(Tags.of("name", channel.eventLoop().threadProperties().name()))
+            .gauge()
+            .value()).isZero();
         ByteBuf buffer = channel.alloc().buffer();
         Tags tags = Tags.of("id", String.valueOf(channel.alloc().hashCode()), "allocator.type",
                 "PooledByteBufAllocator", "memory.type", "direct");
         assertThat(this.registry.get(NettyMeters.ALLOCATOR_MEMORY_USED.getName()).tags(tags).gauge().value())
-                .isPositive();
+            .isPositive();
         buffer.release();
         eventExecutors.shutdownGracefully().get(5, TimeUnit.SECONDS);
     }
