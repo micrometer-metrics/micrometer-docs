@@ -67,14 +67,14 @@ class TracingApiTests {
         // (through the <io.zipkin.reporter2:zipkin-sender-urlconnection> dependency)
         // Another option could be to use a TestSpanHandler for testing purposes.
         SpanHandler spanHandler = ZipkinSpanHandler
-                .create(AsyncReporter.create(URLConnectionSender.create("http://localhost:9411/api/v2/spans")));
+            .create(AsyncReporter.create(URLConnectionSender.create("http://localhost:9411/api/v2/spans")));
 
         // [Brave component] CurrentTraceContext is a Brave component that allows you to
         // retrieve the current TraceContext.
         ThreadLocalCurrentTraceContext braveCurrentTraceContext = ThreadLocalCurrentTraceContext.newBuilder()
-                .addScopeDecorator(MDCScopeDecorator.get()) // Example of Brave's
-                                                            // automatic MDC setup
-                .build();
+            .addScopeDecorator(MDCScopeDecorator.get()) // Example of Brave's
+                                                        // automatic MDC setup
+            .build();
 
         // [Micrometer Tracing component] A Micrometer Tracing wrapper for Brave's
         // CurrentTraceContext
@@ -83,17 +83,19 @@ class TracingApiTests {
         // [Brave component] Tracing is the root component that allows to configure the
         // tracer, handlers, context propagation etc.
         // tag::baggage_brave_setup[]
-        Tracing tracing = Tracing.newBuilder().currentTraceContext(this.braveCurrentTraceContext).supportsJoin(false)
-                .traceId128Bit(true)
-                // For Baggage to work you need to provide a list of fields to propagate
-                .propagationFactory(BaggagePropagation.newFactoryBuilder(B3Propagation.FACTORY)
-                        .add(BaggagePropagationConfig.SingleBaggageField
-                                .remote(BaggageField.create("from_span_in_scope 1")))
-                        .add(BaggagePropagationConfig.SingleBaggageField
-                                .remote(BaggageField.create("from_span_in_scope 2")))
-                        .add(BaggagePropagationConfig.SingleBaggageField.remote(BaggageField.create("from_span")))
-                        .build())
-                .sampler(Sampler.ALWAYS_SAMPLE).addSpanHandler(this.spanHandler).build();
+        Tracing tracing = Tracing.newBuilder()
+            .currentTraceContext(this.braveCurrentTraceContext)
+            .supportsJoin(false)
+            .traceId128Bit(true)
+            // For Baggage to work you need to provide a list of fields to propagate
+            .propagationFactory(BaggagePropagation.newFactoryBuilder(B3Propagation.FACTORY)
+                .add(BaggagePropagationConfig.SingleBaggageField.remote(BaggageField.create("from_span_in_scope 1")))
+                .add(BaggagePropagationConfig.SingleBaggageField.remote(BaggageField.create("from_span_in_scope 2")))
+                .add(BaggagePropagationConfig.SingleBaggageField.remote(BaggageField.create("from_span")))
+                .build())
+            .sampler(Sampler.ALWAYS_SAMPLE)
+            .addSpanHandler(this.spanHandler)
+            .build();
 
         // end::baggage_brave_setup[]
 
@@ -216,19 +218,20 @@ class TracingApiTests {
                 try (BaggageInScope baggage = tracer.createBaggage("from_span_in_scope 2", "value 2").makeCurrent()) {
                     then(baggage.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
                     then(tracer.getBaggage("from_span_in_scope 2").get()).as("[In scope] Baggage 2")
-                            .isEqualTo("value 2");
+                        .isEqualTo("value 2");
                 }
             }
 
             // Assuming that you have a handle to the span
-            try (BaggageInScope baggage = tracer.createBaggage("from_span").set(span.context(), "value 3")
-                    .makeCurrent()) {
+            try (BaggageInScope baggage = tracer.createBaggage("from_span")
+                .set(span.context(), "value 3")
+                .makeCurrent()) {
                 String baggageValueFromATraceContext = baggage.get(span.context());
                 then(baggageValueFromATraceContext).as("[Span passed explicitly] Baggage 3").isEqualTo("value 3");
 
                 String baggageValueFromATraceContextThroughTracer = tracer.getBaggage("from_span").get(span.context());
                 then(baggageValueFromATraceContextThroughTracer).as("[Span passed explicitly] Baggage 3")
-                        .isEqualTo("value 3");
+                    .isEqualTo("value 3");
             }
 
             // Assuming that there's no span in scope
@@ -245,7 +248,7 @@ class TracingApiTests {
             // You will retrieve the baggage value ALWAYS when you pass the context
             // explicitly
             then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
-                    .isEqualTo("value 3");
+                .isEqualTo("value 3");
             // end::baggage_api[]
         }
 
@@ -271,7 +274,7 @@ class TracingApiTests {
                 try (BaggageInScope baggage = tracer.createBaggageInScope("from_span_in_scope 2", "value 2")) {
                     then(baggage.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
                     then(tracer.getBaggage("from_span_in_scope 2").get()).as("[In scope] Baggage 2")
-                            .isEqualTo("value 2");
+                        .isEqualTo("value 2");
                 }
             }
 
@@ -282,7 +285,7 @@ class TracingApiTests {
 
                 String baggageValueFromATraceContextThroughTracer = tracer.getBaggage("from_span").get(span.context());
                 then(baggageValueFromATraceContextThroughTracer).as("[Span passed explicitly] Baggage 3")
-                        .isEqualTo("value 3");
+                    .isEqualTo("value 3");
             }
 
             // Assuming that there's no span in scope
@@ -299,7 +302,7 @@ class TracingApiTests {
             // You will retrieve the baggage value ALWAYS when you pass the context
             // explicitly
             then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
-                    .isEqualTo("value 3");
+                .isEqualTo("value 3");
             // end::baggage_api_1_11_0[]
         }
 
@@ -317,19 +320,24 @@ class TracingApiTests {
         // <io.zipkin.reporter2:zipkin-sender-urlconnection> dependencies)
         // Another option could be to use an ArrayListSpanProcessor for testing purposes
         SpanExporter spanExporter = new ZipkinSpanExporterBuilder()
-                .setSender(URLConnectionSender.create("http://localhost:9411/api/v2/spans")).build();
+            .setSender(URLConnectionSender.create("http://localhost:9411/api/v2/spans"))
+            .build();
 
         // [OTel component] SdkTracerProvider is an SDK implementation for TracerProvider
-        SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder().setSampler(alwaysOn())
-                .addSpanProcessor(BatchSpanProcessor.builder(spanExporter).build()).build();
+        SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder()
+            .setSampler(alwaysOn())
+            .addSpanProcessor(BatchSpanProcessor.builder(spanExporter).build())
+            .build();
 
         // [OTel component] The SDK implementation of OpenTelemetry
-        OpenTelemetrySdk openTelemetrySdk = OpenTelemetrySdk.builder().setTracerProvider(sdkTracerProvider)
-                .setPropagators(ContextPropagators.create(B3Propagator.injectingSingleHeader())).build();
+        OpenTelemetrySdk openTelemetrySdk = OpenTelemetrySdk.builder()
+            .setTracerProvider(sdkTracerProvider)
+            .setPropagators(ContextPropagators.create(B3Propagator.injectingSingleHeader()))
+            .build();
 
         // [OTel component] Tracer is a component that handles the life-cycle of a span
         io.opentelemetry.api.trace.Tracer otelTracer = openTelemetrySdk.getTracerProvider()
-                .get("io.micrometer.micrometer-tracing");
+            .get("io.micrometer.micrometer-tracing");
 
         // [Micrometer Tracing component] A Micrometer Tracing wrapper for OTel
         OtelCurrentTraceContext otelCurrentTraceContext = new OtelCurrentTraceContext();
@@ -461,19 +469,20 @@ class TracingApiTests {
                 try (BaggageInScope baggage = tracer.createBaggage("from_span_in_scope 2", "value 2").makeCurrent()) {
                     then(baggage.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
                     then(tracer.getBaggage("from_span_in_scope 2").get()).as("[In scope] Baggage 2")
-                            .isEqualTo("value 2");
+                        .isEqualTo("value 2");
                 }
             }
 
             // Assuming that you have a handle to the span
-            try (BaggageInScope baggage = tracer.createBaggage("from_span").set(span.context(), "value 3")
-                    .makeCurrent()) {
+            try (BaggageInScope baggage = tracer.createBaggage("from_span")
+                .set(span.context(), "value 3")
+                .makeCurrent()) {
                 String baggageValueFromATraceContext = baggage.get(span.context());
                 then(baggageValueFromATraceContext).as("[Span passed explicitly] Baggage 3").isEqualTo("value 3");
 
                 String baggageValueFromATraceContextThroughTracer = tracer.getBaggage("from_span").get(span.context());
                 then(baggageValueFromATraceContextThroughTracer).as("[Span passed explicitly] Baggage 3")
-                        .isEqualTo("value 3");
+                    .isEqualTo("value 3");
             }
 
             // Assuming that there's no span in scope
@@ -489,7 +498,7 @@ class TracingApiTests {
             // You will retrieve the baggage value ALWAYS when you pass the context
             // explicitly
             then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
-                    .isEqualTo("value 3");
+                .isEqualTo("value 3");
         }
 
         @Test
@@ -513,7 +522,7 @@ class TracingApiTests {
                 try (BaggageInScope baggage = tracer.createBaggageInScope("from_span_in_scope 2", "value 2")) {
                     then(baggage.get()).as("[In scope] Baggage 2").isEqualTo("value 2");
                     then(tracer.getBaggage("from_span_in_scope 2").get()).as("[In scope] Baggage 2")
-                            .isEqualTo("value 2");
+                        .isEqualTo("value 2");
                 }
             }
 
@@ -524,7 +533,7 @@ class TracingApiTests {
 
                 String baggageValueFromATraceContextThroughTracer = tracer.getBaggage("from_span").get(span.context());
                 then(baggageValueFromATraceContextThroughTracer).as("[Span passed explicitly] Baggage 3")
-                        .isEqualTo("value 3");
+                    .isEqualTo("value 3");
             }
 
             // Assuming that there's no span in scope
@@ -540,7 +549,7 @@ class TracingApiTests {
             // You will retrieve the baggage value ALWAYS when you pass the context
             // explicitly
             then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
-                    .isEqualTo("value 3");
+                .isEqualTo("value 3");
         }
 
     }

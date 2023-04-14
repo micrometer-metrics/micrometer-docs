@@ -80,8 +80,10 @@ class TimedAspectTest {
             // tag::example_value_resolver[]
             service.getAnnotationForTagValueResolver("foo");
 
-            assertThat(registry.get("method.timed").tag("test", "Value from myCustomTagValueResolver [foo]").timer()
-                    .count()).isEqualTo(1);
+            assertThat(registry.get("method.timed")
+                .tag("test", "Value from myCustomTagValueResolver [foo]")
+                .timer()
+                .count()).isEqualTo(1);
             // end::example_value_resolver[]
         }
 

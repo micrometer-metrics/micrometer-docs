@@ -49,24 +49,24 @@ class TracingConfiguringTests {
 
         ObservationRegistry registry = ObservationRegistry.create();
         registry.observationConfig()
-                // assuming that micrometer-core is on the classpath
-                .observationHandler(new DefaultMeterObservationHandler(meterRegistry))
-                // we set up a first matching handler that creates spans - it comes from
-                // Micrometer
-                // Tracing. We set up spans for sending and receiving data over the wire
-                // and a default one
-                .observationHandler(new ObservationHandler.FirstMatchingCompositeObservationHandler(
-                        new PropagatingSenderTracingObservationHandler<>(tracer, propagator),
-                        new PropagatingReceiverTracingObservationHandler<>(tracer, propagator),
-                        new DefaultTracingObservationHandler(tracer)));
+            // assuming that micrometer-core is on the classpath
+            .observationHandler(new DefaultMeterObservationHandler(meterRegistry))
+            // we set up a first matching handler that creates spans - it comes from
+            // Micrometer
+            // Tracing. We set up spans for sending and receiving data over the wire
+            // and a default one
+            .observationHandler(new ObservationHandler.FirstMatchingCompositeObservationHandler(
+                    new PropagatingSenderTracingObservationHandler<>(tracer, propagator),
+                    new PropagatingReceiverTracingObservationHandler<>(tracer, propagator),
+                    new DefaultTracingObservationHandler(tracer)));
 
         // Creating and starting a new observation
         // via the `DefaultTracingObservationHandler` that will create a new Span and
         // start it
         Observation observation = Observation.start("my.operation", registry)
-                .contextualName("This name is more readable - we can reuse it for e.g. spans")
-                .lowCardinalityKeyValue("this.tag", "will end up as a meter tag and a span tag")
-                .highCardinalityKeyValue("but.this.tag", "will end up as a span tag only");
+            .contextualName("This name is more readable - we can reuse it for e.g. spans")
+            .lowCardinalityKeyValue("this.tag", "will end up as a meter tag and a span tag")
+            .highCardinalityKeyValue("but.this.tag", "will end up as a span tag only");
 
         // Put the observation in scope
         // This will result in making the previously created Span, the current Span - it's
@@ -94,10 +94,10 @@ class TracingConfiguringTests {
         ObservationRegistry registry = ObservationRegistry.create();
 
         Observation.createNotStarted("my.operation", registry)
-                .contextualName("This name is more readable - we can reuse it for e.g. spans")
-                .lowCardinalityKeyValue("this.tag", "will end up as a meter tag and a span tag")
-                .highCardinalityKeyValue("but.this.tag", "will end up as a span tag only")
-                .observe(this::yourCodeToMeasure);
+            .contextualName("This name is more readable - we can reuse it for e.g. spans")
+            .lowCardinalityKeyValue("this.tag", "will end up as a meter tag and a span tag")
+            .highCardinalityKeyValue("but.this.tag", "will end up as a span tag only")
+            .observe(this::yourCodeToMeasure);
         // end::handler_configuration_observe[]
     }
 
@@ -122,11 +122,11 @@ class TracingConfiguringTests {
         // tag::exemplars[]
         ObservationRegistry registry = ObservationRegistry.create();
         registry.observationConfig()
-                // Don't register the DefaultMeterObservationHandler...
-                // .observationHandler(new DefaultMeterObservationHandler(meterRegistry))
-                // ...instead register the tracing aware version
-                .observationHandler(new TracingAwareMeterObservationHandler<>(
-                        new DefaultMeterObservationHandler(meterRegistry), tracer));
+            // Don't register the DefaultMeterObservationHandler...
+            // .observationHandler(new DefaultMeterObservationHandler(meterRegistry))
+            // ...instead register the tracing aware version
+            .observationHandler(new TracingAwareMeterObservationHandler<>(
+                    new DefaultMeterObservationHandler(meterRegistry), tracer));
         // end::exemplars[]
     }
 

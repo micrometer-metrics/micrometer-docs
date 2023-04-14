@@ -60,12 +60,13 @@ class ObservationTestingTests {
         void doSthThatShouldCreateSpans() {
             try {
                 Observation.createNotStarted("insert user", () -> new CustomContext("mongodb-database"), this.registry)
-                        .highCardinalityKeyValue("mongodb.command", "insert")
-                        .highCardinalityKeyValue("mongodb.collection", "user")
-                        .highCardinalityKeyValue("mongodb.cluster_id", "some_id").observe(() -> {
-                            System.out.println("hello");
-                            throw new IllegalStateException("Boom!");
-                        });
+                    .highCardinalityKeyValue("mongodb.command", "insert")
+                    .highCardinalityKeyValue("mongodb.collection", "user")
+                    .highCardinalityKeyValue("mongodb.cluster_id", "some_id")
+                    .observe(() -> {
+                        System.out.println("hello");
+                        throw new IllegalStateException("Boom!");
+                    });
             }
             catch (Exception ex) {
 

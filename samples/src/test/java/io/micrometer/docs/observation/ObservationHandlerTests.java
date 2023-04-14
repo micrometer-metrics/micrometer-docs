@@ -243,7 +243,7 @@ class ObservationHandlerTests {
         @Override
         public Observation.Context map(Observation.Context context) {
             return context.addLowCardinalityKeyValue(KeyValue.of("cloud.zone", CloudUtils.getZone()))
-                    .addHighCardinalityKeyValue(KeyValue.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
+                .addHighCardinalityKeyValue(KeyValue.of("cloud.instance.id", CloudUtils.getCloudInstanceId()));
         }
 
     }
@@ -397,10 +397,10 @@ class ObservationHandlerTests {
             TaxContext taxContext = new TaxContext(taxType, userId);
             // Create a new observation
             TaxObservationDocumentation.CALCULATE
-                    .observation(this.observationConvention, new DefaultTaxObservationConvention(), () -> taxContext,
-                            this.observationRegistry)
-                    // Run the actual logic you want to observe
-                    .observe(this::calculateInterest);
+                .observation(this.observationConvention, new DefaultTaxObservationConvention(), () -> taxContext,
+                        this.observationRegistry)
+                // Run the actual logic you want to observe
+                .observe(this::calculateInterest);
         }
 
         private void calculateInterest() {
@@ -417,7 +417,7 @@ class ObservationHandlerTests {
         @Override
         public KeyValues getLowCardinalityKeyValues(TaxContext context) {
             return super.getLowCardinalityKeyValues(context)
-                    .and(KeyValue.of("additional.low.cardinality.tag", "value"));
+                .and(KeyValue.of("additional.low.cardinality.tag", "value"));
         }
 
         @Override
