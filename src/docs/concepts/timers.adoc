@@ -112,13 +112,13 @@ public class ExampleService {
 
 === @MeterTag on Method Parameters
 
-To support `@MeterTag` annotation on method parameters you need to configure the `@TimedAspect` to add the `MeterAnnotationHandler`.
+To support `@MeterTag` annotation on method parameters you need to configure the `@TimedAspect` to add the `MeterTagAnnotationHandler`.
 
 [source,java,subs=+attributes]
 -----
 include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=resolvers,indent=0]
 
-include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=metrics_tag_annotation_handler,indent=0]
+include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=meter_tag_annotation_handler,indent=0]
 -----
 
 Let's assume that we have the following interface.
@@ -128,7 +128,7 @@ Let's assume that we have the following interface.
 include::../../../samples/src/test/java/io/micrometer/docs/metrics/TimedAspectTest.java[tags=interface,indent=0]
 -----
 
-When its implementations would be called with different arguments (remember that the implementation needs to be annotated with `@Timed` annotation too) the following timers would be created
+When its implementations would be called with different arguments (remember that the implementation needs to be annotated with `@Timed` annotation too) the following timers would be created:
 
 [source,java,subs=+attributes]
 -----

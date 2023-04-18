@@ -245,13 +245,13 @@ class TracingSpanAspectTests {
 
         // You can provide your own resolvers - here we go with a noop example.
         @Bean
-        ValueResolver tagValueResolver() {
+        ValueResolver valueResolver() {
             return new NoOpValueResolver();
         }
 
-        // Example of a SPel resolver
+        // Example of a SpEL resolver
         @Bean
-        ValueExpressionResolver tagValueExpressionResolver() {
+        ValueExpressionResolver valueExpressionResolver() {
             return new SpelTagValueExpressionResolver();
         }
 
@@ -269,7 +269,7 @@ class TracingSpanAspectTests {
 
     }
 
-    // Example of using SPel to resolve expressions in @SpanTag
+    // Example of using SpEL to resolve expressions in @SpanTag
     static class SpelTagValueExpressionResolver implements ValueExpressionResolver {
 
         private static final Log log = LogFactory.getLog(SpelTagValueExpressionResolver.class);
@@ -283,7 +283,7 @@ class TracingSpanAspectTests {
                 return expressionToEvaluate.getValue(context, parameter, String.class);
             }
             catch (Exception ex) {
-                log.error("Exception occurred while tying to evaluate the SPEL expression [" + expression + "]", ex);
+                log.error("Exception occurred while tying to evaluate the SpEL expression [" + expression + "]", ex);
             }
             return parameter.toString();
         }
