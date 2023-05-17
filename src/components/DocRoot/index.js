@@ -17,7 +17,7 @@ export default function DocRoot() {
 
       <p>
         Join the discussion with any comments and feature requests on Micrometer's
-        public <a href="https://join.slack.com/t/micrometer-metrics/shared_invite/zt-ewo3kcs0-Ji3aOAqTxnjYPEFBBI5HqQ"><i className="fa fa-lg fa-slack" /> Slack team</a>.
+        public <a href="https://slack.micrometer.io"><i className="fa fa-lg fa-slack" /> Slack Workspace</a>.
       </p>
 
       <ol>

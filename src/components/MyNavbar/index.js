@@ -24,7 +24,7 @@ export default function MyNavbar() {
             <Nav.Link href="https://twitter.com/micrometerio"><i className="fa fa-lg fa-twitter" /> Twitter</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="https://join.slack.com/t/micrometer-metrics/shared_invite/zt-ewo3kcs0-Ji3aOAqTxnjYPEFBBI5HqQ"><i className="fa fa-lg fa-slack" /> Slack</Nav.Link>
+            <Nav.Link href="https://slack.micrometer.io"><i className="fa fa-lg fa-slack" /> Slack</Nav.Link>
           </Nav.Item>
         </Nav>
       </Navbar.Collapse>
