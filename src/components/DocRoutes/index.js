@@ -20,7 +20,7 @@ let docsObservation = require('!asciidoc-loader!../../generated-docs/observation
 let docsTracing = require('!asciidoc-loader!../../generated-docs/tracing/index.adoc');
 let docsContextPropagation = require('!asciidoc-loader!../../generated-docs/contextpropagation/index.adoc');
 
-const systems = ['appOptics', 'atlas', 'azure-monitor', 'cloudwatch', 'datadog', 'dynatrace', 'elastic', 'ganglia', 'graphite', 'humio', 'influx', 'instana', 'jmx', 'kairos', 'new-relic', 'prometheus', 'signalFx', 'stackdriver', 'statsD', 'wavefront'];
+const systems = ['appOptics', 'atlas', 'azure-monitor', 'cloudwatch', 'datadog', 'dynatrace', 'elastic', 'ganglia', 'graphite', 'humio', 'influx', 'instana', 'jmx', 'kairos', 'new-relic', 'otlp', 'prometheus', 'signalFx', 'stackdriver', 'statsD', 'wavefront'];
 
 let docsBySystem = {};
 systems.forEach(sys => docsBySystem[sys] = require(`!asciidoc-loader!../../generated-docs/implementations/${sys}.adoc`));

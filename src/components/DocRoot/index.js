@@ -103,6 +103,10 @@ export default function DocRoot() {
               New Relic Insights operates on a push model.
             </li>
 
+            <li><NavLink className="doc-section" to="/docs/registry/otlp">OpenTelemetry</NavLink>.
+               OpenTelemetry is a CNCF incubating project for providing standards for open observability. Micrometer publishes metrics in OpenTelemetry protocol using OpenTelemetry SDK.
+            </li>
+
             <li><NavLink className="doc-section" to="/docs/registry/prometheus">Prometheus</NavLink>.
               An in-memory dimensional time series database with a simple built-in UI, a custom query language, and math
               operations. Prometheus is designed to operate on a pull model, scraping metrics from application instances
