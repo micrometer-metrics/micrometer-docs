@@ -104,7 +104,7 @@ export default function DocRoot() {
             </li>
 
             <li><NavLink className="doc-section" to="/docs/registry/otlp">OpenTelemetry (OTLP)</NavLink>.
-               OpenTelemetry is a CNCF incubating project for providing standards for open observability. Micrometer publishes metrics in OpenTelemetry protocol using OpenTelemetry SDK.
+               OpenTelemetry is a CNCF incubating project for providing standards for telemetry data. Micrometer can publish metrics using the OpenTelemetry protocol (OTLP) to the backends that support it.
             </li>
 
             <li><NavLink className="doc-section" to="/docs/registry/prometheus">Prometheus</NavLink>.
