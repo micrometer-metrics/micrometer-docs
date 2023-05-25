@@ -103,7 +103,7 @@ export default function DocRoot() {
               New Relic Insights operates on a push model.
             </li>
 
-            <li><NavLink className="doc-section" to="/docs/registry/otlp">OpenTelemetry</NavLink>.
+            <li><NavLink className="doc-section" to="/docs/registry/otlp">OpenTelemetry (OTLP)</NavLink>.
                OpenTelemetry is a CNCF incubating project for providing standards for open observability. Micrometer publishes metrics in OpenTelemetry protocol using OpenTelemetry SDK.
             </li>
 
