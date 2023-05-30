@@ -74,11 +74,11 @@ The below table maps OTLP datapoint and the micrometer meters,
 |===
 |OTLP DataPoint | Micrometer meter type
 
+|Sums
 |Counter, FunctionCounter
-| Sums
 
 |Gauge
-|Gauge
+|Gauge, TimeGauge, MultiGauge
 
 |Histogram
 |Timer, DistributionSummary, LongTaskTimer, FunctionTimer (only sum and count are set)
@@ -87,7 +87,10 @@ The below table maps OTLP datapoint and the micrometer meters,
 |Timer, DistributionSummary, LongTaskTimer
 |===
 
-*Note*: `max` on Histogram datapoint is only supported in Delta Aggregation Temporality. This is because the values represented by Cumulative min and max will stabilize as more events are recorded and are less useful when recorded over application's lifecycle.
+*Note*:
+
+1. `max` on Histogram datapoint is only supported in Delta Aggregation Temporality. This is because the values represented by Cumulative min and max will stabilize as more events are recorded and are less useful when recorded over application's lifecycle.
+2. Currently, micrometer only export metadata for type `Meter` to OTLP.
 
 == Histograms and Percentiles
 Micrometer `Timer` and `DistributionSummary` supports configuring docs/concepts#_histograms_and_percentiles[client side percentiles and percentile histograms]. OTLP specification terms Summary Data-point (client-side percentiles) as legacy and not recommended for new applications. Summary data point also cannot have min/max associated with it. Due these reasons micrometer prefers exporting Timers and DistributionSummary as Histogram datapoint. By default a Timer/DistributionSummary without any additional percentile/histogram config will be exported as Histogram Datapoint. However, by configuring the timer to generate only client side percentiles using `publishPercentiles` this can be changed to a Summary data point exporting pre-calculated percentiles. When both `publishPercentiles` and (`publishPercentileHistogram` or `serviceLevelObjectives`) are configured Histogram Datapoint is preferred and pre-calculated percentiles *will not* be generated. See the below table on which data point will be used with different configurations:
