@@ -18,7 +18,7 @@ The following releases are actively maintained:
 | Minor release | OSS Support Until
 | 1.11.x        | May 2024
 | 1.10.x        | November 2023
-| 1.9.x         | May 2023
+| 1.9.x         | November 2023
 |===========
 
 The following releases are out of OSS support:
