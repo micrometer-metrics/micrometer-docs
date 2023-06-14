@@ -41,7 +41,7 @@ public class ObservationThreadLocalAccessor implements ThreadLocalAccessor<Strin
     }
 
     @Override
-    public void reset() {
+    public void setValue() {
         ObservationThreadLocalHolder.reset();
     }
 
