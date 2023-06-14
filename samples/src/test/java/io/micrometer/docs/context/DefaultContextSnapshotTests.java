@@ -18,6 +18,7 @@ package io.micrometer.docs.context;
 import io.micrometer.context.ContextRegistry;
 import io.micrometer.context.ContextSnapshot;
 import io.micrometer.context.ContextSnapshot.Scope;
+import io.micrometer.context.ContextSnapshotFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -38,7 +39,7 @@ class DefaultContextSnapshotTests {
         // When you set a thread local value...
         ObservationThreadLocalHolder.setValue("hello");
         // ... we can capture it using ContextSnapshot
-        ContextSnapshot snapshot = ContextSnapshot.captureAllUsing(key -> true, registry);
+        ContextSnapshot snapshot = ContextSnapshotFactory.builder().contextRegistry(registry).build().captureAll();
 
         // After capturing if you change the thread local value again ContextSnapshot will
         // not see it
