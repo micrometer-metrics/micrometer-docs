@@ -35,10 +35,10 @@ In this section we'll discuss how to wrap Reactive libraries in Observations and
 
 In Reactor 3.5.3 release (through this https://github.com/reactor/reactor-core/pull/3335[PR]) an option to turn on automated context propagation was added. To use this, please ensure that you're using the following projects at minimum in the following versions:
 
-- Reactor https://github.com/reactor/reactor-core/releases/tag/v3.5.3[3.5.3]
-- Micrometer Context-Propagation https://github.com/micrometer-metrics/context-propagation/releases/tag/v1.0.2[1.0.2]
-- Micrometer https://github.com/micrometer-metrics/micrometer/releases/tag/v1.10.4[1.10.4]
-- Micrometer Tracing https://github.com/micrometer-metrics/tracing/releases/tag/v1.0.2[1.0.2]
+- Reactor https://github.com/reactor/reactor-core/releases/tag/v3.5.7[3.5.7]
+- Micrometer Context-Propagation https://github.com/micrometer-metrics/context-propagation/releases/tag/v1.0.3[1.0.3]
+- Micrometer https://github.com/micrometer-metrics/micrometer/releases/tag/v1.10.8[1.10.8]
+- Micrometer Tracing https://github.com/micrometer-metrics/tracing/releases/tag/v1.0.7[1.0.7]
 
 To use the feature call the new Reactor's Hook method (e.g. in your `public static void main` method) like this
 

@@ -327,6 +327,9 @@ class ObservationInstrumentingTests {
         // tag::reactor_with_hook[]
         // This snippet shows an example of how to use the new Hook API with Reactor
         Hooks.enableAutomaticContextPropagation();
+        // Starting from Micrometer 1.10.8 you need to set your registry on this singleton
+        // instance of OTLA
+        ObservationThreadLocalAccessor.getInstance().setObservationRegistry(registry);
 
         // Let's assume that we have a parent observation
         Observation parent = Observation.start("parent", registry);
