@@ -21,7 +21,7 @@ repositories {
 }
 
 ext {
-	micrometerDocsVersion="1.0.0"
+	micrometerDocsVersion="1.0.2"
 }
 
 configurations {
@@ -32,7 +32,7 @@ dependencies {
 	adoc "io.micrometer:micrometer-docs-generator:$micrometerDocsVersion"
 }
 
-task generateObservabilityDocs() {
+task generateObservabilityDocs(type: JavaExec) {
 	mainClass = "io.micrometer.docs.DocsGeneratorCommand"
 	classpath configurations.adoc
 	// input folder, inclusion pattern, output folder
