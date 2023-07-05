@@ -1,0 +1,23 @@
+name: micrometer
+version: true
+title: Micrometer
+nav:
+  - modules/ROOT/nav.adoc
+ext:
+  collector:
+    run:
+      command: gradlew -q -PbuildSrc.skipTests=true "-Dorg.gradle.jvmargs=-Xmx3g -XX:+HeapDumpOnOutOfMemoryError" :website:generateAntoraResources
+      local: true
+    scan:
+      dir: ./build/generated-antora-resources
+
+asciidoc:
+  attributes:
+    attribute-missing: 'warn'
+    # FIXME: the copyright is not removed
+    # FIXME: The package is not renamed
+    chomp: 'all'
+    include-java: 'example$docs-src/main/java/io/micrometer/docs'
+    micrometer-main-code: 'https://github.com/micrometer-metrics/micrometer/tree/main'
+    docs-site: 'https://micrometer.io'
+    docs-micrometer: "{docs-site}/docs/{micrometer-version}"

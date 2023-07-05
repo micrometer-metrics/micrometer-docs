@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        mavenCentral()
         gradlePluginPortal()
     }
 }
@@ -20,4 +21,4 @@ gradleEnterprise {
     server = 'https://ge.micrometer.io'
 }
 
-include 'samples', 'docs-util'
+include 'docs'

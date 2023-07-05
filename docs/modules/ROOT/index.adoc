@@ -1,0 +1,5 @@
+:noheader:
+[[micrometer-documentation]]
+= Micrometer Documentation
+
+Index content
