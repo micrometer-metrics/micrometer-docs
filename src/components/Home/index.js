@@ -42,12 +42,15 @@ export default function Home() {
         <div className="row justify-content-center" style={{ padding: 30 }}>
           <div className="col-lg-6 col-md-12">
             <h2>Support for popular observability systems</h2>
-            <p>As an instrumentation facade, Micrometer allows you to instrument your code with dimensional metrics with
+            <p>As an instrumentation facade, Micrometer allows you to instrument your code with dimensional metrics, spans with
               a vendor-neutral interface and decide on the observability system as a last step. Instrumenting your core library
               code with Micrometer allows the libraries to be included in applications that ship data to different backends.
             </p>
             <p>
               Contains built-in support for <strong>AppOptics</strong>, <strong>Azure Monitor</strong>, Netflix <strong>Atlas</strong>, <strong>CloudWatch</strong>, <strong>Datadog</strong>, <strong>Dynatrace</strong>, <strong>Elastic</strong>, <strong>Ganglia</strong>, <strong>Graphite</strong>, <strong>Humio</strong>, <strong>Influx/Telegraf</strong>, <strong>JMX</strong>, <strong>KairosDB</strong>, <strong>New Relic</strong>, <strong>OpenTelemetry</strong> Protocol (OTLP), <strong>Prometheus</strong>, <strong>SignalFx</strong>, Google <strong>Stackdriver</strong>, <strong>StatsD</strong>, and <strong>Wavefront</strong>.
+            </p>
+            <p>
+              Through <strong>Micrometer Observation</strong> and <strong>Micrometer Tracing</strong> you can ship your spans via <strong>OpenZipkin Brave</strong> or <strong>OpenTelemetry</strong> tracers to different backends (e.g. <strong>OpenZipkin</strong> or <strong>Wavefront</strong>).
             </p>
           </div>
         </div>
