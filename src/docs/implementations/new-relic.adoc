@@ -77,7 +77,7 @@ SELECT sum(totalTime)/sum(count) as 'Average Latency', max(max) as 'Max' FROM ti
 ----
 
 .Timer latency.
-image::img/new-relic-timer-latency.png[New Relic-rendered timer]
+image::new-relic-timer-latency.png[New Relic-rendered timer]
 
 To generate a throughput chart:
 
@@ -87,7 +87,7 @@ SELECT average(count) as 'Average Throughput' FROM timer since 30 minutes ago TI
 ----
 
 .Timer throughput.
-image::img/new-relic-timer-throughput.png[New Relic-rendered timer throughput]
+image::new-relic-timer-throughput.png[New Relic-rendered timer throughput]
 
 To generate a plot of client-side percentiles:
 
@@ -97,7 +97,7 @@ SELECT latest(value) from timerPercentile FACET phi since 30 minutes ago TIMESER
 ----
 
 .Timer Percentiles.
-image::img/new-relic-timer-percentiles.png[New Relic-rendered percentiles]
+image::new-relic-timer-percentiles.png[New Relic-rendered percentiles]
 
 Note how these percentiles are _not aggregable_. We have selected the `latest(value)` function to display this chart (it isn't correct to `average(value)` on a percentile value). The more dimensions you add to a timer, the less useful these values become.
 
@@ -109,6 +109,6 @@ SELECT sum(value) from timerHistogram FACET le since 30 minutes ago TIMESERIES a
 ----
 
 .Timer SLO boundaries.
-image::img/new-relic-timer-sla.png[New Relic-rendered SLO boundaries]
+image::new-relic-timer-sla.png[New Relic-rendered SLO boundaries]
 
 Where the lines converge at various points, it is evident that no sample exceeded the 275 ms SLO boundary.

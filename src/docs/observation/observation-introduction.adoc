@@ -38,7 +38,7 @@ Below you can find an example of using the Observation API.
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationTestingTests.java[tags=example,indent=0]
+include::{include-java}/observation/ObservationTestingTests.java[tags=example,indent=0]
 -----
 
 TIP: Calling `observe(() -> ...)` leads to starting the Observation, putting it in scope, running the lambda, putting an error on the Observation if one took place, closing the scope and stopping the Observation.

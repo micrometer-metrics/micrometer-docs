@@ -1,3 +1,6 @@
+[[timers]]
+= Timers
+
 Timers are intended for measuring short-duration latencies and the frequency of such events. All implementations of `Timer` report at least the total time and the count of events as separate time series. While you can use timers for other use cases, note that negative values are not supported, and recording many longer durations could cause overflow of the total time at `Long.MAX_VALUE` nanoseconds (292.3 years).
 
 As an example, consider a graph showing request latency to a typical web server. The server can be expected to respond to many requests quickly, so the timer gets updated many times per second.
@@ -113,6 +116,7 @@ public class ExampleService {
 === @MeterTag on Method Parameters
 
 To support `@MeterTag` annotation on method parameters you need to configure the `@TimedAspect` to add the `MeterTagAnnotationHandler`.
+
 
 [source,java,subs=+attributes]
 -----

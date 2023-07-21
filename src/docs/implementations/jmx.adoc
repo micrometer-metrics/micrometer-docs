@@ -16,4 +16,4 @@ include::hierarchical-name-mapping.adoc[]
 JMX counters measure mean throughput and one-, five-, and fifteen-minute exponentially-weighted moving average throughputs.
 
 .The JMX rendered values of the random walk counter.
-image::img/jmx-counter.png[JMX-rendered counter]
+image::jmx-counter.png[JMX-rendered counter]

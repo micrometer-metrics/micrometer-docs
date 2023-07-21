@@ -1,3 +1,6 @@
+[[rate-aggregation]]
+= Rate Aggregation
+
 Micrometer is aware of whether a particular monitoring system expects rate aggregation to happen client-side before metrics are published or ad-hoc as part of the query on the server. It accumulates metrics according to which style the monitoring system expects.
 
 Not all measurements are reported or best viewed as a rate. For example, gauge values and the active task count long task timers are not rates.

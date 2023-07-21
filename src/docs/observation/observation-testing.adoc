@@ -26,12 +26,12 @@ Let's say that you have the following production code. It will create an observa
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationTestingTests.java[tags=example,indent=0]
+include::{include-java}/observation/ObservationTestingTests.java[tags=example,indent=0]
 -----
 
 To unit-test this code you can use the `TestObservationRegistry` class.
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationTestingTests.java[tags=test,indent=0]
+include::{include-java}/observation/ObservationTestingTests.java[tags=test,indent=0]
 -----

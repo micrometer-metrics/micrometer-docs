@@ -67,7 +67,7 @@ This section serves as a quick start to rendering useful representations in Wave
 The query that generates a graph for a random-walk counter is `rate(ts(counter))`.
 
 .A Wavefront rendered graph of the random walk counter.
-image::img/wavefront-counter-rate.png[Wavefront-rendered counter]
+image::wavefront-counter-rate.png[Wavefront-rendered counter]
 
 Representing a counter without rate normalization over some time window is rarely useful, as the
 representation is a function of both the rapidity with which the counter is incremented and the
@@ -102,7 +102,7 @@ cannot be aggregated across dimensions.
 You can use these time series to generate a quick view of latency in Wavefront:
 
 .Timer latency.
-image::img/wavefront-timer-latency.png[Wavefront-rendered timer]
+image::wavefront-timer-latency.png[Wavefront-rendered timer]
 
 The preceding chart shows the average latency (`rate(ts(timer.sum))/rate(ts(timer.count))` in
 green), 95th percentile (`ts(timer.percentile, phi="0.95")` in orange), and max (`ts(timer.max)`
@@ -111,7 +111,7 @@ in blue).
 Additionally, `rate(ts(timer.count))` represents a rate/second throughput of events being timed:
 
 .Timer throughput.
-image::img/wavefront-timer-throughput.png[Wavefront-rendered timer throughput]
+image::wavefront-timer-throughput.png[Wavefront-rendered timer throughput]
 
 [[wavefront-histograms]]
 === Wavefront Histograms

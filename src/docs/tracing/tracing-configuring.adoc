@@ -7,14 +7,14 @@ Check the example below for an example of adding and using a single `DefaultTrac
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingConfiguringTests.java[tags=handler_configuration,indent=0]
+include::{include-java}/tracing/TracingConfiguringTests.java[tags=handler_configuration,indent=0]
 -----
 
 You can also use a shorter version to perform measurements via the `observe` method.
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingConfiguringTests.java[tags=handler_configuration_observe,indent=0]
+include::{include-java}/tracing/TracingConfiguringTests.java[tags=handler_configuration_observe,indent=0]
 -----
 
 This will result in the following Micrometer Metrics:
@@ -32,7 +32,7 @@ Gathered the following metrics
 
 And the following trace view in e.g. Zipkin
 
-image::img/zipkin.jpg[Trace Info propagation]
+image::zipkin.jpg[Trace Info propagation]
 
 === Ordered Handler Configuration
 
@@ -46,7 +46,7 @@ In order to make https://micrometer.io/docs/contextPropagation[Context Propagati
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingConfiguringTests.java[tags=span_thread_local_accessor,indent=0]
+include::{include-java}/tracing/TracingConfiguringTests.java[tags=span_thread_local_accessor,indent=0]
 -----
 
 == Exemplars
@@ -55,5 +55,5 @@ To add support for https://grafana.com/docs/grafana/latest/fundamentals/exemplar
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingConfiguringTests.java[tags=exemplars,indent=0]
+include::{include-java}/tracing/TracingConfiguringTests.java[tags=exemplars,indent=0]
 -----

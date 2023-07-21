@@ -10,7 +10,7 @@ antora {
     version = '3.2.0-alpha.2'
     playbook = 'cached-antora-playbook.yml'
     playbookProvider {
-        repository = 'micrometer/micrometer-docs'
+        repository = 'bclozel/micrometer-docs'
         branch = 'docs-build'
         path = 'lib/antora/templates/per-branch-antora-playbook.yml'
         checkLocalBranch = true
@@ -36,7 +36,7 @@ antora {
 
 tasks.named("generateAntoraYml") {
     asciidocAttributes = project.provider( {
-        return  ["micrometer-version": project.version ]
+        return  ["micrometer-version": project.version]
     } )
 }
 

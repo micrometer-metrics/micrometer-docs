@@ -20,9 +20,9 @@ Let's look at the following example.
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=executor,indent=0]
+include::{include-java}/observation/ObservationInstrumentingTests.java[tags=executor,indent=0]
 
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=thread_switching,indent=0]
+include::{include-java}/observation/ObservationInstrumentingTests.java[tags=thread_switching,indent=0]
 -----
 
 [[instrumentation_of_reactive_libraries]]
@@ -44,7 +44,7 @@ To use the feature call the new Reactor's Hook method (e.g. in your `public stat
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=reactor_hook,indent=0]
+include::{include-java}/observation/ObservationInstrumentingTests.java[tags=reactor_hook,indent=0]
 -----
 
 This will automatically wrap Reactor internal mechanisms to propagate context between operators, threads etc. Usage of `tap` and `handle` or Context Propagation API is not required.
@@ -53,7 +53,7 @@ Let's look at the following example.
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=reactor_with_hook,indent=0]
+include::{include-java}/observation/ObservationInstrumentingTests.java[tags=reactor_with_hook,indent=0]
 -----
 
 If performance of this approach is not satisfactory, please verify whether disabling the hook and explicitly using `handle` or `tap` operators improves the performance.
@@ -67,7 +67,7 @@ Let's look at the following example.
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=reactor,indent=0]
+include::{include-java}/observation/ObservationInstrumentingTests.java[tags=reactor,indent=0]
 -----
 
 [[instrumentation_of_http_communication]]
@@ -79,28 +79,28 @@ As an example for the client side we will use a handler that instruments the HTT
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=header_propagating_handler,indent=0]
+include::{include-java}/observation/ObservationInstrumentingTests.java[tags=header_propagating_handler,indent=0]
 -----
 
 Let's look at the following of HTTP client side instrumentation that reuses the handler.
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=http_client,indent=0]
+include::{include-java}/observation/ObservationInstrumentingTests.java[tags=http_client,indent=0]
 -----
 
 As an example for the server side we will use a handler that instruments the Observation by adding the `foo` low cardinality key with the value being the matched path from the HTTP request. Let's look at the example of such a handler.
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=header_receiving_handler,indent=0]
+include::{include-java}/observation/ObservationInstrumentingTests.java[tags=header_receiving_handler,indent=0]
 -----
 
 Let's look at the following of HTTP server side instrumentation that reuses the handler.
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/observation/ObservationInstrumentingTests.java[tags=http_server,indent=0]
+include::{include-java}/observation/ObservationInstrumentingTests.java[tags=http_server,indent=0]
 -----
 
 == Instrumentation of Messaging Communication

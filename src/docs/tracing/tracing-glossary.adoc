@@ -29,7 +29,7 @@ Allows easy latency analysis.
 
 The following image shows how *Span* and *Trace* look in a system.
 
-image::img/trace-id.jpg[Trace Info propagation]
+image::trace-id.jpg[Trace Info propagation]
 
 Each color of a note signifies a span (there are seven spans - from *A* to *G*).
 Consider the following note:
@@ -61,4 +61,4 @@ You can continue with a created span (example with `no custom span` indication) 
 
 The following image shows how parent-child relationships of spans look:
 
-image::img/parents.jpg[Parent child relationship]
+image::parents.jpg[Parent child relationship]

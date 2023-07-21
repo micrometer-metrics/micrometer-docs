@@ -87,7 +87,7 @@ See the https://prometheus.io/docs/querying/basics[Prometheus docs] for a far mo
 
 A publicly available Grafana dashboard for Micrometer-sourced JVM and Tomcat metrics is available https://grafana.com/grafana/dashboards/4701-jvm-micrometer/[here].
 
-image::img/prometheus-dashboard.png[Grafana dashboard for JVM and Tomcat binders]
+image::prometheus-dashboard.png[Grafana dashboard for JVM and Tomcat binders]
 
 The dashboard features:
 
@@ -120,12 +120,12 @@ The query that generates a graph for the random-walk counter is
 `rate(counter[10s])`.
 
 .A Grafana rendered graph of the random walk counter.
-image::img/prometheus-counter.png[Grafana-rendered Prometheus counter]
+image::prometheus-counter.png[Grafana-rendered Prometheus counter]
 
 Representing a counter without rate normalization over some time window is rarely useful, as the representation is a function of both the rapidity with which the counter is incremented and the longevity of the service. It is generally most useful to rate-normalize these time series to reason about them. Since Prometheus keeps track of discrete events across all time, it has the advantage of allowing for the selection of an arbitrary time window across which to normalize at query time (for example, `rate(counter[10s])` provides a notion of requests per second over 10 second windows). The rate-normalized graph in the preceding image would return back to a value around 55 as soon as the new instance (say on a production deployment) was in service.
 
 .Counter over the same random walk, no rate normalization.
-image::img/prometheus-counter-norate.png[Grafana-rendered Prometheus counter (no rate)]
+image::prometheus-counter-norate.png[Grafana-rendered Prometheus counter (no rate)]
 
 In contrast, without rate normalization, the counter drops back to zero on service restart, and the count increases without bound for the duration of the service's uptime.
 
@@ -144,11 +144,11 @@ Using the following Prometheus queries, we can graph the most commonly used stat
 * Throughput (requests per second): `rate(timer_count[10s])`
 
 .Timer over a simulated service.
-image::img/prometheus-timer.png[Grafana-rendered Prometheus timer]
+image::prometheus-timer.png[Grafana-rendered Prometheus timer]
 
 === Long task timers
 
 The Prometheus query to plot the duration of a long task timer for a serial task is `long_task_timer_sum`. In Grafana, we can set an alert threshold at some fixed point.
 
 .Simulated back-to-back long tasks with a fixed alert threshold.
-image::img/prometheus-long-task-timer.png[Grafana-rendered Prometheus long task timer]
+image::prometheus-long-task-timer.png[Grafana-rendered Prometheus long task timer]

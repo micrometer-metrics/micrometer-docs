@@ -67,4 +67,4 @@ name = http_server_requests
 ----
 
 .Timer over a simulated service.
-image::img/humio-timer.png[Humio-rendered timer]
+image::humio-timer.png[Humio-rendered timer]

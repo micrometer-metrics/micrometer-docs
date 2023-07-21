@@ -55,9 +55,9 @@ The AppOptics implementation of `Timer` produces three fields in AppOptics:
 * `max`: A sliding window maximum amount recorded.
 
 .Dimensionally aggregable average in AppOptics.
-image::img/appoptics-timer-average.png[AppOptics timer average]
+image::appoptics-timer-average.png[AppOptics timer average]
 
 AppOptics performs the `sum/count` division dimensionally to generate aggregable averages on your behalf.
 
 .Timer over a simulated service.
-image::img/appoptics-timer.png[AppOptics-rendered timer]
+image::appoptics-timer.png[AppOptics-rendered timer]

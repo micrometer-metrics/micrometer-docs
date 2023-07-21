@@ -45,14 +45,14 @@ To run unit tests of your custom handler you may want to use the `SimpleTracer` 
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingTestingTests.java[tags=observation_handler,indent=0]
+include::{include-java}/tracing/TracingTestingTests.java[tags=observation_handler,indent=0]
 -----
 
 To verify whether the spans got properly created we can use the `SimpleTracer` as follows:
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingTestingTests.java[tags=handler_test,indent=0]
+include::{include-java}/tracing/TracingTestingTests.java[tags=handler_test,indent=0]
 -----
 
 == Running integration tests
@@ -65,5 +65,5 @@ The following example shows how you can run your code to test your integrations
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/tracing/TracingTestingTests.java[tags=observability_smoke_test,indent=0]
+include::{include-java}/tracing/TracingTestingTests.java[tags=observability_smoke_test,indent=0]
 -----

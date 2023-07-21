@@ -58,28 +58,28 @@ At each publishing interval, the SignalFx `Timer` produces several time series i
 
 To generate an aggregable view of latency in SignalFx, divide `totalTime` by `count`:
 
-image::img/signalfx-timer-latency-query.png[SignalFx-aggregable latency query]
+image::signalfx-timer-latency-query.png[SignalFx-aggregable latency query]
 
 This is accomplished by adding signals for `${name}.totalTime` and `${name}.count`, adding a formula that divides them, and hiding the inputs to the formula.
 
 .Timer latency.
-image::img/signalfx-timer-latency.png[SignalFx-rendered timer]
+image::signalfx-timer-latency.png[SignalFx-rendered timer]
 
 To generate a throughput chart, use the `${name}.count` signal:
 
 .Timer throughput.
-image::img/signalfx-timer-throughput.png[SignalFx-rendered timer throughput]
+image::signalfx-timer-throughput.png[SignalFx-rendered timer throughput]
 
 To generate a plot of client-side percentiles, use the `${name}.percentiles` signal:
 
 .Timer Percentiles.
-image::img/signalfx-timer-percentiles.png[SignalFx-rendered percentiles]
+image::signalfx-timer-percentiles.png[SignalFx-rendered percentiles]
 
 Note that these percentiles are _not aggregable_. The more dimensions you add to a timer, the less useful these values become.
 
 Finally, if you define SLO boundaries with the fluent builder for `Timer`, you can view throughput below certain SLO boundaries by using the `${name}.histogram` signal. In this example, we set SLO boundaries at 275 (green), 300 (blue), and 500 (purple) milliseconds for a simulated `Timer` that is recording samples normally distributed around 250 ms. These counts represent the rate/second of samples less than or equal to each SLO boundary.
 
 .Timer SLO boundaries.
-image::img/signalfx-timer-sla.png[SignalFx-rendered SLO boundaries]
+image::signalfx-timer-sla.png[SignalFx-rendered SLO boundaries]
 
 Where the lines converge at various points it is evident that no sample exceeded the 275 ms SLO boundary.

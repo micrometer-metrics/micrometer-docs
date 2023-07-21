@@ -1,5 +1,0 @@
-[[overview]]
-= Micrometer Overview
-:docinfo1:
-
-Overview content

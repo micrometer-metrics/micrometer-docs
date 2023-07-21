@@ -5,7 +5,7 @@ Instrumentation can be done once at startup, if resources are already known:
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/netty/NettyMetricsTests.java[tags=directInstrumentation,indent=0]
+include::{include-java}/netty/NettyMetricsTests.java[tags=directInstrumentation,indent=0]
 -----
 
 Netty infrastructure can be configured in many ways, so you can also instrument lazily at runtime as resources are used.
@@ -13,6 +13,6 @@ If you do so, you must ensure that you will not bind metrics for the same resour
 
 [source,java,subs=+attributes]
 -----
-include::../../../samples/src/test/java/io/micrometer/docs/netty/NettyMetricsTests.java[tags=channelInstrumentation,indent=0]
+include::{include-java}/netty/NettyMetricsTests.java[tags=channelInstrumentation,indent=0]
 -----
 

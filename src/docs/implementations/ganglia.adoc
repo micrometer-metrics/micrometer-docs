@@ -56,4 +56,4 @@ This section serves as a quick start to rendering useful representations in Gang
 Ganglia counters measure mean throughput and one-, five-, and fifteen-minute exponentially-weighted moving average throughputs.
 
 .A Ganglia rendered graph of the random walk counter.
-image::img/ganglia-counter.png[Ganglia-rendered counter]
+image::ganglia-counter.png[Ganglia-rendered counter]
