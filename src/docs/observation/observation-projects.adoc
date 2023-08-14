@@ -4,6 +4,7 @@ Micrometer Observation is used to instrument various projects. Below you can fin
 |===
 |Project Name |Link
 
+| Apache CXF | https://github.com/apache/cxf/pull/1346#event-10091735987[PR]
 | Apache Dubbo | https://github.com/apache/dubbo/pull/11021[PR]
 | Apache HttpComponents | https://github.com/micrometer-metrics/micrometer/tree/main/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/httpcomponents[Repo]
 | Apache Skywalking | https://github.com/apache/skywalking-java/pull/401[PR], https://skywalking.apache.org/docs/skywalking-java/next/en/setup/service-agent/java-agent/application-toolkit-micrometer-1.10/[Docs]
