@@ -64,3 +64,7 @@ include::observation-testing.adoc[leveloffset=+1]
 == Documentation Generation
 
 include::observation-docs-gen.adoc[leveloffset=+1]
+
+== Existing Instrumentations
+
+include::observation-projects.adoc[leveloffset=+1]
