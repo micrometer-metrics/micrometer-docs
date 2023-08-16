@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'io.spring.antora.generate-antora-yml' version '0.0.1'
     id 'org.antora' version '1.0.0'
+    id 'java-library'
 }
 
 description = "Micrometer Docs"
@@ -10,7 +11,7 @@ antora {
     version = '3.2.0-alpha.2'
     playbook = 'cached-antora-playbook.yml'
     playbookProvider {
-        repository = 'bclozel/micrometer-docs'
+        repository = 'micrometer/micrometer-docs'
         branch = 'docs-build'
         path = 'lib/antora/templates/per-branch-antora-playbook.yml'
         checkLocalBranch = true
@@ -57,5 +58,27 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.micrometer:micrometer-core'
+    implementation 'io.micrometer:context-propagation'
+    implementation 'io.micrometer:micrometer-tracing'
+    implementation 'ch.qos.logback:logback-classic'
+    implementation 'org.slf4j:slf4j-api'
 
+    testImplementation 'io.zipkin.reporter2:zipkin-sender-urlconnection'
+
+    testImplementation 'io.micrometer:micrometer-test'
+    testImplementation 'io.micrometer:micrometer-observation-test'
+    testImplementation 'io.micrometer:micrometer-tracing-test'
+    testImplementation 'io.micrometer:micrometer-tracing-integration-test'
+    testImplementation 'org.aspectj:aspectjweaver'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-inline'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.springframework:spring-context'
+    testImplementation 'io.projectreactor:reactor-core'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'io.netty:netty-transport'
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5'
+    testImplementation 'io.javalin:javalin'
 }
+

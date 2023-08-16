@@ -17,7 +17,7 @@ Out-of-the-box instrumentation of caches, the class loader, garbage collection, 
 
 === Integrated into Spring
 
-Micrometer is the instrumentation library powering the delivery of application observability from Spring Boot applications.
+Micrometer is the instrumentation library powering the delivery of application observability from https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics[Spring Boot applications].
 
 === Support for popular observability systems
 

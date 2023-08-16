@@ -11,11 +11,11 @@ Monitoring systems that perform server-side rate math expect absolute values to 
 
 Suppose we have a slightly positively biased random walk that chooses to increment a counter once every 10 milliseconds. If we view the raw counter value in a system like Prometheus, we see a step-wise monotonically increasing function (the width of the step is the interval at which Prometheus is polling or scraping for data).
 
-image::prometheus-counter-norate.png[Absolute counter value]
+image::implementations/prometheus-counter-norate.png[Absolute counter value]
 
 Representing a counter without rate aggregation over some time window is rarely useful, as the representation is a function of both the rapidity with which the counter is incremented and the longevity of the service. In the preceding example, the counter drops back to zero on service restart. The rate-aggregated graph would return back to a value around 55 as soon as the new instance (say on a production deployment) was in service.
 
-image::prometheus-counter.png[Rate-aggregated counter]
+image::implementations/prometheus-counter.png[Rate-aggregated counter]
 
 If you have achieved zero-downtime deployments (for example, through red-black deployments), you should be able to comfortably set _minimum_ alert thresholds on the rate-aggregated graph without service restarts causing dips in the counter value.
 
@@ -30,7 +30,7 @@ Two other classes of monitoring system either:
 
 Micrometer efficiently maintains rate data by means of a step value that accumulates data for the current publishing interval. When the step value is polled (when publishing, for example), if the step value detects that the current interval has elapsed, it moves current data to "`previous`" state. This previous state is what is reported until the next time current data overwrites it. The following image shows the interaction of current and previous state, along with polling:
 
-image::rate-normalizing.png[Behavior of a step value,width=1200]
+image::implementations/rate-normalizing.png[Behavior of a step value,width=1200]
 
 The value returned by the poll function is always _rate per second * interval_. If the step value shown in the preceding image represents the values of a counter, we could say that the counter saw "`0.3 increments per second`" in the first interval, which is reportable to the backend at any time during the second interval.
 
