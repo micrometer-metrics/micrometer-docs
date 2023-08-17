@@ -9,7 +9,7 @@ NOTE: New Relic provides its own Micrometer `MeterRegistry` implementation based
 It intends to supersede Micrometer's `NewRelicMeterRegistry` (which uses custom events in New Relic), because New Relic's dimensional metrics are a better fit for metrics than custom events.
 You can find more details in https://github.com/newrelic/micrometer-registry-newrelic[its GitHub repository].
 
-include::install.adoc[]
+include::_install.adoc[]
 
 == Configuring
 

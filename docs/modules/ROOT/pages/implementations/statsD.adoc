@@ -7,7 +7,7 @@ StatsD is a UDP-based sidecar-driven metrics collection system. The maintainer o
 
 If you intend to use the Datadog or Telegraf flavors, see the documentation for Micrometer's link:/docs/registry/datadog[Datadog] or link:/docs/registry/influx[Influx] support.
 
-include::install.adoc[]
+include::_install.adoc[]
 
 == Configuring
 

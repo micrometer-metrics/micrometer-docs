@@ -6,7 +6,7 @@ Ray Tsang <saturnism@gmail.com>
 
 Stackdriver Monitoring is a dimensional time-series SaaS with built-in dashboarding.
 
-include::install.adoc[]
+include::_install.adoc[]
 
 == Configuring
 

@@ -6,7 +6,7 @@ Tommy Ludwig <tludwig@vmware.com>
 
 https://aws.amazon.com/cloudwatch/[Amazon CloudWatch] is a dimensional time-series SaaS on Amazon's cloud.
 
-include::install.adoc[]
+include::_install.adoc[]
 
 NOTE: The `micrometer-registry-cloudwatch2` module uses AWS SDK v2. `micrometer-registry-cloudwatch` is for AWS SDK v1.
 

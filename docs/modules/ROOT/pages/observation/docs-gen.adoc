@@ -7,7 +7,7 @@ Below you can find an example of a Maven `pom.xml` with the Micrometer Docs Gene
 .pom.xml
 [source,xml,subs=+attributes]
 -----
-include::../../../samples/src/test/resources/docs-generator-pom.xml[indent=0]
+include::{include-resources}/docs-generator-pom.xml[indent=0]
 -----
 
 Below you can find an example of a Gradle `build.gradle` with the Micrometer Docs Generator project.
@@ -15,7 +15,7 @@ Below you can find an example of a Gradle `build.gradle` with the Micrometer Doc
 .build.gradle
 [source,groovy,subs=+attributes]
 -----
-include::../../../samples/src/test/resources/docs-generator-build.gradle[indent=0,tag=main]
+include::{include-resources}/docs-generator-build.gradle[indent=0,tag=main]
 -----
 
 Running these tasks would lead to generation of adoc files similar to these ones.

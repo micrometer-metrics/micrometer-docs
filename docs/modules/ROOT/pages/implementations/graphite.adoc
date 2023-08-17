@@ -5,7 +5,7 @@
 
 Graphite is one of the most popular current hierarchical metrics systems backed by a fixed-size database, similar in design and purpose to RRDtool. It originated at Orbitz in 2006 and was open sourced in 2008.
 
-include::install.adoc[]
+include::_install.adoc[]
 
 == Configuring
 

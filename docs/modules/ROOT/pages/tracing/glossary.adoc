@@ -31,7 +31,7 @@ Allows easy latency analysis.
 
 The following image shows how *Span* and *Trace* look in a system.
 
-image::implementations/trace-id.jpg[Trace Info propagation]
+image::tracing/trace-id.jpg[Trace Info propagation]
 
 Each color of a note signifies a span (there are seven spans - from *A* to *G*).
 Consider the following note:

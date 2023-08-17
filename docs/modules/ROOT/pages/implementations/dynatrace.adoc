@@ -7,7 +7,7 @@ https://www.dynatrace.com/[*Dynatrace*] is a Software Intelligence Platform feat
 It can ingest multi-purpose dimensional time-series data and has built-in dashboarding.
 Both SaaS and self-hosted (Managed) deployments are offered.
 
-include::install.adoc[]
+include::_install.adoc[]
 
 == Configuring
 

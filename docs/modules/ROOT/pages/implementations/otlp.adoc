@@ -5,7 +5,7 @@
 
 OpenTelemetry is a CNCF incubating project for providing standards for telemetry data. OpenTelemetry protocol (OTLP) is a vendor neutral protocol that can be used to send data to various backends which support it. You can read the corresponding docs on how the metrics are ingested and can be visualized in the respective vendor docs.
 
-include::install.adoc[]
+include::_install.adoc[]
 
 == Configuring
 The following example configures an OTLP registry:

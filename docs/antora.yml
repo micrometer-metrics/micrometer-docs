@@ -18,6 +18,7 @@ asciidoc:
     # FIXME: The package is not renamed
     chomp: 'all'
     include-java: 'example$docs-src/test/java/io/micrometer/docs'
+    include-resources: 'example$docs-src/test/resources'
     micrometer-main-code: 'https://github.com/micrometer-metrics/micrometer/tree/main'
     docs-site: 'https://micrometer.io'
     docs-micrometer: "{docs-site}/docs/{micrometer-version}"

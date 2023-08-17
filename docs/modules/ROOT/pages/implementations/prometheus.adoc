@@ -6,7 +6,7 @@
 Prometheus is a dimensional time series database with a built-in UI, a custom query language, and math operations.
 Prometheus is designed to operate on a pull model, periodically scraping metrics from application instances, based on service discovery.
 
-include::install.adoc[]
+include::_install.adoc[]
 
 == Configuring
 
