@@ -45,6 +45,10 @@ tasks.create("generateAntoraResources") {
     dependsOn 'generateAntoraYml'
 }
 
+tasks.named("antora") {
+    dependsOn "generateAntoraResources"
+}
+
 jar {
     enabled = false
 }
