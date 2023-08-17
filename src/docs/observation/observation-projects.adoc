@@ -4,12 +4,12 @@ Micrometer Observation is used to instrument various projects. Below you can fin
 |===
 |Project Name |Link
 
+| Apache Camel | https://issues.apache.org/jira/browse/CAMEL-19023[Issue]
 | Apache CXF | https://github.com/apache/cxf/pull/1346#event-10091735987[PR]
 | Apache Dubbo | https://github.com/apache/dubbo/pull/11021[PR]
 | Apache HttpComponents | https://github.com/micrometer-metrics/micrometer/tree/main/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/httpcomponents[Repo]
 | Apache Skywalking | https://github.com/apache/skywalking-java/pull/401[PR], https://skywalking.apache.org/docs/skywalking-java/next/en/setup/service-agent/java-agent/application-toolkit-micrometer-1.10/[Docs]
 | Appsmith | https://github.com/appsmithorg/appsmith/commit/5e46a2f4b7bf184aba03b4b93038edce8a615366[Commit]
-| Camel | https://issues.apache.org/jira/browse/CAMEL-19023[Issue]
 | gRPC | https://github.com/micrometer-metrics/micrometer/pull/3427[PR]
 | Halo | https://github.com/halo-dev/halo/commit/d192b8c956887e4701b94e3ed302fb88e4771583[Commit]
 | JDBC | https://github.com/jdbc-observations/datasource-micrometer[Repo]
