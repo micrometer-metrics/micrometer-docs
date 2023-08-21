@@ -1,12 +1,12 @@
-name: micrometer
+name: micrometer-docs
 version: true
-title: Micrometer
+title: Micrometer Docs
 nav:
   - modules/ROOT/nav.adoc
 ext:
   collector:
     run:
-      command: gradlew -q -PbuildSrc.skipTests=true "-Dorg.gradle.jvmargs=-Xmx3g -XX:+HeapDumpOnOutOfMemoryError" :docs:generateAntoraResources
+      command: gradlew -q -PbuildSrc.skipTests=true -Pantora "-Dorg.gradle.jvmargs=-Xmx3g -XX:+HeapDumpOnOutOfMemoryError" :docs:generateAntoraResources
       local: true
     scan:
       dir: ./build/generated-antora-resources

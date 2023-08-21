@@ -37,7 +37,7 @@ antora {
 
 tasks.named("generateAntoraYml") {
     asciidocAttributes = project.provider( {
-        return  ["micrometer-version": project.version]
+        return  ["micrometer-docs-version": project.version]
     } )
 }
 
@@ -47,6 +47,10 @@ tasks.create("generateAntoraResources") {
 
 tasks.named("antora") {
     dependsOn "generateAntoraResources"
+}
+
+tasks.named("antora") {
+    dependsOn "test"
 }
 
 jar {
