@@ -9,9 +9,11 @@ Think SLF4J, but for observability.
 
 == Projects
 
-Micrometer `2023.11` release train consists of the following projects:
+Micrometer consists of various projects that have their own release cycle. Micrometer does not come with a release train BOM (Bill of Materials) but for your convenience we are grouping the corresponding projects with their compatible versions.
 
-- xref:1.12.0@micrometer:ROOT:index.adoc[Micrometer Core 1.12.0]
-- xref:1.1.0@micrometer-context-propagation:ROOT:index.adoc[Micrometer Context Propagation 1.1.0]
-- xref:1.2.0@micrometer-tracing:ROOT:index.adoc[Micrometer Tracing 1.2.0]
-- xref:1.1.0@micrometer-docs-generator:ROOT:index.adoc[Micrometer Docs Generator 1.1.0]
+Micrometer `{micrometer-docs-version}` release train consists of the following projects:
+
+- https://micrometer.io/docs/context-propagation/reference/{context-propagation-version}/index.html[Micrometer Context Propagation {context-propagation-version}]
+- https://micrometer.io/docs/micrometer/reference/{micrometer-version}/index.html[Micrometer Core {micrometer-version}]
+- https://micrometer.io/docs/tracing/reference/{tracing-version}/index.html[Micrometer Tracing {tracing-version}]
+- https://micrometer.io/docs/docs-generation/reference/{micrometer-docs-generation-version}/index.html[Micrometer Docs Generator {micrometer-docs-generation-version}]

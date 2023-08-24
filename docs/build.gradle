@@ -37,7 +37,12 @@ antora {
 
 tasks.named("generateAntoraYml") {
     asciidocAttributes = project.provider( {
-        return  ["micrometer-docs-version": project.version]
+        return  ["micrometer-docs-version": project.version,
+        "context-propagation-version" : "${contextPropagationVersion}".toString(),
+        "micrometer-version" : "${micrometerVersion}".toString(),
+        "tracing-version" : "${tracingVersion}".toString(),
+        "micrometer-docs-generation-version" : "${micrometerDocsGeneratorVersion}".toString(),
+        ]
     } )
 }
 
