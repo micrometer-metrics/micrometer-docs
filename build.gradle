@@ -13,7 +13,7 @@ buildscript {
     dependencies {
         classpath 'gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.16.1'
         classpath 'io.spring.nohttp:nohttp-gradle:0.0.11'
-        classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.38'
+        classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.39'
         classpath 'org.siouan:frontend-gradle-plugin-jdk8:6.0.0'
 
         constraints {
