@@ -20,8 +20,10 @@ Micrometer contains a core module with an instrumentation https://en.wikipedia.o
 |Server-side
 
 |AppOptics, Atlas, Azure Monitor, Datadog, Dynatrace, Elastic, Graphite, Ganglia, Humio, Influx, JMX, Kairos, New Relic, all StatsD flavors, SignalFx
-|Prometheus, Wavefront footnote:[As of 1.2.0, Micrometer sends cumulative values to Wavefront.]
+|Prometheus, Wavefront
 |===
+
+NOTE: As of 1.2.0, Micrometer sends cumulative values to Wavefront.
 
 * *Publishing*. Some systems expect to poll applications for metrics at their leisure, while others expect metrics to be pushed to them on a regular interval.
 

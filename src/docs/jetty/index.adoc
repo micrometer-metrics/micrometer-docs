@@ -1,6 +1,6 @@
-Micrometer supports binding metrics to `Jetty` through `Connection.Listener`.
+Micrometer supports binding metrics to Jetty through `Connection.Listener`.
 
-You can collect metrics from `Jetty` by adding `JettyConnectionMetrics` as follows:
+You can collect metrics from Jetty by adding `JettyConnectionMetrics`, as follows:
 
 [source,java]
 ----
@@ -12,7 +12,7 @@ You can collect metrics from `Jetty` by adding `JettyConnectionMetrics` as follo
 
 Micrometer also supports binding metrics to `Jersey` through `ApplicationEventListener`.
 
-You can collect metrics from `Jersey` by adding `MetricsApplicationEventListener` as follows:
+You can collect metrics from `Jersey` by adding `MetricsApplicationEventListener`, as follows:
 
 [source,java]
 ----

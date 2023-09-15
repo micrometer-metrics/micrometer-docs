@@ -1,6 +1,6 @@
 == `ThreadLocal` Population
 
-Below you can find a holder for `ThreadLocal` values.
+The following example creates a holder for `ThreadLocal` values.
 
 .ObservationThreadLocalHolder
 [source,java,subs=+attributes]
@@ -8,7 +8,7 @@ Below you can find a holder for `ThreadLocal` values.
 include::../../../samples/src/test/java/io/micrometer/docs/context/ObservationThreadLocalHolder.java[tags=holder,indent=0]
 -----
 
-Below you can find a `ThreadLocalAccessor` that interacts with the holder.
+The following example creates a `ThreadLocalAccessor` that interacts with the holder.
 
 .ObservationThreadLocalAccessor
 [source,java,subs=+attributes]
@@ -16,7 +16,7 @@ Below you can find a `ThreadLocalAccessor` that interacts with the holder.
 include::../../../samples/src/test/java/io/micrometer/docs/context/ObservationThreadLocalAccessor.java[tags=accessor,indent=0]
 -----
 
-Below you can find an example of how to store and restore thread local values via `ThreadLocalAccessor`, `ContextSnapshot` and `ContextRegistry`.
+The following example whows how to store and restore thread local values via `ThreadLocalAccessor`, `ContextSnapshot`, and `ContextRegistry`.
 
 [source,java,subs=+attributes]
 -----

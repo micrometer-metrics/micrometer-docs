@@ -1,4 +1,4 @@
-A gauge is a handle to get the current value. Typical examples for gauges would be the size of a collection or map or number of threads in a running state.
+A gauge is a handle to get the current value. Typical examples for gauges would be the size of a collection or map or the number of threads in a running state.
 
 TIP: Gauges are useful for monitoring things with natural upper bounds. We do not recommend using a gauge to monitor things like request count, as they can grow without bound for the duration of an application instance's life.
 
@@ -6,7 +6,7 @@ TIP: Never gauge something you can count with a `Counter`!
 
 Micrometer takes the stance that gauges should be sampled and not be set, so there is no information about what might have occurred between samples. Any intermediate values set on a gauge are lost by the time the gauge value is reported to a metrics backend, so there is little value in setting those intermediate values in the first place.
 
-Think of a `Gauge` as a "`heisen-gauge`": a meter that changes only when it is observed. Every other meter type accumulates intermediate counts toward the point where the data is sent to the metrics backend.
+Think of a `Gauge` as a "`heisenberg-gauge`": a meter that changes only when it is observed. Every other meter type accumulates intermediate counts toward the point where the data is sent to the metrics backend.
 
 The `MeterRegistry` interface contains methods for building gauges to observe numeric values, functions, collections, and maps:
 
@@ -35,7 +35,7 @@ myGauge.set(27);
 myGauge.set(11);
 ----
 
-Note that, in this form, unlike other meter types, you do not get a reference to the `Gauge` when creating one. Rather, you get a reference to the thing being observed. This is because of the "`heisen-gauge`" principal: The gauge is self-sufficient once created, so you should never need to interact with it. This lets us give you back only the instrumented object, which allows for quick one-liners that both create the object to be observed and set up metrics around it.
+Note that, in this form, unlike other meter types, you do not get a reference to the `Gauge` when creating one. Rather, you get a reference to the thing being observed. This is because of the "`heisenberg-gauge`" principal: The gauge is self-sufficient once created, so you should never need to interact with it. This lets us give you back only the instrumented object, which allows for quick one-liners that both create the object to be observed and set up metrics around it.
 
 This pattern should be less common than the `DoubleFunction` form. Remember that frequent setting of the observed `Number` results in a lot of intermediate values that never get published. Only the _instantaneous value_ of the gauge at publish time is ever sent to the monitoring system.
 

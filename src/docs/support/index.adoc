@@ -42,7 +42,7 @@ The following releases are out of OSS support:
 
 The following examples demonstrate how the support policy applies:
 
-** Micrometer 1.0.0 was released in February 2018. At a minimum, support for the 1.x line extends through February 2021 (Major Releases statement). Practically, the Micrometer 1.x line is supported for at least as long as Spring Boot 2.x and major versions of other dependent web frameworks are supported.
-** Micrometer 1.1.0 was released in October 2018, minimally extending support through October 2019 (Minor Releases statement). Practically, the Micrometer 1.1.x line is supported for at least as long as the Spring Boot 2.1.x line is supported.
-** If Micrometer 1.2.x were to be released, support for the 1.x line would be extended another 12 months from the 1.2.x release date.
-** Patch releases, such as Micrometer 1.0.7, do not increase the support obligations for the 1.0.x release line.
+* Micrometer 1.0.0 was released in February 2018. At a minimum, support for the 1.x line extends through February 2021 (Major Releases statement). Practically, the Micrometer 1.x line is supported for at least as long as Spring Boot 2.x and major versions of other dependent web frameworks are supported.
+* Micrometer 1.1.0 was released in October 2018, minimally extending support through October 2019 (Minor Releases statement). Practically, the Micrometer 1.1.x line is supported for at least as long as the Spring Boot 2.1.x line is supported.
+* If Micrometer 1.2.x were to be released, support for the 1.x line would be extended another 12 months from the 1.2.x release date.
+* Patch releases, such as Micrometer 1.0.7, do not increase the support obligations for the 1.0.x release line.
