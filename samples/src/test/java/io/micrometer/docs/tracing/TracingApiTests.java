@@ -244,11 +244,8 @@ class TracingApiTests {
             then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of scope] Baggage 1").isNull();
             then(tracer.getBaggage("from_span_in_scope 2").get()).as("[Out of scope] Baggage 2").isNull();
             then(tracer.getBaggage("from_span").get()).as("[Out of scope] Baggage 3").isNull();
-
-            // You will retrieve the baggage value ALWAYS when you pass the context
-            // explicitly
             then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
-                .isEqualTo("value 3");
+                .isNull();
             // end::baggage_api[]
         }
 
@@ -298,11 +295,8 @@ class TracingApiTests {
             then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of scope] Baggage 1").isNull();
             then(tracer.getBaggage("from_span_in_scope 2").get()).as("[Out of scope] Baggage 2").isNull();
             then(tracer.getBaggage("from_span").get()).as("[Out of scope] Baggage 3").isNull();
-
-            // You will retrieve the baggage value ALWAYS when you pass the context
-            // explicitly
             then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
-                .isEqualTo("value 3");
+                .isNull();
             // end::baggage_api_1_11_0[]
         }
 
@@ -494,11 +488,8 @@ class TracingApiTests {
             then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of scope] Baggage 1").isNull();
             then(tracer.getBaggage("from_span_in_scope 2").get()).as("[Out of scope] Baggage 2").isNull();
             then(tracer.getBaggage("from_span").get()).as("[Out of scope] Baggage 3").isNull();
-
-            // You will retrieve the baggage value ALWAYS when you pass the context
-            // explicitly
             then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
-                .isEqualTo("value 3");
+                .isNull();
         }
 
         @Test
@@ -545,11 +536,8 @@ class TracingApiTests {
             then(tracer.getBaggage("from_span_in_scope 1").get()).as("[Out of scope] Baggage 1").isNull();
             then(tracer.getBaggage("from_span_in_scope 2").get()).as("[Out of scope] Baggage 2").isNull();
             then(tracer.getBaggage("from_span").get()).as("[Out of scope] Baggage 3").isNull();
-
-            // You will retrieve the baggage value ALWAYS when you pass the context
-            // explicitly
             then(tracer.getBaggage("from_span").get(span.context())).as("[Out of scope - with context] Baggage 3")
-                .isEqualTo("value 3");
+                .isNull();
         }
 
     }
