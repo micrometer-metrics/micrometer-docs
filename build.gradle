@@ -167,17 +167,6 @@ frontend {
     publishScript = 'run deploy'
 }
 
-tasks.register('setupYarnRc') {
-    doLast {
-        File file = new File(".yarnrc.yml")
-        if (!file.exists()) {
-            println("Creating .yarnrc.yml")
-            file.createNewFile()
-            file.text = "nodeLinker: node-modules"
-        }
-    }
-}
-
 tasks.register('yarnStart', RunYarn) {
     dependsOn tasks.named('installNode')
     dependsOn tasks.named('installFrontend')
