@@ -14,7 +14,7 @@ buildscript {
         classpath 'gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.16.1'
         classpath 'io.spring.nohttp:nohttp-gradle:0.0.11'
         classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.39'
-        classpath 'org.siouan:frontend-gradle-plugin-jdk8:6.0.0'
+        classpath 'org.siouan:frontend-jdk17:8.0.0'
 
         constraints {
             classpath('org.ow2.asm:asm:7.3.1') {
@@ -158,12 +158,10 @@ subprojects {
     }
 }
 
-apply plugin: 'org.siouan.frontend-jdk8'
+apply plugin: 'org.siouan.frontend-jdk17'
 
 frontend {
     nodeVersion = '16.16.0'
-    yarnEnabled = true
-    yarnVersion = '3.2.1'
     assembleScript = 'run build'
     cleanScript = 'run clean'
     publishScript = 'run deploy'
@@ -202,8 +200,6 @@ tasks.register('yarnUpgrade', RunYarn) {
     dependsOn tasks.named('installFrontend')
     script = 'run upgrade'
 }
-
-installYarnGlobally.dependsOn("setupYarnRc")
 
 [assembleFrontend, checkFrontend, yarnStart].each {
     it.dependsOn(":samples:build", ":docs-util:generateCoalescedAdocs")

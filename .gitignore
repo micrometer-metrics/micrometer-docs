@@ -49,3 +49,5 @@ node/
 
 build/
 .yarnrc.yml
+
+.frontend-gradle-plugin/
