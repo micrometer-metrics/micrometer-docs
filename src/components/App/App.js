@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import MyNavbar from '../MyNavbar';
 import Footer from '../Footer';
-import Home from '../Home';
+import DocRoot from '../DocRoot';
 import DocRoutes from '../DocRoutes';
 
 export default function App() {
@@ -11,7 +11,7 @@ export default function App() {
       <MyNavbar />
 
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/docs" component={DocRoot} />
 
         <Route path="/security-policy" component={() => { 
           window.location.href='https://tanzu.vmware.com/security';
@@ -21,7 +21,7 @@ export default function App() {
 
         <DocRoutes/>
 
-        <Route path="**" render={() => <Redirect to="/" />} />
+        <Route path="**" render={() => <Redirect to="/docs" />} />
       </Switch>
 
       <div className="container-fluid" style={{ paddingRight: 0, paddingLeft: 0 }}>
