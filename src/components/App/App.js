@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import MyNavbar from '../MyNavbar';
 import Footer from '../Footer';
-import Home from '../Home';
+import DocRoot from '../DocRoot';
 import DocRoutes from '../DocRoutes';
 import DocSection from "../DocSection";
 
@@ -15,7 +15,7 @@ export default function App() {
       <MyNavbar />
 
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/docs" component={DocRoot} />
 
         <Route exact path="/support" render={() =>
             <DocSection title="Micrometer Support Policy" content={docsSupport}/>
@@ -31,7 +31,7 @@ export default function App() {
 
         <DocRoutes/>
 
-        <Route path="**" render={() => <Redirect to="/" />} />
+        <Route path="**" render={() => <Redirect to="/docs" />} />
       </Switch>
 
       <div className="container-fluid" style={{ paddingRight: 0, paddingLeft: 0 }}>

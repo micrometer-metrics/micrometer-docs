@@ -1,7 +1,7 @@
 {
   "name": "micrometer-docs",
   "version": "0.1.2",
-  "homepage": "https://micrometer.io",
+  "homepage": "https://micrometer.io/docs",
   "private": true,
   "dependencies": {
     "asciidoc-loader": "^0.2.0",
