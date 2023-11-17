@@ -5,6 +5,7 @@ import Footer from '../Footer';
 import DocRoot from '../DocRoot';
 import DocRoutes from '../DocRoutes';
 import DocSection from "../DocSection";
+import MigrationAlert from "../MigrationAlert";
 
 /* eslint import/no-webpack-loader-syntax: off */
 let docsSupport = require('!asciidoc-loader!../../generated-docs/support/index.adoc');
@@ -13,6 +14,8 @@ export default function App() {
   return (
     <div>
       <MyNavbar />
+
+      <MigrationAlert />
 
       <Switch>
         <Route exact path="/docs" component={DocRoot} />
@@ -23,7 +26,7 @@ export default function App() {
 
         <Route exact path="/docs/support" render={() => <Redirect to="/support" />} />
 
-        <Route path="/security-policy" component={() => { 
+        <Route path="/security-policy" component={() => {
           window.location.href='https://tanzu.vmware.com/security';
           return null; 
         }
