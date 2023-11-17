@@ -8,7 +8,7 @@ import { Nav, Navbar } from "react-bootstrap";
 export default function MyNavbar() {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" style={{ borderTop: '8px solid #1ba89c' }} >
-      <Navbar.Brand as={Link} to="/" >
+      <Navbar.Brand href="/">
         <img src={logo} className="img-fluid" style={{ maxHeight: 80 }} alt="Micrometer" />
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
