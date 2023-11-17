@@ -4,11 +4,14 @@ import MyNavbar from '../MyNavbar';
 import Footer from '../Footer';
 import DocRoot from '../DocRoot';
 import DocRoutes from '../DocRoutes';
+import MigrationAlert from "../MigrationAlert";
 
 export default function App() {
   return (
     <div>
       <MyNavbar />
+
+      <MigrationAlert />
 
       <Switch>
         <Route exact path="/docs" component={DocRoot} />
