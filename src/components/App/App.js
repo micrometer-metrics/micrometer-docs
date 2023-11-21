@@ -26,12 +26,6 @@ export default function App() {
 
         <Route exact path="/docs/support" render={() => <Redirect to="/support" />} />
 
-        <Route path="/security-policy" component={() => {
-          window.location.href='https://tanzu.vmware.com/security';
-          return null; 
-        }
-        } />
-
         <DocRoutes/>
 
         <Route path="**" render={() => <Redirect to="/docs" />} />
