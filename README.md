@@ -17,4 +17,4 @@ To regenerate the adoc files just run `./gradlew generateCoalescedAdocs`.
 -------------------------------------
 _Licensed under [Apache Software License 2.0](https://www.apache.org/licenses/LICENSE-2.0)_
 
-_Sponsored by [VMware](https://tanzu.vmware.com/)_
+_Sponsored by [Broadcom](https://www.broadcom.com/)_
