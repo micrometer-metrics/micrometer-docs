@@ -15,7 +15,6 @@ let docsNetty = require('!asciidoc-loader!../../generated-docs/netty/index.adoc'
 let docsConsoleReporter = require('!asciidoc-loader!../../generated-docs/guide/console-reporter.adoc');
 let docsHttpSenderResilience4jRetry = require('!asciidoc-loader!../../generated-docs/guide/http-sender-resilience4j-retry.adoc');
 let docsCustomMeterRegistry = require('!asciidoc-loader!../../generated-docs/guide/custom-meter-registry.adoc');
-let docsSupport = require('!asciidoc-loader!../../generated-docs/support/index.adoc');
 let docsObservation = require('!asciidoc-loader!../../generated-docs/observation/index.adoc');
 let docsTracing = require('!asciidoc-loader!../../generated-docs/tracing/index.adoc');
 let docsContextPropagation = require('!asciidoc-loader!../../generated-docs/contextpropagation/index.adoc');
@@ -75,10 +74,6 @@ export default function DocRoutes() {
 
       <Route path="/docs/guide/customMeterRegistry" render={() =>
         <DocSection title="Custom meter registry" content={docsCustomMeterRegistry}/>
-      }/>
-
-      <Route path="/docs/support" render={() =>
-        <DocSection title="Micrometer Support Policy" content={docsSupport}/>
       }/>
 
       <Route path="/docs/observation" render={() =>

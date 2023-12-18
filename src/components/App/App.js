@@ -21,6 +21,8 @@ export default function App() {
             <DocSection title="Micrometer Support Policy" content={docsSupport}/>
         }/>
 
+        <Route exact path="/docs/support" render={() => <Redirect to="/support" />} />
+
         <Route path="/security-policy" component={() => { 
           window.location.href='https://tanzu.vmware.com/security';
           return null; 
