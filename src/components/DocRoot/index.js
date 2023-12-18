@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 
 import './style.css';
 
@@ -179,7 +179,7 @@ export default function DocRoot() {
           the abstraction provided by Micrometer Context Propagation.
         </li>
         <li>
-          <NavLink className="doc-section" to="/docs/support">Support policy</NavLink>. Micrometer's support policy for releases.
+          <a className="doc-section" href="/support">Support policy</a>. Micrometer's support policy for releases.
         </li>
       </ol>
     </div>
