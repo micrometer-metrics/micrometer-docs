@@ -4,6 +4,10 @@ import MyNavbar from '../MyNavbar';
 import Footer from '../Footer';
 import Home from '../Home';
 import DocRoutes from '../DocRoutes';
+import DocSection from "../DocSection";
+
+/* eslint import/no-webpack-loader-syntax: off */
+let docsSupport = require('!asciidoc-loader!../../generated-docs/support/index.adoc');
 
 export default function App() {
   return (
@@ -12,6 +16,10 @@ export default function App() {
 
       <Switch>
         <Route exact path="/" component={Home} />
+
+        <Route exact path="/support" render={() =>
+            <DocSection title="Micrometer Support Policy" content={docsSupport}/>
+        }/>
 
         <Route path="/security-policy" component={() => { 
           window.location.href='https://tanzu.vmware.com/security';
