@@ -1,6 +1,12 @@
-## Micrometer website source ![main branch status](https://github.com/micrometer-metrics/micrometer-docs/actions/workflows/ci.yml/badge.svg?branch=main)
+## Micrometer website source (old) ![main branch status](https://github.com/micrometer-metrics/micrometer-docs/actions/workflows/ci.yml/badge.svg?branch=main)
 
-This repo is the source code for [micrometer.io](https://micrometer.io).
+This repo is the archive of the source code previously used for [micrometer.io](https://micrometer.io) and the corresponding docs now available at https://micrometer.io/docs.
+
+The current website source is at https://github.com/micrometer-metrics/micrometer-website and documentation source is in each Micrometer repository so it is versioned with the codebase it is documenting.
+
+Given the above, issues and pull requests should not be opened to this repository anymore. If you have an issue with the website, report it to https://github.com/micrometer-metrics/micrometer-website. If you have an issue or contribution for the documentation, please open it in the respective repository.
+
+----
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
