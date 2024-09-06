@@ -5,19 +5,21 @@ pluginManagement {
 }
 
 plugins {
-    id 'com.gradle.enterprise' version '3.17.6'
-    id 'io.spring.develocity.conventions' version '0.0.19'
+    id 'com.gradle.develocity' version '3.18'
+    id 'io.spring.develocity.conventions' version '0.0.20'
 }
 
 rootProject.name = 'micrometer-docs'
 
-buildCache {
-    remote(HttpBuildCache) {
-        url = 'https://ge.micrometer.io/cache/'
-    }
-}
-gradleEnterprise {
+
+develocity {
     server = 'https://ge.micrometer.io'
+}
+
+buildCache {
+    remote(develocity.buildCache) {
+        server = 'https://ge.micrometer.io'
+    }
 }
 
 include 'samples', 'docs-util'
